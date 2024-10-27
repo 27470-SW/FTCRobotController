@@ -75,7 +75,7 @@ public class MeepMeepTesting
 
          System.out.println("STARTING at " +LocalDateTime.now());
 
-         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)
+         meepMeep.setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_OFFICIAL)
                  .setDarkMode(true)
                  .setBackgroundAlpha(0.95f)
                  .addEntity(rrBotEntity)
