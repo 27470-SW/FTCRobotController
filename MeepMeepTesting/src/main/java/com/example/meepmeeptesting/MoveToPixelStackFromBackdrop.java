@@ -26,7 +26,7 @@ public class MoveToPixelStackFromBackdrop {
                     route.addFunction(route::intakes);
                     route.addLocation(route.pickUpPixelStackRightRedLeft, SPLINE, HEAD_LINEAR);
                     //
-                } else if (teamElement == Route.TeamElement.RIGHT && startPos == Field.StartPos.START_STACKS) {
+                } else if (teamElement == Route.TeamElement.RIGHT && startPos == Field.StartPos.START_SPECIMENS) {
                     route.addEvent(Route.Action.TANGENT, route.threetwenty);
                     route.addFunction(route::armDrivePos, 1.5);
                     route.addLocation(route.pointForRobotToPixelStack, SPLINE, HEAD_CONSTANT);
@@ -132,9 +132,9 @@ public class MoveToPixelStackFromBackdrop {
                 route.addFunction(route::armToIntake);
                 route.addFunction(route::intakes);
                 //
-                if (teamElement == Route.TeamElement.RIGHT && startPos == Field.StartPos.START_BACKDROP) {
+                if (teamElement == Route.TeamElement.RIGHT && startPos == Field.StartPos.START_SAMPLES) {
                     route.addLocation(route.pickUpPixelStackRightCircuitBlueRight, SPLINE, HEAD_LINEAR);
-                } else if (teamElement == Route.TeamElement.CENTER && startPos == Field.StartPos.START_STACKS) {
+                } else if (teamElement == Route.TeamElement.CENTER && startPos == Field.StartPos.START_SPECIMENS) {
                     route.addLocation(route.pickUpPixelStackRightCircuitBlueCenter, SPLINE, HEAD_LINEAR);
                 } else {
                     route.addLocation(route.pickUpPixelStackRightCircuitBlue, SPLINE, HEAD_LINEAR);

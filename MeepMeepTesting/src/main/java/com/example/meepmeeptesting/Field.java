@@ -92,8 +92,8 @@ public abstract class Field
 
     public enum StartPos implements PositionOption
     {
-        START_BACKDROP,
-        START_STACKS
+        START_SAMPLES,
+        START_SPECIMENS
     }
 
     public enum AutonDebug implements PositionOption

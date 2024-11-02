@@ -45,9 +45,7 @@ public class MeepMeepTesting
 
          RobotConstants.init(RobotConstants.Chassis.B7252);
          RobotConstants.MAX_LOOPS = 1;
-         Field.Highways[] highwaysIn = {WALL, DOOR,WALL, DOOR,WALL, CENTER,WALL, DOOR};
-         Field.Highways[] pixelsIn = {DOOR, CENTER,WALL, DOOR,WALL, DOOR,WALL, DOOR};
-         ITD_Route ffr = new ITD_Route(Route.TeamElement.LEFT, START_BACKDROP, DOOR, Field.Alliance.RED, Field.FirstLocation.BACKDROP, DOOR, highwaysIn, pixelsIn ) ;
+         ITD_Route ffr = new ITD_Route(START_SAMPLES, DOOR, Field.FirstLocation.BACKDROP) ;
 
          TrajectorySequence seq = ffr.fullSeq;
 

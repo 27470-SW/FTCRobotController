@@ -49,26 +49,16 @@ public abstract class Route
     protected static final boolean strafeDropX = false;
 
     public Route(Route copyRoute){
-        this(copyRoute.teamElement, copyRoute.startPos, copyRoute.parkPos, copyRoute.alliance, copyRoute.firstLocation, copyRoute.stackHighway, copyRoute.highways, copyRoute.pixelStacks);
+        this(copyRoute.startPos, copyRoute.parkPos, copyRoute.firstLocation);
     }
      public Route(
-                  TeamElement teamElement,
                   PositionOption startPos,
 	 			  Field.Highways parkPos,
-                  Field.Alliance alliance,
-                  Field.FirstLocation firstLocation,
-                  Field.Highways stackHighway,
-                  Field.Highways[] highways,
-                  Field.Highways[] pixelStacks)
+                  Field.FirstLocation firstLocation)
     {
-           this.teamElement = teamElement;
            this.startPos = startPos;
            this.parkPos  = parkPos;
-           this.alliance = alliance;
-           this.highways = highways;
-		   this.pixelStacks = pixelStacks;
            this.firstLocation = firstLocation;
-           this.stackHighway = stackHighway;
 
            botLen = RobotConstants.BOT_LEN;
            botWid = RobotConstants.BOT_WID;
@@ -100,7 +90,7 @@ public abstract class Route
              sf = 0;
              sx = -1;
              flip = Math.toRadians(180);
-             if (startPos == START_BACKDROP)
+             if (startPos == START_SAMPLES)
 			 {
                  /* Blue Right quadrant II */
                  sf = 1;
@@ -121,7 +111,7 @@ public abstract class Route
              sf = -1;
              sx =1;
              flip = Math.toRadians(0);
-             if (startPos == START_STACKS)
+             if (startPos == START_SPECIMENS)
 			 {
                  /* Red Right quadrant IV */
                  sf = 0;
@@ -135,7 +125,7 @@ public abstract class Route
              }
          }
 
-         if (startPos == START_BACKDROP)
+         if (startPos == START_SAMPLES)
          {
              strtY = 0.5 * ITD_Field.tileWidth;
           }
@@ -152,6 +142,7 @@ public abstract class Route
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Put new poses here
+
         startCSRedHigh = new Pose2d(sx * 63.25, 16, flip + sh*Math.toRadians(180));
         startCSRedLow = new Pose2d(sx*63.25, -32, flip + sh*Math.toRadians(180));
         startCBlueHigh = new Pose2d(sx * -63.25, 16, flip + sh*Math.toRadians(0));

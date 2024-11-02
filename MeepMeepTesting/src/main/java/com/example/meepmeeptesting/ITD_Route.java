@@ -12,16 +12,11 @@ import static com.example.meepmeeptesting.Route.Heading.*;
 public class ITD_Route extends Route
 {
   public ITD_Route(
-                          TeamElement teamElement,
                           PositionOption startPos,
 						  Field.Highways parkPos,
-                          Field.Alliance alliance,
-                    Field.FirstLocation firstLocation,
-                    Field.Highways stackToBack,
-                    Field.Highways[] highways,
-                    Field.Highways[] pixelStacks)
+                    Field.FirstLocation firstLocation)
   {
-    super(teamElement, startPos, parkPos, alliance, firstLocation, stackToBack, highways, pixelStacks);
+    super(startPos, parkPos, firstLocation);
   }
 
  public enum preLoadedCone{low,med,high,lowHigh}
@@ -171,39 +166,10 @@ public class ITD_Route extends Route
    {
 
        Pose2d lastPose;
-       DropOnTapeThenBackdrop t1 = new DropOnTapeThenBackdrop(this);
-       t1.makeTraj(teamElement, alliance, startPos, firstLocation, stackHighway);
+       ChristianoRoute t1 = new ChristianoRoute(this);
+       t1.makeTraj(startPos, parkPos, firstLocation);
 
        lastPose = this.getEnd();
-
-//       TimeForPixelRun q1 = new TimeForPixelRun(this, pixelStacks[0]);
-//
-       int highwayIndex = 0;
-       int stackIndex = 0;
-
-       Route circuit = null;
-       for(int i=0; i < RobotConstants.MAX_LOOPS; i++) {
-//
-           MoveToPixelStackFromBackdrop t3 = new MoveToPixelStackFromBackdrop(this);
-           t3.makeTraj(highways[highwayIndex++], pixelStacks[stackIndex],alliance, teamElement, startPos);  //do not increment pixelStack as we want to move to and leave the same stack
-TeamElement dropLocation = TeamElement.RIGHT;
-if(teamElement== TeamElement.RIGHT){
-     dropLocation = TeamElement.LEFT;
-}
-if(teamElement == TeamElement.LEFT && alliance == Field.Alliance.RED && startPos == Field.StartPos.START_BACKDROP)   //wierd hack; ideally we would change this
-{
-    dropLocation = TeamElement.CENTER;
-}
-           MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(this);
-           t4.makeTraj(highways[highwayIndex++], pixelStacks[stackIndex++], dropLocation, alliance);
-//           addFunction(this::dropPixels);
-//           lastPose = circuit.getEnd();
-       }
-//
-//			// time = find total duration of current route
-
-       MoveToPark t5 = new MoveToPark(this);
-       t5.makeTraj(parkPos, alliance);
 
         //Always do this at the end of initTrajectories2
         finalizeTrajSeq();

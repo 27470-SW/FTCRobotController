@@ -305,7 +305,7 @@ public class RobotConstants
         switch (alliance)
         {
           case RED:
-            if (sPos == Field.StartPos.START_STACKS) {
+            if (sPos == Field.StartPos.START_SPECIMENS) {
               IP_IMG_TOP = 0.10;
               IP_IMG_BOT = 0.80;
               IP_IMG_LFT = 0.10;
@@ -314,7 +314,7 @@ public class RobotConstants
             break;
 
           case BLUE:
-            if (sPos == Field.StartPos.START_BACKDROP) {
+            if (sPos == Field.StartPos.START_SAMPLES) {
               IP_IMG_TOP = 0.20;
               IP_IMG_BOT = 0.80;
               IP_IMG_LFT = 0.22;
