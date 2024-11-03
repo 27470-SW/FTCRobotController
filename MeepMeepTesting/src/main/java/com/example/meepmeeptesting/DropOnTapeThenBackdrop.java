@@ -37,7 +37,7 @@ route = constructorRoute;
         }
         this.teamElement = teamElement;
         this.alliance = alliance;
-        qualifierRoute(teamElement, alliance,startPos,firstLocation);
+        //qualifierRoute(teamElement, alliance,startPos,firstLocation);
     }
 
     private void goToBackdrop(Pose2d backdrop){
@@ -83,7 +83,7 @@ route = constructorRoute;
     private void qualifierRoute(Route.TeamElement teamElement, Field.Alliance alliance, PositionOption startPos, Field.FirstLocation firstLocation) {
         if (alliance == Field.Alliance.RED) {
             switch ((Field.StartPos) startPos) {
-                case START_BACKDROP:
+                case START_SAMPLES:
 
                     route.addLocation(route.start, SPLINE, HEAD_LINEAR);
                     switch (teamElement) {
@@ -201,7 +201,7 @@ route = constructorRoute;
                         break;
                     }
                     break;
-                case START_STACKS:
+                case START_SPECIMENS:
                     route.addLocation(route.start, START, HEAD_LINEAR);
                     switch (teamElement) {
                         case LEFT:
@@ -485,7 +485,7 @@ route = constructorRoute;
             }
         } else {
             switch ((Field.StartPos) startPos) {
-                case START_BACKDROP:
+                case START_SAMPLES:
                     route.addLocation(route.start, SPLINE, HEAD_LINEAR);
                     switch (teamElement) {
                         case LEFT:
@@ -581,7 +581,7 @@ route = constructorRoute;
                             break;
                     }
                     break;
-                case START_STACKS:
+                case START_SPECIMENS:
                     route.addLocation(route.start, START, HEAD_LINEAR);
                     switch (teamElement) {
                         case LEFT:
@@ -807,7 +807,7 @@ route = constructorRoute;
             }
         }
 
-        if ((alliance == Field.Alliance.BLUE && startPos == START_BACKDROP)){
+        if ((alliance == Field.Alliance.BLUE && startPos == START_SAMPLES)){
             route.addLocation(route.dropCenterPixelBackwards, LINE, HEAD_LINEAR);
         }
     }
@@ -821,7 +821,7 @@ route = constructorRoute;
 
     protected void firstMovement(Route.TeamElement teamElement, Field.Alliance alliance, PositionOption startPos, Field.FirstLocation firstLocation)
     {
-        if((teamElement ==LEFT &&alliance== Field.Alliance.RED ||teamElement ==RIGHT &&alliance== Field.Alliance.BLUE)  && startPos == START_BACKDROP && firstLocation == BACKDROP){
+        if((teamElement ==LEFT &&alliance== Field.Alliance.RED ||teamElement ==RIGHT &&alliance== Field.Alliance.BLUE)  && startPos == START_SAMPLES && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedHigh,START,HEAD_DEFAULT);
 //            route.addEvent(Route.Action.TANGENT,route.ninetyFive);
             route.addLocation(route.extraPointHigh,SPLINE,HEAD_LINEAR);
@@ -838,7 +838,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel);
             route.addEvent(Route.Action.WAIT, .5);
         }
-        if((teamElement ==RIGHT && alliance== Field.Alliance.RED || teamElement ==LEFT && alliance== Field.Alliance.BLUE) && startPos == START_BACKDROP && firstLocation == BACKDROP){
+        if((teamElement ==RIGHT && alliance== Field.Alliance.RED || teamElement ==LEFT && alliance== Field.Alliance.BLUE) && startPos == START_SAMPLES && firstLocation == BACKDROP){
             route.addLocation(route.start,START,HEAD_DEFAULT);
             route.addLocation(route.teamElementRight,LINE,HEAD_LINEAR);
             route.addFunction(route::armDropSpikePos, .3);
@@ -853,7 +853,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel);
             route.addEvent(Route.Action.WAIT, .5);
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_BACKDROP && firstLocation == BACKDROP){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SAMPLES && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedHigh,START,HEAD_DEFAULT);
             route.addLocation(route.teamElementCenter,LINE,HEAD_LINEAR);
             route.addFunction(route::armDropSpikePos, .3);
@@ -868,7 +868,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel);
             route.addEvent(Route.Action.WAIT, .5);
         }
-        if((teamElement ==LEFT && alliance== Field.Alliance.RED ||teamElement ==RIGHT && alliance== Field.Alliance.BLUE)  && startPos == START_STACKS && firstLocation == BACKDROP){
+        if((teamElement ==LEFT && alliance== Field.Alliance.RED ||teamElement ==RIGHT && alliance== Field.Alliance.BLUE)  && startPos == START_SPECIMENS && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addFunction(route::armDropSpikePos, .3);
             route.addEvent(Route.Action.TANGENT, route.oneHundred);
@@ -883,7 +883,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel );
             route.addEvent(Route.Action.WAIT,.5);
         }
-        if((teamElement ==RIGHT && alliance== Field.Alliance.RED || teamElement==LEFT && alliance== Field.Alliance.BLUE) && startPos == START_STACKS && firstLocation == BACKDROP){
+        if((teamElement ==RIGHT && alliance== Field.Alliance.RED || teamElement==LEFT && alliance== Field.Alliance.BLUE) && startPos == START_SPECIMENS && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addFunction(route::armDropSpikePos, 1.5);
             route.addLocation(route.extraPointLow,LINE,HEAD_LINEAR);
@@ -898,7 +898,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel );
             route.addEvent(Route.Action.WAIT,.5);
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_STACKS && firstLocation == BACKDROP){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SPECIMENS && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addFunction(route::armDropSpikePos, 1);
             route.addLocation(route.teamElementCenterLow,LINE,HEAD_LINEAR);
@@ -912,56 +912,56 @@ route = constructorRoute;
             route.addFunction(route::outPixel );
             route.addEvent(Route.Action.WAIT,.5);
         }
-        if(teamElement ==LEFT && startPos == START_STACKS && firstLocation == PIXEL_WALL){
+        if(teamElement ==LEFT && startPos == START_SPECIMENS && firstLocation == PIXEL_WALL){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(330));
             route.addLocation(route.teamElementLeftLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackRight, SPLINE, HEAD_LINEAR,Math.toRadians(270));
         }
-        if(teamElement ==LEFT && startPos == START_STACKS && firstLocation == PIXEL_CENTER){
+        if(teamElement ==LEFT && startPos == START_SPECIMENS && firstLocation == PIXEL_CENTER){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(330));
             route.addLocation(route.teamElementLeftLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackRight, SPLINE, HEAD_LINEAR,Math.toRadians(270));
             route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement ==LEFT && startPos == START_STACKS && firstLocation == PIXEL_DOOR){
+        if(teamElement ==LEFT && startPos == START_SPECIMENS && firstLocation == PIXEL_DOOR){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(330));
             route.addLocation(route.teamElementLeftLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackRight, SPLINE, HEAD_LINEAR,Math.toRadians(270));
             route.addLocation(route.pickUpPixelStackLeft, LINE, HEAD_LINEAR,Math.toRadians(330));
         }
-        if(teamElement ==RIGHT && startPos == START_STACKS && firstLocation == PIXEL_WALL){
+        if(teamElement ==RIGHT && startPos == START_SPECIMENS && firstLocation == PIXEL_WALL){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addLocation(route.teamElementRightLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackRight, LINE, HEAD_LINEAR,Math.toRadians(130));
         }
-        if(teamElement ==RIGHT && startPos == START_STACKS && firstLocation == PIXEL_CENTER){
+        if(teamElement ==RIGHT && startPos == START_SPECIMENS && firstLocation == PIXEL_CENTER){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(220));
             route.addLocation(route.teamElementRightLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackCenter, LINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement ==RIGHT && startPos == START_STACKS && firstLocation == PIXEL_DOOR){
+        if(teamElement ==RIGHT && startPos == START_SPECIMENS && firstLocation == PIXEL_DOOR){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(220));
             route.addLocation(route.teamElementRightLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackLeft, LINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_STACKS && firstLocation == PIXEL_CENTER){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SPECIMENS && firstLocation == PIXEL_CENTER){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(300));
             route.addLocation(route.teamElementCenterLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_STACKS && firstLocation == PIXEL_DOOR){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SPECIMENS && firstLocation == PIXEL_DOOR){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(300));
             route.addLocation(route.teamElementCenterLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackLeft, SPLINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_STACKS && firstLocation == PIXEL_WALL){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SPECIMENS && firstLocation == PIXEL_WALL){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(330));
             route.addLocation(route.teamElementCenterLow,LINE,HEAD_LINEAR);
