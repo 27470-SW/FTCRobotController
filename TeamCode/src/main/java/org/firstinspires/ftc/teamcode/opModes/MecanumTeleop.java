@@ -85,12 +85,12 @@ public class MecanumTeleop extends InitLinearOpMode
         Pose2d startPose = new Pose2d();
         if(prevOpModeType != BasicBot.OpModeType.AUTO)
         {
-            if (robot.extenderMotor != null){
-                robot.initExMot();
+            if (robot.slides != null){
+                robot.initSlides();
             }
-            if(robot.elbowMotor != null)
+            if(robot.arm != null)
             {
-                robot.initElbMot();
+                robot.initArmMot();
             }
         }
         else
@@ -138,7 +138,7 @@ public class MecanumTeleop extends InitLinearOpMode
     private int ONE_CONSTANT = 1;
 
     void processSensors(){
-        if (robot.colorFindDistance() < ONE_CONSTANT && !pixelDetected){
+        /*if (robot.colorFindDistance() < ONE_CONSTANT && !pixelDetected){
             robot.pixelPieces ++;
             pixelDetected = true;
             if(VERBOSE) {  RobotLog.dd(TAG, "pixel detected: %d, pieces: %d", pixelDetected?1:0, robot.pixelPieces);}
@@ -159,7 +159,7 @@ public class MecanumTeleop extends InitLinearOpMode
 
                 goBrd = 0;
             }
-        }
+        }*/
     }
 
     private void update()
@@ -174,12 +174,6 @@ public class MecanumTeleop extends InitLinearOpMode
 
         poseEstimate = robot.drive.getPoseEstimate();
         processSensors();
-
-        if(robot.elev != null)
-        {
-            lStr = robot.elev.toString();
-        }
-
 
     }
 
@@ -206,8 +200,8 @@ public class MecanumTeleop extends InitLinearOpMode
         dashboard.displayText(l++, String.format(Locale.US,"Mrk Pos %.2f MvRate %.2f ",
                 lastMrkPos, moveAtRate));
         if(null != robot) {
-            if (null != robot.elev) {
-                dashboard.displayText(l++, String.format(Locale.US, "elevator encoding %d", robot.elev.getCurEnc()));
+            if (null != robot.slides) {
+                dashboard.displayText(l++, String.format(Locale.US, "elevator encoding %d", robot.slides.getLiftPos()));
             }
             if (null!= robot.rearDistSensor){
 
@@ -216,7 +210,8 @@ public class MecanumTeleop extends InitLinearOpMode
         }
         dashboard.displayText(l++, String.format(Locale.US, "lyftpowr %4.2f", liftSpd ));
         dashboard.displayText(14, String.format(Locale.US,"SW Ver SC Build 12_8_2022"));
-        dashboard.displayText(l++,String.format(Locale.US, "PixelDistance: %f", robot.colorFindDistance()));
+        //dashboard.displayText(l++,String.format(Locale.US, "PixelDistance: %f", robot.colorFindDistance()));
+        dashboard.displayText(l++, String.format(Locale.US, "arm encoder: %4.2f", robot.arm.getCurEnc() ));
 
 
         if(VERBOSE) RobotLog.dd(TAG, "TEL SHT:%.1f ARM:%.1f INT:%.1f DRV:%.1f",
@@ -261,15 +256,15 @@ public class MecanumTeleop extends InitLinearOpMode
     {
 
 
-        if(robot.elbowMotor == null) return;
+        if(robot.arm == null) return;
         boolean start = gpad2.pressed(ManagedGamepad.Button.START);
-        double lftPwr = gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y)/2;
+        double lftPwr = gpad2.value(ManagedGamepad.AnalogInput.R_STICK_Y);
         /* Move the Elevator to desired HuB level */
-        boolean armLevelUp   = gpad2.just_pressed(ManagedGamepad.Button.D_UP);
-        boolean armLevelDown   = gpad2.just_pressed(ManagedGamepad.Button.D_DOWN);
+       // boolean armLevelUp   = gpad2.just_pressed(ManagedGamepad.Button.D_UP);
+        //boolean armLevelDown   = gpad2.just_pressed(ManagedGamepad.Button.D_DOWN);
         if (lftPwr >= -.1 && lftPwr <= .1)
         {
-            if(robot.elbowMotor.getMode() == RUN_TO_POSITION)
+            if(robot.arm.getMode() == RUN_TO_POSITION)
             {
 
 
@@ -277,10 +272,10 @@ public class MecanumTeleop extends InitLinearOpMode
             else
             {
                 if(joystickUsed = true){
-                    targetEncoder = robot.elbowMotor.getCurEnc() + 50;
+                    targetEncoder = robot.arm.getCurEnc() + 50;
                     joystickUsed = false;
                 }
-                robot.elbowMotor.moveToCnt(targetEncoder, robot.getElSpd(targetEncoder));
+                robot.arm.moveToCnt(targetEncoder, robot.getElSpd(targetEncoder));
 
                 if(VERBOSE) { dashboard.displayText(13, String.format(Locale.US, "Target Encoder %d",targetEncoder));}
             }
@@ -288,7 +283,7 @@ public class MecanumTeleop extends InitLinearOpMode
         }
         else
         {
-            robot.elbowMotor.setMode(RUN_USING_ENCODER);
+            robot.arm.setMode(RUN_USING_ENCODER);
             liftSpd = lftPwr;
             joystickUsed = true;
 
@@ -306,24 +301,17 @@ public class MecanumTeleop extends InitLinearOpMode
 //        if (robot.elbowMotor.getCurEnc() < -2100 && robot.elbowMotor.getCurEnc() > -2200){
 //            stackLvlCnt = 4;
 //        }
-        if (armLevelUp)
+/*        if (armLevelUp)
         {
-            if (stackLvlCnt < RobotConstants.EL_NUM_LEVS -1)
+            if (stackLvlCnt < EL_NUM_LEVS -1)
             {
                 stackLvlCnt++;
-                robot.elbowMotor.moveToLevel(stackLvlCnt, RobotConstants.EL_SPD);
+                robot.arm.moveToLevel(stackLvlCnt, EL_SPD);
 
             }
             else
             {
 
-            }
-            if (stackLvlCnt == 4){
-                robot.extendr(1);
-            }else if(stackLvlCnt == 3){
-                robot.extendr(.5);
-            }else {
-                robot.destendr();
             }
 
             if(VERBOSE) {  dashboard.displayText(13, String.format(Locale.US, "D up Pressed %d",stackLvlCnt));}
@@ -333,30 +321,23 @@ public class MecanumTeleop extends InitLinearOpMode
             if (stackLvlCnt > 0)
             {
                 stackLvlCnt--;
-                robot.elbowMotor.moveToLevel(stackLvlCnt, EL_SPD_DWN);
+                robot.arm.moveToLevel(stackLvlCnt, EL_SPD_DWN);
 
             }
             else
             {
                 stackLvlCnt = EL_NUM_LEVS - 1;
-                robot.elbowMotor.moveToLevel(stackLvlCnt, RobotConstants.EL_SPD);
-            }
-            if (stackLvlCnt == 4){
-                robot.extendr(1);
-            }else if(stackLvlCnt == 3){
-                robot.extendr(.5);
-            }
-            else {
-                robot.destendr();
+                robot.arm.moveToLevel(stackLvlCnt, EL_SPD);
             }
 
             if(VERBOSE) {  dashboard.displayText(13, String.format(Locale.US, "D down Pressed %d",stackLvlCnt));}
         }
-        if (robot.elbowMotor.getMode() != RUN_TO_POSITION)
+ */
+        if (robot.arm.getMode() != RUN_TO_POSITION)
         {
             if (
-                    (liftSpd <= 0 && robot.elbowMotor.getCurEnc() > EL_MIN_ENCODER ) ||
-                            (liftSpd >= 0 && robot.elbowMotor.getCurEnc() < EL_MAX_ENCODER)
+                    (liftSpd <= 0 && robot.arm.getCurEnc() > EL_MIN_ENCODER ) ||
+                            (liftSpd >= 0 && robot.arm.getCurEnc() < EL_MAX_ENCODER)
             )
             {
                 double locSpeedLimit = 1;
@@ -371,135 +352,62 @@ public class MecanumTeleop extends InitLinearOpMode
 //                    }
 //                }
 
-                robot.elbowMotor.moveAtControlRate(RobotConstants.EL_SPD * liftSpd * locSpeedLimit);
+                robot.arm.moveAtControlRate(EL_SPD * liftSpd * locSpeedLimit);
             }
             else
             {
-                robot.elbowMotor.moveAtControlRate(0);
+                robot.arm.moveAtControlRate(0);
             }
 
         }
-
-        //To correct extender motor not keeping encoder counts
-        double elb = robot.elbowMotor.getCurEnc();
-        if (elb>=-100){
-            robot.extenderMotor.moveToCnt(-20, .1);
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    robot.extenderMotor.setMode(STOP_AND_RESET_ENCODER);
-                    robot.extenderMotor.setMode(RUN_USING_ENCODER);
-                }
-            };
-            timer.schedule(task, 240);
-        }
-
-        robot.setWristServo(gpad2.value(ManagedGamepad.AnalogInput.R_STICK_Y));
+/*
+        robot.setClawPos(gpad2.value(ManagedGamepad.AnalogInput.R_STICK_Y));
             if(gpad2.pressed(ManagedGamepad.Button.D_RIGHT))
             {
-                robot.setWristServo(.2);
+                robot.setClawPos(.2);
                 if(VERBOSE) { dashboard.displayText(12, String.format(Locale.US, "manually adjusting wrist"));}
             }
             if(gpad2.pressed(ManagedGamepad.Button.D_LEFT))
             {
-                robot.setWristServo(-.2);
+                robot.setClawPos(-.2);
                 if(VERBOSE) { dashboard.displayText(12, String.format(Locale.US, "manually adjusting wrist"));}
             }
-            if(elb >-100 && !wristRestrictionsOff)
-            {
-                /* Stowed position */
-             robot.wristServo.moveTo(.195);
-//                robot.wristServo.makeDeadServo();
-            } else if(elb > -750  && robot.elbowMotor.getCurSpd() >= .1 && wristRestrictionsOff){
-//                robot.wristServo.makeDeadServo();
-            }else if(elb >=-950 && elb <=-850 && !wristRestrictionsOff)
-            {
-                /* before it hits ground on the way to being stowed */
-                robot.wristServo.moveTo(1-.43);
-            }
-            else if(robot.elbowMotor.getCurEnc() < -1500 && robot.elbowMotor.getCurEnc() > -1600  && !wristRestrictionsOff)
-            {
-                /* Back drop Level 1 */
-                robot.wristServo.moveTo(0.675);
-            }
-            else if(robot.elbowMotor.getCurEnc() < -1650 && robot.elbowMotor.getCurEnc() > -1750  && !wristRestrictionsOff)
-            {
-                /* Back drop Level 2 */
-                robot.wristServo.moveTo(0.76);
-            }
-            else if(robot.elbowMotor.getCurEnc() < -1820 && robot.elbowMotor.getCurEnc() > -1930  && !wristRestrictionsOff)
-            {
-                /* Back drop Level 3 with extender all the way out */
-                robot.wristServo.moveTo(1-.065);
-            }
-            //the two else ifs below this comment should always be last
-            else if(elb <= -850){
-//            robot.wristServo.moveTo(0.5);
-            }
-            else {
-                double a = Math.pow(elb,2)* 0;
-                double b = .0003 * elb;
-                double c = .73;
-                double d = robot.elbowMotor.getCurSpd() * .000;
-                robot.wristServo.moveTo( 1-(a + b + c + d));
-                if(VERBOSE) {  dashboard.displayText(12, String.format(Locale.US, "a(%f) + b(%f) + c(%f) + d(%f)= %f",a,b,c,d,a+b+c+d));}
-
-            }
-
-        if(VERBOSE) { dashboard.displayText(8, String.format(Locale.US, "extender motor: %d", robot.extenderMotor.getCurEnc()));
-        dashboard.displayText(15, String.format(Locale.US, "arm level: %d, encoder: %d, power: %f ",robot.armLevel,robot.elbowMotor.getCurEnc(),robot.elbowMotor.getPwr()));}
+*/
+        if(VERBOSE) { dashboard.displayText(8, String.format(Locale.US, "extender motor: %d", robot.slides.getLiftPos()));
+        dashboard.displayText(15, String.format(Locale.US, "arm level: %d, encoder: %d, power: %f ",robot.armLevel,robot.arm.getCurEnc(),robot.arm.getPwr()));}
     }
 
 
  
     private void controlClaw()
     {
-//        double openClaw = gpad2.value(ManagedGamepad.AnalogInput.R_TRIGGER_VAL);
-//        double closeClaw = gpad2.value(ManagedGamepad.AnalogInput.L_TRIGGER_VAL);
-//
-//        if (robot.claw != null)
-//        {
-//            if (openClaw != 0)
-//            {
-//                robot.claw.openClaw();
-//            }
-//            if (closeClaw != 0)
-//            {
-//                robot.claw.closeClaw();
-//            }
-//        }
+       double openClaw = gpad2.value(ManagedGamepad.AnalogInput.R_TRIGGER_VAL);
+        double closeClaw = gpad2.value(ManagedGamepad.AnalogInput.L_TRIGGER_VAL);
+
+        if (robot.claw != null)
+        {
+            if (openClaw != 0)
+            {
+                robot.claw.openClaw(openClaw);
+            }
+            if (closeClaw != 0)
+            {
+                robot.claw.closeClaw(closeClaw);
+            }
+        }
 
     }
-
+    private void controlSlides()
+    {
+        double lftPwr = gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y);
+        robot.slides.setLiftPwr(lftPwr);
+    }
 
     private Pose2d tempPose = new Pose2d();
     private int goLeft = 0;
     private int goRight = 0;
     private int goBrd = 0;
     private double brdDis;
-
-
-
-
-
-
-
-
-
-
-
-    private double getBrdDis(){
-        if (robot.elbowMotor.getCurEnc() < -1600 && robot.elbowMotor.getCurEnc() > -1675){
-            return 15.5;
-        }else if (robot.elbowMotor.getCurEnc() < -1700 && robot.elbowMotor.getCurEnc() > -1850){
-            return 12;
-        }else if (robot.elbowMotor.getCurEnc() < -1850){
-            return 9;
-        }else {
-            return 20;
-        }
-    }
 
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
     double  drive           = 0;        // Desired forward power/speed (-1 to +1)
@@ -530,10 +438,6 @@ public class MecanumTeleop extends InitLinearOpMode
         boolean goto1 = gpad1.just_pressed(ManagedGamepad.Button.X);
         boolean goto2 = gpad1.just_pressed(ManagedGamepad.Button.A) && !gpad1.pressed(ManagedGamepad.Button.START);
         boolean goto3 = gpad1.just_pressed(ManagedGamepad.Button.B) && !gpad1.pressed(ManagedGamepad.Button.START);
-
-
-
-
 
 //        boolean algn = gpad1.just_pressed(ManagedGamepad.Button.A) && !strt;
 //        boolean strf = gpad1.just_pressed(ManagedGamepad.Button.B) && !strt;
@@ -643,7 +547,7 @@ public class MecanumTeleop extends InitLinearOpMode
         if(Math.abs(lr)+Math.abs(fb) > .25){        //if joystick is being used
            clearDriverOveride();
         }
-
+/*
         if (rightOne){
             goRight = 1;
             goLeft = 0;
@@ -717,6 +621,7 @@ public class MecanumTeleop extends InitLinearOpMode
                     // This tag is NOT in the library, so we don't have enough information to track to it.
                     telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                 }
+
             }
 
 
@@ -750,6 +655,7 @@ public class MecanumTeleop extends InitLinearOpMode
 //        }else {
             mechDrv.setWeightedDrivePower(velPose);
 //        }
+        */
     }
     private void clearDriverOveride(){
         goRight = 0;
@@ -958,6 +864,7 @@ public class MecanumTeleop extends InitLinearOpMode
 //         * <p>
 //         * Positive Yaw is counter-clockwise
 //         */
+
         public void moveRobot(double x, double y, double yaw) {
             // Calculate wheel powers.
             double leftFrontPower    =  x -y -yaw;
@@ -1118,15 +1025,14 @@ public class MecanumTeleop extends InitLinearOpMode
 //        }
 
 //        robot.setElbowMotor(gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y));
-        robot.setExtenderPower(gpad2.value(ManagedGamepad.AnalogInput.R_TRIGGER_VAL)-gpad2.value(ManagedGamepad.AnalogInput.L_TRIGGER_VAL));
+//        robot.setExtenderPower(gpad2.value(ManagedGamepad.AnalogInput.R_TRIGGER_VAL)-gpad2.value(ManagedGamepad.AnalogInput.L_TRIGGER_VAL));
 //        dashboard.displayText(11, String.format(Locale.US, " LEFT TRIGGER(%f) - RIGHT TRIGGER(%f) = %f",gpad2.value(ManagedGamepad.AnalogInput.R_TRIGGER_VAL),gpad2.value(ManagedGamepad.AnalogInput.L_TRIGGER_VAL),gpad2.value(ManagedGamepad.AnalogInput.R_TRIGGER_VAL)-gpad2.value(ManagedGamepad.AnalogInput.L_TRIGGER_VAL)));
-        if(VERBOSE) { dashboard.displayText(11, String.format(Locale.US, "wrist angle: %f",robot.wristServo.getPosition()));}
 
 //        robot.elbowMotor.moveToLevel();
 
 
 
-        if(gpad2.just_pressed(ManagedGamepad.Button.L_BUMP))
+ /*       if(gpad2.just_pressed(ManagedGamepad.Button.L_BUMP))
         {
             robot.toggleBucketServoForward();
             robot.pixelPieces --;
@@ -1203,10 +1109,6 @@ public class MecanumTeleop extends InitLinearOpMode
             wristRestrictionsOff = true;
         }
         /* disable triangele button during Teleop to prevent accidental Drone Deployment */
-        if(gpad2.just_pressed(ManagedGamepad.Button.Y) && enabledDroneLaunching==true)
-        {
-            robot.droneLauncherServo.moveTo(1.0);
-        }
 
 //       if(gpad2.just_pressed(ManagedGamepad.Button.D_DOWN)){
 //            robot.armLevelDown();
@@ -1217,6 +1119,7 @@ public class MecanumTeleop extends InitLinearOpMode
 //        }
         controlArm();
 
+        controlSlides();
 
 
         opTimer.reset();

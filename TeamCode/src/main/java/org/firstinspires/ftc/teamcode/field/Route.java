@@ -1325,59 +1325,43 @@ public class Route
     }
 
      public void armDrivePos(){
-        robot.elbowMotor.moveToLevel(1,1);
-         robot.wristServo.moveTo(.52);
+        robot.arm.moveToLevel(1,1);
      }
      public void armDropSpikePos(){
-         robot.elbowMotor.moveToCnt(-800,1);
-         robot.wristServo.moveTo(.52);
+         robot.arm.moveToCnt(-800,1);
+
 }
     public void outFrontPixel(){
-        Timer timer = new Timer();
-        robot.sweeperServo1.moveAtRate(-0.2);
-        robot.sweeperServo2.moveAtRate(-0.2);
-        robot.intakesOn = true;
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                robot.intakesOff();
-                armDropSpikePos();
-            }
-        };
-        timer.schedule(task, 2000);
+
     }
      public void armToDrop(){
-        robot.elbowMotor.moveToCnt(-1450,1);
-        robot.wristServo.moveTo(0.585);
+
      }
 
     public void armToDropMid(){
-        robot.elbowMotor.moveToCnt(-1540,1);
-        robot.wristServo.moveTo(0.62);
+
     }
 
     public void armToDropHigher(){
-        robot.elbowMotor.moveToCnt(-1650,1);
-        robot.wristServo.moveTo(0.700);
+
     }
     public void armToIntake(){
-        robot.elbowMotor.moveToLevel(0,1);
-        robot.wristServo.moveTo(.195);
+
     }
      public void outPixel(){
          if(VERBOSE) { RobotLog.dd(TAG, "in outPixel");}
-        robot.toggleBucketServoForward();
+
      }
     public void outPurplePixel(){
         robot.purplePixelDrop = true;
-        robot.toggleBucketServoForward();
+
     }
 
     public void intakes(){
-        robot.toggleIntakes();
+
     }
      public void intakesSlow(){
-        robot.toggleIntakes(.1);
+
      }
 
      public void addFunction(MarkerCallback callback)

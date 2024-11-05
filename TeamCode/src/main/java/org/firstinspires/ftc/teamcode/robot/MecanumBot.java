@@ -12,7 +12,6 @@ import static org.firstinspires.ftc.teamcode.robot.RobotConstants.WR_SENSE;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -33,16 +32,20 @@ public class MecanumBot extends BasicBot
 
     //public Claw claw = null;
     //Still need this for now for backward compatibility
-    public MotorComponent elev;
 
-    public MotorComponent elbowMotor = null;
-    public MotorComponent extenderMotor = null;
-    public MotorComponent bucketServo = null;
-    public ServoComponent wristServo = null;
-    public ServoComponent droneLauncherServo = null;
-    public MotorComponent sweeperServo1 = null;
-    public MotorComponent sweeperServo2 = null;
-    public Intake intake = null;
+    // public MotorComponent elev;
+
+    // public MotorComponent elbowMotor = null;
+    //public MotorComponent extenderMotor = null;
+    //public MotorComponent bucketServo = null;
+    //public ServoComponent wristServo = null;
+    //public ServoComponent droneLauncherServo = null;
+    //public MotorComponent sweeperServo1 = null;
+    //public MotorComponent sweeperServo2 = null;
+    //public Intake intake = null;
+public Claw claw =null;
+public Lifter slides=null;
+public MotorComponent arm=null;
 
     public double logIntakeCurSpd = 0.0;
 
@@ -154,16 +157,20 @@ public class MecanumBot extends BasicBot
         //claw.maxClosed = .85;
         //claw.maxOpen = .35;
 
-        elbowMotor = new MotorComponent("elbow", hwMap);
-        extenderMotor = new MotorComponent("extend", hwMap);
-        bucketServo = new MotorComponent("bucket", hwMap);
-        wristServo = new ServoComponent("wrist", hwMap);
-        droneLauncherServo = new ServoComponent("drone", hwMap);
-        sweeperServo1 = new MotorComponent("sweeper1", hwMap);
-        sweeperServo2 = new MotorComponent("sweeper2", hwMap);
-        intake = new Intake(hwMap);
+        //elbowMotor = new MotorComponent("elbow", hwMap);
+        //extenderMotor = new MotorComponent("extend", hwMap);
+        //bucketServo = new MotorComponent("bucket", hwMap);
+        //wristServo = new ServoComponent("wrist", hwMap);
+        //droneLauncherServo = new ServoComponent("drone", hwMap);
+        //sweeperServo1 = new MotorComponent("sweeper1", hwMap);
+        //sweeperServo2 = new MotorComponent("sweeper2", hwMap);
+        //intake = new Intake(hwMap);
 
-        redLED1 = hwMap.get(DigitalChannel.class, "red1");
+        claw = new Claw(hwMap);
+        slides = new Lifter( "slide1", "slide2",hwMap);
+        arm = new MotorComponent("arm",hwMap);
+
+        /*redLED1 = hwMap.get(DigitalChannel.class, "red1");
         greenLED1 = hwMap.get(DigitalChannel.class, "green1");
         redLED2 = hwMap.get(DigitalChannel.class, "red2");
         greenLED2 = hwMap.get(DigitalChannel.class, "green2");
@@ -215,10 +222,22 @@ public class MecanumBot extends BasicBot
             RobotLog.dd(TAG,"drone launcher was init");
         }
         intake.init();
+        */
+         claw.init();
+         arm.init(RobotConstants.ARM_MOT,1);
+        arm.setDir(RobotConstants.EXT_DIR);
+        arm.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
+        arm.setLevelOffset(
+                RobotConstants.ARM_LEVS[0],
+                RobotConstants.ARM_LEVS[1],
+                RobotConstants.ARM_LEVS[2],
+                RobotConstants.ARM_LEVS[3],
+                RobotConstants.ARM_LEVS[4]);
+        armLevel =0;
+        slides.init();
+        slides.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
+        //elbowMotor.init(RobotConstants.EL_EXT_M, -2);
 
-
-        bucketServoOn = servoState.STOPPED;
-        intakesOn = false;
     }
 
     private final ElapsedTime updTimer = new ElapsedTime();
@@ -228,13 +247,17 @@ public class MecanumBot extends BasicBot
         super.update();
         double botTime = updTimer.milliseconds();
         updTimer.reset();
-        if(elbowMotor != null)
+        if(claw != null)
         {
-            elbowMotor.update();
+            claw.update();
         }
-        if(extenderMotor != null)
+        if(slides != null)
         {
-            extenderMotor.update();
+            slides.update();
+        }
+        if(arm != null)
+        {
+            arm.update();
         }
         double lftTime = updTimer.milliseconds();
         updTimer.reset();
@@ -251,7 +274,7 @@ public class MecanumBot extends BasicBot
     }
 
     public void ledUpdate(){
-        switch (pixelPieces){
+        /*switch (pixelPieces){
             case 2:
                 greenLED1.setState(false);
                 redLED1.setState(false);
@@ -279,42 +302,25 @@ public class MecanumBot extends BasicBot
                 break;
 
 
-        }
+        }*/
     }
 
-   public void initElbMot () throws InterruptedException {
-        elbowMotor.moveToCnt(1000,.18);
+   public void initArmMot() throws InterruptedException {
+        arm.moveToCnt(1000,.18);
         Thread.sleep(3000);
-        elbowMotor.setMode(STOP_AND_RESET_ENCODER);
-        elbowMotor.setMode(RUN_USING_ENCODER);
-        elbowMotor.moveToLevel(0,EL_SPD);
+        arm.setMode(STOP_AND_RESET_ENCODER);
+        arm.setMode(RUN_USING_ENCODER);
+        arm.moveToLevel(0,EL_SPD);
     }
-    public void initExMot () throws InterruptedException {
-        extenderMotor.moveToCnt(-2500,.3);
-        Thread.sleep(4000);
-        extenderMotor.setMode(STOP_AND_RESET_ENCODER);
-        extenderMotor.setMode(RUN_USING_ENCODER);
-        extenderMotor.moveToCnt(EX_MIN,.18);
+    public void initClaw() {
+        claw.setClawPos(0);
     }
-
-    public void setElbowMotor(double input){
-        if(Math.abs( input) > 0.125) {
-            elbowMotor.moveDist(input*20,  input);
-           // elbowMotor.moveTo();
-        }
-        else {
-            elbowMotor.stop();
-        }
+    public void initSlides() throws InterruptedException {
+       slides.initPos();
     }
 
-
-    public void setWristServo(double input){
-        if(Math.abs( input) > 0.125) {
-            wristServo.moveAmount(-input * WR_SENSE );
-        }
-        else {
-
-        }
+    public void setClawPos(double input){
+            claw.setClawPos(input * WR_SENSE );
     }
 
     boolean extenderStopped = true;
@@ -343,128 +349,26 @@ public class MecanumBot extends BasicBot
     private servoState bucketServoOn;
     Timer timer = new Timer();
 
-
-    public void toggleBucketServoForward(){
-        if(bucketServoOn == servoState.FORWARD) {
-            timer.cancel();
-            timer = new Timer();
-            TimerTask bucketTask = new TimerTask() {
-                @Override
-                public void run() {
-                    setBucketServo(servoState.STOPPED);
-                }
-            };
-            timer.schedule(bucketTask, 470);
-        }else if(purplePixelDrop){
-            setBucketServo(servoState.FORWARD);
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    setBucketServo(servoState.STOPPED);
-                }
-            };
-            timer.schedule(task, 650);
-            purplePixelDrop = false;
-        }
-        else{
-            setBucketServo(servoState.FORWARD);
-            timer = new Timer();
-            TimerTask bucketTask = new TimerTask() {
-                @Override
-                public void run() {
-                    setBucketServo(servoState.STOPPED);
-                }
-            };
-            timer.schedule(bucketTask, 465);
-        }
-
-    }
-
-    public void toggleBucketServoBackward() {
-        if(bucketServoOn == servoState.BACKWARD)
-            setBucketServo(servoState.STOPPED);
-        else
-            setBucketServo(servoState.BACKWARD);
-    }
 public  int armLevel;
     public void armLevelUp(){
         if(armLevel != EL_NUM_LEVS){
             armLevel ++;
-            elbowMotor.moveToLevel(armLevel, 1);
+            arm.moveToLevel(armLevel, 1);
         }
     }
 
     public void armLevelDown() {
         if(armLevel != 0){
             armLevel--;
-            elbowMotor.moveToLevel(armLevel, -1);
+            arm.moveToLevel(armLevel, -1);
         }
-    }
-
-    public void setBucketServo(servoState state){
-        RobotLog.dd(TAG, "in setBucketServo: %s", state);
-        bucketServoOn = state;
-        switch (state){
-            case STOPPED:
-                bucketServo.moveAtRate(0);
-                break;
-            case FORWARD:
-                bucketServo.moveAtRate(1);
-                break;
-            case BACKWARD:
-                bucketServo.moveAtRate(-1);
-                break;
-
-        }
-    }
-
-
-
-    public void extendr(double level){
-//        extenderMotor.moveToLevel(1,1);
-        if(level > 1){
-            level = 1;
-        }
-        extenderMotor.moveToCnt((int)Math.round(EX_MAX * level), 1);
-    }
-
-    public void destendr(){
-        extenderMotor.moveToCnt(0, 1);
     }
 
     public double getElSpd(int targetEncoder){
-        if(targetEncoder > elbowMotor.getCurEnc()){
+        if(targetEncoder > slides.getLiftPos()){
             return EL_SPD_DWN;
         }else {
             return EL_SPD;
-        }
-    }
-    public boolean intakesOn;
-
-    public void intakesOff(){
-        if(intakesOn){
-            toggleIntakes();
-        }
-    }
-
-    public void toggleIntakes(){
-        toggleIntakes(0.5);
-    }
-
-    public void toggleIntakes(double speed){
-        intakesOn = !intakesOn;
-
-
-        if(intakesOn) {
-            sweeperServo1.moveAtRate(speed);
-            sweeperServo2.moveAtRate(speed);
-            intake.setPwr(1);
-            setBucketServo(servoState.BACKWARD);
-        }else{
-            sweeperServo1.moveAtRate(0);
-            sweeperServo2.moveAtRate(0);
-            intake.stop();
-            setBucketServo(servoState.STOPPED);
         }
     }
 

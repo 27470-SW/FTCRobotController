@@ -14,7 +14,7 @@ public class Claw {
     {
         this.hwMap = map;
         clawServo = hwMap.get(Servo.class, "clawservo");
-        something = 1;
+        percent = 1;
         maxOpen = 0;
         maxClosed = 1;
 
@@ -22,32 +22,31 @@ public class Claw {
 
     public void setClawPos(double pos)
     {
+        pos = 1-pos;
         if(clawServo == null) return;
         clawServo.setPosition(pos);
     }
 
 public void update(){
-        setClawPos(something);
+        setClawPos(percent);
 }
 
-    public void openClaw(){
- //       something = something - .1;
- //       if (something < maxOpen){
- //           something = maxOpen
- //           ;}
-
-        something = maxOpen;
-        setClawPos(something);
+    public void openClaw(double val){
+        percent = percent - .007*val;
+        if (percent > maxClosed)
+        {
+            percent = maxClosed;
+        }
+        setClawPos(percent);
     }
 
-    public void closeClaw(){
-        something = something + .1;
-        if (something > maxClosed){
-            something = maxClosed
-            ;}
-        something = maxClosed;
-        setClawPos(something);
-
+    public void closeClaw(double val){
+        percent = percent + .007*val;
+        if (percent > maxClosed)
+        {
+            percent = maxClosed;
+        }
+        setClawPos(percent);
     }
 
 
@@ -72,7 +71,7 @@ public void update(){
         }
         return success;
     }
-    public double something;
+    public double percent;
     private static final String TAG = "claw";
     public Servo clawServo;
     protected HardwareMap hwMap;

@@ -267,12 +267,7 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
 
     private void setupBotComponents()
     {
-        if(robot.elev != null)
-        {
-            robot.elev.setMode(STOP_AND_RESET_ENCODER);
-            robot.elev.setMode(RUN_USING_ENCODER);
-            RobotLog.dd(TAG,"Elev encoders reset \n %s", robot.elev.toString());
-        }
+
 
     }
 
@@ -315,19 +310,18 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
         BasicBot.curOpModeType = BasicBot.OpModeType.AUTO;
 
         robot.init(this, chas, true);
-        if(robot.elbowMotor != null)
+        try {
+        if(robot.arm != null)
         {
-            try {
-                if (robot.extenderMotor != null){
-                    robot.initExMot();
-                }
-                robot.initElbMot();
-            } catch (InterruptedException e) {
-                RobotLog.dd(TAG, "Stopped mid init for arm encoder reset");
-            }
+
+                robot.initArmMot();
+
         }
-        if(robot.wristServo != null) {
-//            robot.wristServo.moveTo(.195);
+        }catch (InterruptedException e) {
+            RobotLog.dd(TAG, "Stopped mid init for arm encoder reset");
+        }
+        if(robot.claw != null) {
+            robot.initClaw();
         }
         try {
             initAprilTag();

@@ -10,12 +10,18 @@ import java.util.Locale;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EX_MIN;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.INIT_SLIDE_POWER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.SLIDE_POWER;
+
 
 public class Lifter
 {
-    public Lifter(String cfgName, HardwareMap map)
+    public Lifter(String cfgName,String cfgName2, HardwareMap map)
     {
         this.name  = cfgName;
+        this.name2 = cfgName2;
         this.hwMap = map;
     }
 
@@ -25,11 +31,14 @@ public class Lifter
         try
         {
             liftMotor = hwMap.get(DcMotorEx.class, name);
-            liftMotor.setDirection(RobotConstants.LF_ARM_ROT_DIR);
-            setLiftPwr(0.0);
+            liftMotor.setDirection(RobotConstants.SLIDE1_DIR);
             //setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             setMode(RUN_USING_ENCODER);
-            RobotLog.dd(TAG, "Lifter.init Found liftMotor " + name);
+            liftMotor2 = hwMap.get(DcMotorEx.class, name2);
+            liftMotor2.setDirection(RobotConstants.SLIDE2_DIR);
+            setLiftPwr(0.0);            //setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            setMode(RUN_USING_ENCODER);
+            RobotLog .dd(TAG, "Lifter.init Found liftMotor " + name);
             success = true;
         }
         catch (Exception ignored)
@@ -37,6 +46,7 @@ public class Lifter
         }
         try
         {
+            //made for one servo
             liftServo = hwMap.get(CRServo.class, name);
             liftServo.setDirection(RobotConstants.LF_ARM_ROT_DIR);
             setLiftPwr(0.0);
@@ -47,9 +57,30 @@ public class Lifter
         {
         }
 
-        if(!success) RobotLog.ee(TAG, "ERROR lifter - no liftMotor or liftServo " + name);
+        if(!success) RobotLog.ee(TAG, "ERROR lifter - no liftMotor or liftServo " + name + " or " + name2);
 
         return success;
+    }
+
+    public void initPos()throws InterruptedException{
+        liftMotor2.setPower(INIT_SLIDE_POWER);
+        liftMotor2.setTargetPosition(-2500);
+        liftMotor.setPower(INIT_SLIDE_POWER);
+        liftMotor.setTargetPosition(-2500);
+        Thread.sleep(2000);
+        liftMotor2.setMode(STOP_AND_RESET_ENCODER);
+        liftMotor2.setMode(RUN_TO_POSITION);
+        liftMotor2.setPower(SLIDE_POWER);
+        liftMotor2.setTargetPosition(EX_MIN);
+        liftMotor.setMode(STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(RUN_TO_POSITION);
+        liftMotor.setPower(SLIDE_POWER);
+        liftMotor.setTargetPosition(EX_MIN);
+    }
+
+    public int getLiftPos()
+    {
+       return liftMotor.getCurrentPosition();
     }
 
     //pos in counts
@@ -57,6 +88,7 @@ public class Lifter
     {
         tgtCnt = pos;
         if (liftMotor != null) liftMotor.setTargetPosition(pos);
+        if (liftMotor2 != null) liftMotor2.setTargetPosition(pos);
 
         if (lastRunMode != RUN_TO_POSITION)
         {
@@ -64,9 +96,11 @@ public class Lifter
         }
 
         if (liftMotor != null)
+            if (liftMotor2 != null)
         {
             setLiftPwr(RobotConstants.LF_ARM_ROT_SPD);
         }
+
     }
 
     public void setLiftSpd(double pwr)
@@ -91,6 +125,7 @@ public class Lifter
 
 
             if (liftMotor != null)
+                if (liftMotor2 != null)
             {
                 setLiftPwr(pwr * RobotConstants.LF_ARM_ROT_SPD);
             }
@@ -100,8 +135,10 @@ public class Lifter
     public void setMode(DcMotor.RunMode mode)
     {
         if (liftMotor != null && mode != lastRunMode)
+            if (liftMotor2 != null && mode != lastRunMode)
         {
             liftMotor.setMode(mode);
+            liftMotor2.setMode(mode);
             lastRunMode = mode;
         }
     }
@@ -110,6 +147,7 @@ public class Lifter
     {
         if(cmdPwr == pwr) return;
         if (liftMotor != null) liftMotor.setPower(pwr);
+        if (liftMotor2 != null) liftMotor2.setPower(pwr);
         if (liftServo != null) liftServo.setPower(pwr);
         cmdPwr = pwr;
 
@@ -118,7 +156,11 @@ public class Lifter
 
     public void update()
     {
-        if(liftMotor != null) lftCnts = liftMotor.getCurrentPosition();
+        if(liftMotor != null){
+            lftCnts = liftMotor.getCurrentPosition();
+            if(liftMotor2 != null) if (lftCnts != liftMotor2.getCurrentPosition()) RobotLog .dd(TAG, "Warning slides not on same motor count:slide1 = " + lftCnts+" slide2 = "+liftMotor2.getCurrentPosition());;
+        }
+
     }
 
     public String toString()
@@ -129,9 +171,11 @@ public class Lifter
     }
 
     private DcMotorEx liftMotor;
+    private DcMotorEx liftMotor2;
     private CRServo liftServo;
     protected HardwareMap hwMap;
     protected final String name;
+    protected final String name2;
 
     private DcMotor.RunMode lastRunMode;
     private int tgtCnt = 0;

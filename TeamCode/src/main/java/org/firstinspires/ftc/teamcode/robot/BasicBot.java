@@ -317,7 +317,7 @@ public class BasicBot
 
         try
         {
-            imu = hwMap.get(IMU.class, "imu-new");
+            imu = hwMap.get(IMU.class, "imu");
             if(initDirSensor)
             {
                 IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(

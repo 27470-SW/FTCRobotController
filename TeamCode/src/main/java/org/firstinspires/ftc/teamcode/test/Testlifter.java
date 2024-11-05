@@ -29,7 +29,8 @@ public class Testlifter extends InitLinearOpMode {
     public void runOpMode() {
         initCommon(this);
 
-        Lifter lifter = new Lifter("liftrot", hardwareMap);
+        Lifter lifter = new Lifter("slide1","slide2" ,hardwareMap);
+
         lifter.init();
         Dumper dumper = new Dumper(hardwareMap);
         dumper.init();

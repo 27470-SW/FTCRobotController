@@ -70,18 +70,21 @@ public class RobotConstants
   public static double IN_ACT_DIST = 3.0;
 
   //Elev
-
+  public static double INIT_SLIDE_POWER = 0.05;
+  public static int      ARM_NUM_LEVS=3;
   public static int      EL_NUM_LEVS=3;
   public static int      EX_NUM_LEVS=2;
   public static double   EL_MAX_IPS = 1.0;
-  public static double   EL_SPD = 1.0;
+  public static double   EL_SPD = 0.1;
   public static double   EL_SPD_DWN = .3333333;
   public static double[] EL_LEVS;
+  public static double[] ARM_LEVS;
   public static double[] EX_LEVS;
   public static int EL_MAX_ENCODER;
   public static int EL_MIN_ENCODER = 10;
   public static int   EX_MAX = 3200;
   public static int   EX_MIN = 6;
+  public static double   SLIDE_POWER = .8;
   public static DcMotorSimple.Direction EL_DIR = DcMotorSimple.Direction.REVERSE;
 
   public static DcMotorSimple.Direction EXT_DIR = DcMotorSimple.Direction.FORWARD;
@@ -89,7 +92,13 @@ public class RobotConstants
     public static DcMotorSimple.Direction SWP_DIR2 = DcMotorSimple.Direction.FORWARD;
   public static Motors.MotorModel EL_EXT_MOT = Motors.MotorModel.GOBILDA_5202_139;
   public static Motors.MotorModel EL_EX_MOT = Motors.MotorModel.GOBILDA_5202_5_2;
-    public static Double SWP_SRV = 4.8;
+  public static Motors.MotorModel ARM_MOT = Motors.MotorModel.GOBILDA_5202_50_9;
+
+  public static DcMotorSimple.Direction ARM_DIR = DcMotorSimple.Direction.FORWARD;
+    public static DcMotorSimple.Direction SLIDE1_DIR = DcMotorSimple.Direction.FORWARD;
+  public static DcMotorSimple.Direction SLIDE2_DIR = DcMotorSimple.Direction.REVERSE;
+
+  public static Double SWP_SRV = 4.8;
 
   public static DcMotorSimple.Direction TR_DIR = DcMotorSimple.Direction.FORWARD;
   public static double TR_SPD_SCL = 0.5;
@@ -353,60 +362,70 @@ public class RobotConstants
     RobotLog.dd(TAG, "RobotConstants.init() " + chas);
 
     Field.StartPos sPos = (Field.StartPos)startPos;
+    EL_MIN_ENCODER = 10;
+    EL_MAX_ENCODER = 1256;
 
+    EL_SPD = 0.8;
+
+    EL_NUM_LEVS = 5;
+    EL_LEVS = new double[EL_NUM_LEVS];
+    EL_LEVS[0] = 0.0;
+    EL_LEVS[1] = 5.00;
+    EL_LEVS[2] = 7.83;
+    EL_LEVS[3] = 9;
+    //EL_LEVS[4] = 1.63;
+    ARM_NUM_LEVS = 5;
+    ARM_LEVS = new double[ARM_NUM_LEVS];
+    ARM_LEVS[0] = 0.0;
+    ARM_LEVS[1] = 1.00;
+    ARM_LEVS[2] = 4.83;
+    ARM_LEVS[3] = 7;
+    ARM_LEVS[4] = 9;
+
+    IP_IMG_TOP = 0.20;
+    IP_IMG_BOT = 0.80;
+    IP_IMG_LFT = 0.05;
+    IP_IMG_RGT = 0.95;
+
+    DT_LDIR = DcMotorSimple.Direction.REVERSE;
+    DT_RDIR = DcMotorSimple.Direction.FORWARD;
+
+    BOT_LEN = 13.125;
+    BOT_WID = 13.125;
+
+    MAX_VEL = 50;
+    LATERAL_MULTIPLIER = 1.122;
+    DT_MOTOR = Motors.MotorModel.GOBILDA_5202_19_2;
+    DT_EXT_GEAR_RATIO = 0.997;
+    DT_WHEEL_DIAM = 96.0/MMPERIN;
+    // Track Width tuned via Road Runner Quick Start
+    DT_TRACK_WIDTH = 13.85;
+    MOTOR_VELO_PID = new PIDFCoefficients(8.05, 0, 5, 13.4); //Needs RR tuning
+    //Heading & Translation PIDs tuned via Road Runner Quick Start
+    TRANSLATIONAL_PID = new PIDCoefficients(6, 0.01, 0.25);
+    HEADING_PID = new PIDCoefficients(5, 0.45, 0.35);
+
+    EL_SPD_DWN = .333333333;
+
+    // kV & KA tuned via Road Runner Quick Start in the Feed Forward
+    kV = 0.01702;
+    kA = 0.0027;
+    kStatic = 0.0021;
+
+    RUN_USING_ENCODER = false;
+
+    POSE_EQUAL = 0.5;
     switch (bot)
     {
       case GENERIC_CHASIS:
           RobotLog.dd(TAG, "Calibrating for Bot %s", bot);
-          EL_MIN_ENCODER = 10;
-          EL_MAX_ENCODER = 1256;
-          EL_SPD = 0.8;
           EL_DIR = DcMotorSimple.Direction.REVERSE;
           EL_EXT_MOT = Motors.MotorModel.GOBILDA_5202_19_2;
-          EL_NUM_LEVS = 5;
-          EL_LEVS = new double[EL_NUM_LEVS];
-          EL_LEVS[0] = 0.0;
-          EL_LEVS[1] = 5.00;
-          EL_LEVS[2] = 7.83;
-          EL_LEVS[3] = 9;
-//          EL_LEVS[4] = 1.63;
 //          EL_LEVS[5] = 1.26;
 //          EL_LEVS[6] = 0.91;
 //          EL_LEVS[7] = 0.575;
 
-
-
-          IP_IMG_TOP = 0.20;
-          IP_IMG_BOT = 0.80;
-          IP_IMG_LFT = 0.05;
-          IP_IMG_RGT = 0.95;
-
-
-          DT_LDIR = DcMotorSimple.Direction.REVERSE;
-          DT_RDIR = DcMotorSimple.Direction.FORWARD;
-
-          BOT_LEN = 13.125;
-          BOT_WID = 13.125;
-
-          MAX_VEL = 50;
-          LATERAL_MULTIPLIER = 1.122;
-          DT_MOTOR = Motors.MotorModel.GOBILDA_5202_19_2;
-          DT_EXT_GEAR_RATIO = 0.997;
-          DT_WHEEL_DIAM = 96.0/MMPERIN;
-          /* Track Width tuned via Road Runner Quick Start */
-          DT_TRACK_WIDTH = 13.85;
-          MOTOR_VELO_PID = new PIDFCoefficients(8.05, 0, 5, 13.4); //Needs RR tuning
-          /* Heading & Translation PIDs tuned via Road Runner Quick Start */
-          TRANSLATIONAL_PID = new PIDCoefficients(6, 0.01, 0.25);
-          HEADING_PID = new PIDCoefficients(5, 0.45, 0.35);
-
-          /* kV & KA tuned via Road Runner Quick Start in the Feed Forward */
-          kV = 0.01702;
-          kA = 0.0027;
-          kStatic = 0.0021;
-
-          kVsetManual = true;
-          RUN_USING_ENCODER = false;
+        kVsetManual = true;
 
         break;
 
@@ -416,27 +435,26 @@ public class RobotConstants
           EL_MIN_ENCODER = -2700;
           EL_MAX_ENCODER = 200;
           EL_SPD = 1;
-          EL_SPD_DWN = .333333333;
           EL_DIR = DcMotorSimple.Direction.REVERSE;
           EL_EXT_MOT = Motors.MotorModel.GOBILDA_5202_19_2;
           EL_NUM_LEVS = 6;
           EL_LEVS = new double[EL_NUM_LEVS];
           EL_LEVS[0] = 0.2;
           EL_LEVS[1] = 2;
-        EL_LEVS[2] = 5.8;
-        EL_LEVS[3] = 6.3;
-        EL_LEVS[4] = 7;
-        EL_LEVS[5] = 8;
+          EL_LEVS[2] = 5.8;
+          EL_LEVS[3] = 6.3;
+          EL_LEVS[4] = 7;
+          EL_LEVS[5] = 8;
 
 //          EL_LEVS[4] = 1.63;
 //          EL_LEVS[5] = 1.26;
 //          EL_LEVS[6] = 0.91;
 //          EL_LEVS[7] = 0.575;
 
-        EX_NUM_LEVS = 2;
-        EX_LEVS = new double[EL_NUM_LEVS];
-        EX_LEVS[0] = 0;
-        EX_LEVS[1] = 0;
+          EX_NUM_LEVS = 2;
+          EX_LEVS = new double[EL_NUM_LEVS];
+          EX_LEVS[0] = 0;
+          EX_LEVS[1] = 0;
 
           IP_IMG_TOP = 0.20;
           IP_IMG_BOT = 0.80;
@@ -457,14 +475,14 @@ public class RobotConstants
           DT_MOTOR = Motors.MotorModel.GOBILDA_5202_19_2;
           DT_EXT_GEAR_RATIO = 0.997;
           DT_WHEEL_DIAM = 96.0/MMPERIN;
-          /* Track Width tuned via Road Runner Quick Start */
+          // Track Width tuned via Road Runner Quick Start
           DT_TRACK_WIDTH = 13.85;
           MOTOR_VELO_PID = new PIDFCoefficients(8.05, 0, 5, 13.4); //Needs RR tuning
-          /* Heading & Translation PIDs tuned via Road Runner Quick Start */
+         //  Heading & Translation PIDs tuned via Road Runner Quick Start
           TRANSLATIONAL_PID = new PIDCoefficients(6, 0.01, 0.25);
           HEADING_PID = new PIDCoefficients(5, 0.45, 0.35);
 
-          /* kV & KA tuned via Road Runner Quick Start in the Feed Forward */
+         //  kV & KA tuned via Road Runner Quick Start in the Feed Forward
           kV = 0.0177;
           kA = 0.00235;
           kStatic = 0.037;
@@ -472,13 +490,13 @@ public class RobotConstants
           kVsetManual = true;
           RUN_USING_ENCODER = false;
 
-          POSE_EQUAL = 0.5;
-
         break;
       default:
         DT_MOTOR = Motors.MotorModel.GOBILDA_5202_19_2;
         break;
     }
+
+
 
     DT_CPMR = DT_MOTOR.getCpr();
     DT_MAX_RPM = DT_MOTOR.getRpm();
