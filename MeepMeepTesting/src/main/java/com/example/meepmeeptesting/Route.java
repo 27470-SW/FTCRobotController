@@ -143,6 +143,10 @@ public abstract class Route
 
         //Put new poses here
 
+        //specimen points
+        startSpecimenSide = new Pose2d(sx * -5, 63.25, flip + sh*Math.toRadians(270));
+        dropPreSpecimen = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
+
         startCSRedHigh = new Pose2d(sx * 63.25, 16, flip + sh*Math.toRadians(180));
         startCSRedLow = new Pose2d(sx*63.25, -32, flip + sh*Math.toRadians(180));
         startCBlueHigh = new Pose2d(sx * -63.25, 16, flip + sh*Math.toRadians(0));
@@ -667,6 +671,8 @@ public abstract class Route
      protected Pose2d white_pixel_middle;
      protected Pose2d back_drop;
      protected Pose2d startCSRedHigh;
+     protected Pose2d startSpecimenSide;
+     protected Pose2d dropPreSpecimen;
      protected Pose2d purplePixelPlaceCenterTop;
     protected Pose2d dropCenterPixel;
     protected Pose2d dropCenterPixelAdj;

@@ -15,14 +15,14 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import java.util.Locale;
 
-public class ChristianoRoute {
+public class SpecimenRoute {
     Route route;
     private Field.Highways stackToBack;
     private Field.Highways pixelStack;
 
     private Route.TeamElement teamElement;
     private Field.Alliance alliance;
-    public ChristianoRoute(Route constructorRoute) {
+    public SpecimenRoute(Route constructorRoute) {
 route = constructorRoute;
     }
 
@@ -41,10 +41,10 @@ route = constructorRoute;
     */
        //  qualifierRoute(startPos,parkPos,firstLocation);
 
-        route.addLocation(route.start, START, HEAD_LINEAR);
+        route.addLocation(route.startSpecimenSide, START, HEAD_LINEAR);
         route.addEvent(Route.Action.TANGENT, Math.toRadians(90));
 //        route.addLocation(route.dropCenterPixel, SPLINE, HEAD_LINEAR);
-        route.addLocation(route.dropCenterPixel, SPLINE, HEAD_LINEAR, Math.toRadians(90));
+        route.addLocation(route.dropPreSpecimen, LINE, HEAD_LINEAR, Math.toRadians(180));
     }
 
     private void goToBackdrop(Pose2d backdrop){
@@ -119,7 +119,9 @@ route = constructorRoute;
 ////                            route.addMovement(TURN, -0.5);
 //                            route.addEvent(Route.Action.WAIT, 0.1);
                             // my old route
-                            route.addEvent(Route.Action.TANGENT, route.oneFifteen);
+                            route.addLocation(route.startSpecimenSide, LINE, HEAD_LINEAR, Math.toRadians(100));
+                            route.addLocation(route.dropPreSpecimen, LINE, HEAD_LINEAR, Math.toRadians(100));
+                           /* route.addEvent(Route.Action.TANGENT, route.oneFifteen);
 //                            route.addLocation(route.dropPixelRedLeftTapeBackdropAdj,SPLINE,HEAD_LINEAR, 180);
                             route.addLocation(route.dropPixelRedLeftTapeBackdrop, LINE, HEAD_LINEAR, route.twofifity);
                             route.addFunction(route::armDropSpikePos);
@@ -133,7 +135,7 @@ route = constructorRoute;
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .75);
 //                            route.addFunction(route::outPixel);
-//                            route.addEvent(Route.Action.WAIT, .2);
+//                            route.addEvent(Route.Action.WAIT, .2);*/
                             break;
                         case CENTER:
                             // Red Center Backdrop (7252)

@@ -166,7 +166,7 @@ public class ITD_Route extends Route
    {
 
        Pose2d lastPose;
-       ChristianoRoute t1 = new ChristianoRoute(this);
+       SpecimenRoute t1 = new SpecimenRoute(this);
        t1.makeTraj(startPos, parkPos, firstLocation);
 
        lastPose = this.getEnd();
