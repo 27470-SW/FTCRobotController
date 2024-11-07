@@ -70,12 +70,12 @@ public class RobotConstants
   public static double IN_ACT_DIST = 3.0;
 
   //Elev
-  public static double INIT_SLIDE_POWER = 0.05;
+  public static double INIT_SLIDE_POWER = .15;
   public static int      ARM_NUM_LEVS=3;
   public static int      EL_NUM_LEVS=3;
   public static int      EX_NUM_LEVS=2;
   public static double   EL_MAX_IPS = 1.0;
-  public static double   EL_SPD = 0.1;
+  public static double   EL_SPD = 0.03;
   public static double   EL_SPD_DWN = .3333333;
   public static double[] EL_LEVS;
   public static double[] ARM_LEVS;
@@ -84,7 +84,7 @@ public class RobotConstants
   public static int EL_MIN_ENCODER = 10;
   public static int   EX_MAX = 3200;
   public static int   EX_MIN = 6;
-  public static double   SLIDE_POWER = .8;
+  public static double   SLIDE_POWER = 1;
   public static DcMotorSimple.Direction EL_DIR = DcMotorSimple.Direction.REVERSE;
 
   public static DcMotorSimple.Direction EXT_DIR = DcMotorSimple.Direction.FORWARD;
@@ -95,8 +95,8 @@ public class RobotConstants
   public static Motors.MotorModel ARM_MOT = Motors.MotorModel.GOBILDA_5202_50_9;
 
   public static DcMotorSimple.Direction ARM_DIR = DcMotorSimple.Direction.FORWARD;
-    public static DcMotorSimple.Direction SLIDE1_DIR = DcMotorSimple.Direction.FORWARD;
-  public static DcMotorSimple.Direction SLIDE2_DIR = DcMotorSimple.Direction.REVERSE;
+    public static DcMotorSimple.Direction SLIDE1_DIR = DcMotorSimple.Direction.REVERSE;
+  public static DcMotorSimple.Direction SLIDE2_DIR = DcMotorSimple.Direction.FORWARD;
 
   public static Double SWP_SRV = 4.8;
 
@@ -329,7 +329,7 @@ public class RobotConstants
   public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7.5, 0, 0);
   public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
-  public static final boolean logVerbose = false;
+  public static final boolean logVerbose = true;
 
   public static final String TAG = "SJH_RBC";
 
@@ -363,9 +363,9 @@ public class RobotConstants
 
     Field.StartPos sPos = (Field.StartPos)startPos;
     EL_MIN_ENCODER = 10;
-    EL_MAX_ENCODER = 1256;
+    EL_MAX_ENCODER = 3000;
 
-    EL_SPD = 0.8;
+    EL_SPD = 0.3;
 
     EL_NUM_LEVS = 5;
     EL_LEVS = new double[EL_NUM_LEVS];
@@ -431,7 +431,7 @@ public class RobotConstants
 
       case B7253:
       case B7252:
-          RobotLog.dd(TAG, "Calibrating for Bot %s", bot);
+        /*  RobotLog.dd(TAG, "Calibrating for Bot %s", bot);
           EL_MIN_ENCODER = -2700;
           EL_MAX_ENCODER = 200;
           EL_SPD = 1;
@@ -489,7 +489,7 @@ public class RobotConstants
 
           kVsetManual = true;
           RUN_USING_ENCODER = false;
-
+*/
         break;
       default:
         DT_MOTOR = Motors.MotorModel.GOBILDA_5202_19_2;

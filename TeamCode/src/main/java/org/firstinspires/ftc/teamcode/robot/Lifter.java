@@ -61,7 +61,9 @@ public class Lifter
 
         return success;
     }
-
+    public int getCurEnc(){
+       return liftMotor.getCurrentPosition();
+    }
     public void initPos()throws InterruptedException{
         liftMotor2.setPower(INIT_SLIDE_POWER);
         liftMotor2.setTargetPosition(-2500);
@@ -98,7 +100,7 @@ public class Lifter
         if (liftMotor != null)
             if (liftMotor2 != null)
         {
-            setLiftPwr(RobotConstants.LF_ARM_ROT_SPD);
+            setLiftPwr(SLIDE_POWER);
         }
 
     }
@@ -118,8 +120,8 @@ public class Lifter
 
             //safetycheck
             //TODO: replace with endstop check
-            double lftmin = Math.min(RobotConstants.LF_ARM_ROT_STOW, RobotConstants.LF_ARM_ROT_LOW);
-            double lftmax = RobotConstants.LF_ARM_ROT_MAX;
+            double lftmin = RobotConstants.EL_MIN_ENCODER;
+            double lftmax = RobotConstants.EL_MAX_ENCODER;
             if (lftCnts <= lftmin && pwr < 0.0 ||
                 lftCnts >= lftmax  && pwr > 0.0) pwr = 0.0;
 
@@ -127,7 +129,7 @@ public class Lifter
             if (liftMotor != null)
                 if (liftMotor2 != null)
             {
-                setLiftPwr(pwr * RobotConstants.LF_ARM_ROT_SPD);
+                setLiftPwr(pwr * SLIDE_POWER);
             }
         }
     }
@@ -169,7 +171,22 @@ public class Lifter
                 "lift %5d %5d %.2f %s",
                 lftCnts, tgtCnt, cmdPwr, lastRunMode);
     }
+    public DcMotor.RunMode getMode(){
+       return liftMotor.getMode();
 
+    }
+    private int encoderPos;
+    public void holdPosition(){
+        encoderPos = liftMotor.getCurrentPosition();
+
+        liftMotor.setMode(RUN_TO_POSITION);
+        liftMotor.setTargetPosition(encoderPos);
+        liftMotor.setPower(SLIDE_POWER);
+
+        liftMotor2.setMode(RUN_TO_POSITION);
+        liftMotor2.setTargetPosition(encoderPos);
+        liftMotor2.setPower(SLIDE_POWER);
+    }
     private DcMotorEx liftMotor;
     private DcMotorEx liftMotor2;
     private CRServo liftServo;
