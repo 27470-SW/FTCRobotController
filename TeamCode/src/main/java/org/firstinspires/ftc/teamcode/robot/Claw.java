@@ -25,7 +25,7 @@ public class Claw {
         pos = 1-pos;
         percent = pos;
         if(clawServo == null) return;
-        clawServo.setPosition(pos);
+        clawServo.setPosition(percent);
         RobotLog.dd(TAG, "Percent:%f POS:%f", percent, pos);
 
     }

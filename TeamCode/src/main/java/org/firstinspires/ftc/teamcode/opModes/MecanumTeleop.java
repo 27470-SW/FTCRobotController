@@ -133,6 +133,7 @@ public class MecanumTeleop extends InitLinearOpMode
 
         lBumperPressed = false;
         clawLev = 0;
+        armNslidesLev = 0;
     }
 
     public boolean pixelDetected = false;
@@ -422,6 +423,16 @@ public class MecanumTeleop extends InitLinearOpMode
            clawLev --;
        }
        robot.claw.setClawLev(clawLev);
+    }
+
+    private void armNslidesLevs()
+    {
+        if (gpad2.just_pressed(ManagedGamepad.Button.D_UP) && (armNslidesLev <= 2)) {
+            armNslidesLev ++;
+        } if(gpad2.just_pressed(ManagedGamepad.Button.D_DOWN) && (armNslidesLev >= 1)){
+        armNslidesLev --;
+    }
+        robot.lev(armNslidesLev);
     }
 
 
@@ -1019,6 +1030,7 @@ public class MecanumTeleop extends InitLinearOpMode
 
     private boolean lBumperPressed;
     private int clawLev;
+    private int armNslidesLev;
 
     private void processControllerInputs()
     {
@@ -1147,6 +1159,8 @@ public class MecanumTeleop extends InitLinearOpMode
         controlSlides();
 
         presetClaws();
+
+        armNslidesLevs();
 
 
         opTimer.reset();

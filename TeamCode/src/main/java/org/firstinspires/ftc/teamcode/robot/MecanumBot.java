@@ -2,6 +2,12 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEV1;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEV2;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEV3;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEVS;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_MAX_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_MIN_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_NUM_LEVS;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD_DWN;
@@ -35,7 +41,7 @@ public class MecanumBot extends BasicBot
 
     // public MotorComponent elev;
 
-    // public MotorComponent elbowMotor = null;
+    // public MotorComponent  = null;
     //public MotorComponent extenderMotor = null;
     //public MotorComponent bucketServo = null;
     //public ServoComponent wristServo = null;
@@ -169,7 +175,7 @@ public MotorComponent arm=null;
         claw = new Claw(hwMap);
         slides = new Lifter( "slide1", "slide2",hwMap);
         arm = new MotorComponent("arm",hwMap);
-
+arm.setLevelOffset();
         /*redLED1 = hwMap.get(DigitalChannel.class, "red1");
         greenLED1 = hwMap.get(DigitalChannel.class, "green1");
         redLED2 = hwMap.get(DigitalChannel.class, "red2");
@@ -224,7 +230,7 @@ public MotorComponent arm=null;
         intake.init();
         */
          //claw.init();
-         arm.init(RobotConstants.ARM_MOT,1);
+         arm.init(RobotConstants.ARM_MOT,5);
         arm.setDir(RobotConstants.EXT_DIR);
         arm.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
         arm.setLevelOffset(
@@ -369,6 +375,26 @@ public  int armLevel;
             return EL_SPD_DWN;
         }else {
             return EL_SPD;
+        }
+    }
+
+    public void lev(int lev){
+
+        if (lev == 0){
+            slides.setLiftPos(EL_MIN_ENCODER);
+            arm.moveToLevel(0, 0.8);
+        } if(lev == 1){
+            slides.setLiftPos(EL_LEV1);
+            arm.moveToLevel(1, 0.8);
+        }if (lev == 2){
+            slides.setLiftPos(EL_LEV2);
+            arm.moveToLevel(2, 0.8);
+        } if(lev == 3){
+            slides.setLiftPos(EL_LEV3);
+            arm.moveToLevel(3, 0.8);
+        } if(lev == 4){
+            slides.setLiftPos(EL_MAX_ENCODER);
+            arm.moveToLevel(4, 0.8);
         }
     }
 
