@@ -132,6 +132,7 @@ public class MecanumTeleop extends InitLinearOpMode
         }
 
         lBumperPressed = false;
+        clawLev = 0;
     }
 
     public boolean pixelDetected = false;
@@ -211,8 +212,11 @@ public class MecanumTeleop extends InitLinearOpMode
         dashboard.displayText(l++, String.format(Locale.US, "lyftpowr %4.2f", liftSpd ));
         dashboard.displayText(14, String.format(Locale.US,"SW Ver SC Build 12_8_2022"));
         //dashboard.displayText(l++,String.format(Locale.US, "PixelDistance: %f", robot.colorFindDistance()));
-        dashboard.displayText(l++, String.format(Locale.US, "arm encoder: %4.2f", robot.arm.getCurEnc() ));
+        dashboard.displayText(l++, String.format(Locale.US, "arm encoder: %d, Mode: %s", robot.arm.getCurEnc(), robot.arm.getMode().name() ));
 
+        dashboard.displayText(l++, String.format(Locale.US, "slides encoder: %d, Mode: %s", robot.slides.getCurEnc(), robot.slides.getMode().name() ));
+
+        dashboard.displayText(l++, String.format(Locale.US, "left joystick: %f, right joystick: %f", -gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y),gpad2.value(ManagedGamepad.AnalogInput.R_STICK_Y )));
 
         if(VERBOSE) RobotLog.dd(TAG, "TEL SHT:%.1f ARM:%.1f INT:%.1f DRV:%.1f",
             spinTime, liftTime, intTime, drvTime);
@@ -250,7 +254,11 @@ public class MecanumTeleop extends InitLinearOpMode
     double liftSpd = 0.0;
     int stackLvlCnt = 0;
     boolean joystickUsed = false;
+    boolean joystickSlides = false;
+
     int targetEncoder = 0;
+    int targetEncoderSlides = 0;
+
 
     private void controlArm()
     {
@@ -388,10 +396,12 @@ public class MecanumTeleop extends InitLinearOpMode
         {
             if (openClaw != 0)
             {
+                RobotLog.dd(TAG, "openclaw: %f", openClaw);
                 robot.claw.openClaw(openClaw);
             }
             if (closeClaw != 0)
             {
+                RobotLog.dd(TAG, "closeclaw: %f", closeClaw);
                 robot.claw.closeClaw(closeClaw);
             }
         }
@@ -399,9 +409,21 @@ public class MecanumTeleop extends InitLinearOpMode
     }
     private void controlSlides()
     {
-        double lftPwr = gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y);
-        robot.slides.setLiftPwr(lftPwr);
+        double lftPwr = -gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y);
+        robot.slides.setLiftSpd(lftPwr);
+            //robot.elev.moveToCnt(robot.elev.getCurEnc(), RobotConstants.EL_SPD);
+        }
+
+    private void presetClaws()
+    {
+       if (gpad2.just_pressed(ManagedGamepad.Button.L_BUMP) && (clawLev <= 1)) {
+           clawLev ++;
+       } if(gpad2.just_pressed(ManagedGamepad.Button.R_BUMP) && (clawLev >= 1)){
+           clawLev --;
+       }
+       robot.claw.setClawLev(clawLev);
     }
+
 
     private Pose2d tempPose = new Pose2d();
     private int goLeft = 0;
@@ -646,16 +668,18 @@ public class MecanumTeleop extends InitLinearOpMode
                 velPose = new Pose2d(drive, strafe, turnA);
             RobotLog.dd(TAG, String.format("drive: %f, turnA: %f, strafe: %f", drive, turnA, strafe));
         }
-        else{
+
+ */
+ //       else{
             velPose = new Pose2d(driveInput, -turn);
-        }
+ //       }
 
 //        if(goBrd == 1){
 //            moveRobot(drive, strafe, turnA);
 //        }else {
             mechDrv.setWeightedDrivePower(velPose);
 //        }
-        */
+
     }
     private void clearDriverOveride(){
         goRight = 0;
@@ -994,6 +1018,7 @@ public class MecanumTeleop extends InitLinearOpMode
     private final ElapsedTime opTimer = new ElapsedTime();
 
     private boolean lBumperPressed;
+    private int clawLev;
 
     private void processControllerInputs()
     {
@@ -1120,6 +1145,8 @@ public class MecanumTeleop extends InitLinearOpMode
         controlArm();
 
         controlSlides();
+
+        presetClaws();
 
 
         opTimer.reset();

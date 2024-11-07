@@ -23,8 +23,25 @@ public class Claw {
     public void setClawPos(double pos)
     {
         pos = 1-pos;
+        percent = pos;
         if(clawServo == null) return;
         clawServo.setPosition(pos);
+        RobotLog.dd(TAG, "Percent:%f POS:%f", percent, pos);
+
+    }
+
+    public void setClawLev(double lev)
+    {
+        if (lev == 0){
+            setClawPos(0);
+        }
+        if (lev == 1){
+            setClawPos(.6);
+        }
+        if (lev == 2){
+            setClawPos(1);
+        }
+
     }
 
 public void update(){
@@ -32,6 +49,8 @@ public void update(){
 }
 
     public void openClaw(double val){
+        RobotLog.dd(TAG, "Percent:%f Val:%f", percent, val);
+
         percent = percent - .007*val;
         if (percent > maxClosed)
         {
@@ -41,6 +60,8 @@ public void update(){
     }
 
     public void closeClaw(double val){
+        RobotLog.dd(TAG, "Percent:%f Val:%f", percent, val);
+
         percent = percent + .007*val;
         if (percent > maxClosed)
         {

@@ -223,7 +223,7 @@ public MotorComponent arm=null;
         }
         intake.init();
         */
-         claw.init();
+         //claw.init();
          arm.init(RobotConstants.ARM_MOT,1);
         arm.setDir(RobotConstants.EXT_DIR);
         arm.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
@@ -262,7 +262,7 @@ public MotorComponent arm=null;
         double lftTime = updTimer.milliseconds();
         updTimer.reset();
 
-        double clawTime;
+        double clawTime = 0;
 //        if(claw != null)
 //        {
 //            claw.update();
@@ -306,7 +306,7 @@ public MotorComponent arm=null;
     }
 
    public void initArmMot() throws InterruptedException {
-        arm.moveToCnt(1000,.18);
+        arm.moveToCnt(1000,.3);
         Thread.sleep(3000);
         arm.setMode(STOP_AND_RESET_ENCODER);
         arm.setMode(RUN_USING_ENCODER);
