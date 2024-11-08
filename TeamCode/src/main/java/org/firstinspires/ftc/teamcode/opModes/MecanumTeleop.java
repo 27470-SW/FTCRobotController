@@ -28,22 +28,15 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
-import static org.firstinspires.ftc.teamcode.robot.RobotConstants.BORD_SPD;
-import static org.firstinspires.ftc.teamcode.robot.RobotConstants.BUTT_SPD;
-import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_MAX_ENCODER;
-import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_MIN_ENCODER;
-import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_NUM_LEVS;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_MAX_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_MIN_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD;
-import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD_DWN;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.POSE_EQUAL;
 
 
@@ -132,6 +125,12 @@ public class MecanumTeleop extends InitLinearOpMode
         }
 
         lBumperPressed = false;
+<<<<<<< Updated upstream
+=======
+        clawLev = 0;
+        armNslidesLev = 0;
+        robot.claw.Triggr = true;
+>>>>>>> Stashed changes
     }
 
     public boolean pixelDetected = false;
@@ -276,6 +275,7 @@ public class MecanumTeleop extends InitLinearOpMode
                     joystickUsed = false;
                 }
                 robot.arm.moveToCnt(targetEncoder, robot.getElSpd(targetEncoder));
+                RobotLog.dd(TAG, "setting arm to encoder: %d", targetEncoder);
 
                 if(VERBOSE) { dashboard.displayText(13, String.format(Locale.US, "Target Encoder %d",targetEncoder));}
             }
@@ -335,9 +335,10 @@ public class MecanumTeleop extends InitLinearOpMode
  */
         if (robot.arm.getMode() != RUN_TO_POSITION)
         {
+            RobotLog.dd(TAG, "encoder = %d, MIN = %d, MAX = %d, the arm's mode: %s", robot.arm.getCurEnc(), ARM_MIN_ENCODER, ARM_MAX_ENCODER, robot.arm.getMode().name());
             if (
-                    (liftSpd <= 0 && robot.arm.getCurEnc() > EL_MIN_ENCODER ) ||
-                            (liftSpd >= 0 && robot.arm.getCurEnc() < EL_MAX_ENCODER)
+                    (liftSpd <= 0 && robot.arm.getCurEnc() > ARM_MIN_ENCODER ) ||
+                            (liftSpd >= 0 && robot.arm.getCurEnc() < ARM_MAX_ENCODER)
             )
             {
                 double locSpeedLimit = 1;
@@ -353,6 +354,7 @@ public class MecanumTeleop extends InitLinearOpMode
 //                }
 
                 robot.arm.moveAtControlRate(EL_SPD * liftSpd * locSpeedLimit);
+                RobotLog.dd(TAG, "EL_SPD= %f, lftspd = %f, locSpeed = %f", EL_SPD, liftSpd, locSpeedLimit);
             }
             else
             {
@@ -384,24 +386,67 @@ public class MecanumTeleop extends InitLinearOpMode
        double openClaw = gpad2.value(ManagedGamepad.AnalogInput.R_TRIGGER_VAL);
         double closeClaw = gpad2.value(ManagedGamepad.AnalogInput.L_TRIGGER_VAL);
 
+        if(openClaw != 0){
+            robot.claw.openClaw(openClaw);
+        }
+        else if(closeClaw != 0){
+            robot.claw.closeClaw(closeClaw);
+        }
+/*
         if (robot.claw != null)
         {
-            if (openClaw != 0)
+            if (openClaw > 0.05)
             {
+<<<<<<< Updated upstream
                 robot.claw.openClaw(openClaw);
+=======
+                RobotLog.dd(TAG, "openclaw: %f", openClaw);
+                robot.claw.K1R2 = 1;
+                robot.claw.Triggr = true;
+                robot.claw.clawFunctions(openClaw);
+>>>>>>> Stashed changes
             }
-            if (closeClaw != 0)
+            if (closeClaw > 0.05)
             {
+<<<<<<< Updated upstream
                 robot.claw.closeClaw(closeClaw);
+=======
+                RobotLog.dd(TAG, "closeclaw: %f", closeClaw);
+                robot.claw.K1R2 = 2;
+                robot.claw.Triggr = true;
+                robot.claw.clawFunctions(closeClaw);
+>>>>>>> Stashed changes
             }
         }
-
+*/
     }
     private void controlSlides()
     {
+<<<<<<< Updated upstream
         double lftPwr = gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y);
         robot.slides.setLiftPwr(lftPwr);
+=======
+        double lftPwr = -gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y);
+        robot.slides.setLiftSpd(lftPwr);
+            //robot.elev.moveToCnt(robot.elev.getCurEnc(), RobotConstants.EL_SPD);
+        }
+
+        /*
+    private void presetClaws()
+    {
+
+       if (gpad2.just_pressed(ManagedGamepad.Button.L_BUMP) && (clawLev <= 1)) {
+           clawLev ++;
+           robot.claw.Triggr = false;
+           robot.claw.clawFunctions(clawLev);
+       } if(gpad2.just_pressed(ManagedGamepad.Button.R_BUMP) && (clawLev >= 1)){
+           clawLev --;
+           robot.claw.Triggr = false;
+           robot.claw.clawFunctions(clawLev);
+       }
+>>>>>>> Stashed changes
     }
+         */
 
     private Pose2d tempPose = new Pose2d();
     private int goLeft = 0;
@@ -995,6 +1040,7 @@ public class MecanumTeleop extends InitLinearOpMode
 
     private boolean lBumperPressed;
 
+
     private void processControllerInputs()
     {
         gpad2.update();
@@ -1121,6 +1167,13 @@ public class MecanumTeleop extends InitLinearOpMode
 
         controlSlides();
 
+<<<<<<< Updated upstream
+=======
+        //presetClaws();
+
+        //armNslidesLevs();
+
+>>>>>>> Stashed changes
 
         opTimer.reset();
         liftTime = opTimer.milliseconds();
@@ -1191,7 +1244,7 @@ public class MecanumTeleop extends InitLinearOpMode
 //            robot.waitForTick(20);
             w=opTimer.milliseconds();
 //            oTimer.reset();
-            if(VERBOSE){RobotLog.vv(TAG, "looping");}
+//            if(VERBOSE){RobotLog.vv(TAG, "looping");}
         }
     }
 

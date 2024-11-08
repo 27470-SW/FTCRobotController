@@ -612,7 +612,7 @@ public class MotorComponent
         setMode(RUN_USING_ENCODER);
       }
     }
-
+    RobotLog.dd(TAG, "in moveatcontrolrate: movingtolevel: %d, absrate: %f, wakeupthresh: %f, rate: %f", movingToLevel, absRate, wakeupThresh, rate);
     if (movingToLevel < 0 || absRate >= wakeupThresh)
       moveAtRate(rate);
   }
@@ -656,6 +656,7 @@ public class MotorComponent
           motor.setPower(cmdRate);
         }
       }
+      RobotLog.dd(TAG, "command rate = %f", cmdRate);
     }
     else if (motor instanceof CRServo)
     {
@@ -669,7 +670,7 @@ public class MotorComponent
       if (cmdRate != rate)
       {
         cmdRate = rate;
-        //RobotLog.dd(TAG, "%s Calling setPower cmdRate:%.2f", name, cmdRate );
+        RobotLog.dd(TAG, "%s Calling setPower cmdRate:%.2f", name, cmdRate );
         motor.setPower(cmdRate);
       }
     }

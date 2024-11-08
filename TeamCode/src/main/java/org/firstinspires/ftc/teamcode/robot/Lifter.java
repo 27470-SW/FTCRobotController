@@ -38,7 +38,7 @@ public class Lifter
             liftMotor2.setDirection(RobotConstants.SLIDE2_DIR);
             setLiftPwr(0.0);            //setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             setMode(RUN_USING_ENCODER);
-            RobotLog .dd(TAG, "Lifter.init Found liftMotor " + name);
+            RobotLog .dd(TAG, "Lifter.init Found liftMotor " + name);   //TODO: add liftMotor2
             success = true;
         }
         catch (Exception ignored)
@@ -65,11 +65,14 @@ public class Lifter
        return liftMotor.getCurrentPosition();
     }
     public void initPos()throws InterruptedException{
+        liftMotor2.setMode(RUN_TO_POSITION);
         liftMotor2.setPower(INIT_SLIDE_POWER);
         liftMotor2.setTargetPosition(-2500);
+        liftMotor.setMode(RUN_TO_POSITION);
         liftMotor.setPower(INIT_SLIDE_POWER);
         liftMotor.setTargetPosition(-2500);
         Thread.sleep(2000);
+        RobotLog.dd(TAG, "lm1e: %d, lm2e: %d, lm1p: %f, lm2p: %f",liftMotor.getCurrentPosition(), liftMotor2.getCurrentPosition(), liftMotor.getPower(), liftMotor2.getPower());
         liftMotor2.setMode(STOP_AND_RESET_ENCODER);
         liftMotor2.setMode(RUN_TO_POSITION);
         liftMotor2.setPower(SLIDE_POWER);
@@ -78,6 +81,8 @@ public class Lifter
         liftMotor.setMode(RUN_TO_POSITION);
         liftMotor.setPower(SLIDE_POWER);
         liftMotor.setTargetPosition(EX_MIN);
+
+        RobotLog.dd(TAG, "lm1e: %d, lm2e: %d, lm1p: %f, lm2p: %f",liftMotor.getCurrentPosition(), liftMotor2.getCurrentPosition(), liftMotor.getPower(), liftMotor2.getPower());
     }
 
     public int getLiftPos()
@@ -107,12 +112,17 @@ public class Lifter
 
     public void setLiftSpd(double pwr)
     {
+
         if (Math.abs(pwr) < 0.05 && lastRunMode != RUN_TO_POSITION)
         {
             setLiftPos(lftCnts);
+            RobotLog.ee(TAG, "setting Lit Pos to: %d",lftCnts);
+
         }
         else if (Math.abs(pwr) >= 0.05)
         {
+            RobotLog.dd(TAG, "pwr: %f, lm1e: %d, lm2e: %d, lftCnts: %d, MIN: %d, MAX: %d",pwr, liftMotor.getCurrentPosition(), liftMotor2.getCurrentPosition(), lftCnts, RobotConstants.EL_MIN_ENCODER, RobotConstants.EL_MAX_ENCODER);
+
             if (lastRunMode != RUN_USING_ENCODER)
             {
                 setMode(RUN_USING_ENCODER);
@@ -138,11 +148,11 @@ public class Lifter
     {
         if (liftMotor != null && mode != lastRunMode)
             if (liftMotor2 != null && mode != lastRunMode)
-        {
-            liftMotor.setMode(mode);
-            liftMotor2.setMode(mode);
-            lastRunMode = mode;
-        }
+            {
+                liftMotor.setMode(mode);
+                liftMotor2.setMode(mode);
+                lastRunMode = mode;
+            }
     }
 
     public void setLiftPwr(double pwr)
@@ -160,10 +170,12 @@ public class Lifter
     {
         if(liftMotor != null){
             lftCnts = liftMotor.getCurrentPosition();
-            if(liftMotor2 != null) if (lftCnts != liftMotor2.getCurrentPosition()) RobotLog .dd(TAG, "Warning slides not on same motor count:slide1 = " + lftCnts+" slide2 = "+liftMotor2.getCurrentPosition());;
+            int motor2cnts = liftMotor2.getCurrentPosition();
+            if(liftMotor2 != null) if (lftCnts > motor2cnts + 10 || lftCnts < motor2cnts - 10 ) RobotLog .dd(TAG, "Warning slides not on same motor count:slide1 = " + lftCnts+" slide2 = "+liftMotor2.getCurrentPosition());;
         }
 
     }
+
 
     public String toString()
     {

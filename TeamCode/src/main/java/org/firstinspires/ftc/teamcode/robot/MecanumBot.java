@@ -306,15 +306,22 @@ public MotorComponent arm=null;
     }
 
    public void initArmMot() throws InterruptedException {
+<<<<<<< Updated upstream
         arm.moveToCnt(1000,.18);
+=======
+        arm.moveToCnt(2000,.05);
+>>>>>>> Stashed changes
         Thread.sleep(3000);
         arm.setMode(STOP_AND_RESET_ENCODER);
         arm.setMode(RUN_USING_ENCODER);
-        arm.moveToLevel(0,EL_SPD);
+        arm.moveToCnt(-600, 0.4);
+        Thread.sleep(2000);
+        arm.moveToCnt(-515, 0.1);
     }
     public void initClaw() {
-        claw.setClawPos(0);
+        claw.setClawPos(1);
     }
+
     public void initSlides() throws InterruptedException {
        slides.initPos();
     }
