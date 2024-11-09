@@ -306,11 +306,9 @@ public MotorComponent arm=null;
     }
 
    public void initArmMot() throws InterruptedException {
-<<<<<<< Updated upstream
-        arm.moveToCnt(1000,.18);
-=======
+
         arm.moveToCnt(2000,.05);
->>>>>>> Stashed changes
+
         Thread.sleep(3000);
         arm.setMode(STOP_AND_RESET_ENCODER);
         arm.setMode(RUN_USING_ENCODER);

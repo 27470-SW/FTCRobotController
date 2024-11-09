@@ -125,12 +125,11 @@ public class MecanumTeleop extends InitLinearOpMode
         }
 
         lBumperPressed = false;
-<<<<<<< Updated upstream
-=======
+
         clawLev = 0;
         armNslidesLev = 0;
         robot.claw.Triggr = true;
->>>>>>> Stashed changes
+
     }
 
     public boolean pixelDetected = false;
@@ -392,46 +391,38 @@ public class MecanumTeleop extends InitLinearOpMode
         else if(closeClaw != 0){
             robot.claw.closeClaw(closeClaw);
         }
-/*
+
         if (robot.claw != null)
         {
             if (openClaw > 0.05)
             {
-<<<<<<< Updated upstream
-                robot.claw.openClaw(openClaw);
-=======
+
                 RobotLog.dd(TAG, "openclaw: %f", openClaw);
                 robot.claw.K1R2 = 1;
                 robot.claw.Triggr = true;
                 robot.claw.clawFunctions(openClaw);
->>>>>>> Stashed changes
+
             }
             if (closeClaw > 0.05)
             {
-<<<<<<< Updated upstream
-                robot.claw.closeClaw(closeClaw);
-=======
                 RobotLog.dd(TAG, "closeclaw: %f", closeClaw);
                 robot.claw.K1R2 = 2;
                 robot.claw.Triggr = true;
                 robot.claw.clawFunctions(closeClaw);
->>>>>>> Stashed changes
+
             }
         }
-*/
+
     }
     private void controlSlides()
     {
-<<<<<<< Updated upstream
-        double lftPwr = gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y);
-        robot.slides.setLiftPwr(lftPwr);
-=======
+
         double lftPwr = -gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y);
         robot.slides.setLiftSpd(lftPwr);
             //robot.elev.moveToCnt(robot.elev.getCurEnc(), RobotConstants.EL_SPD);
         }
 
-        /*
+        
     private void presetClaws()
     {
 
@@ -444,9 +435,9 @@ public class MecanumTeleop extends InitLinearOpMode
            robot.claw.Triggr = false;
            robot.claw.clawFunctions(clawLev);
        }
->>>>>>> Stashed changes
+
     }
-         */
+         
 
     private Pose2d tempPose = new Pose2d();
     private int goLeft = 0;
@@ -1167,13 +1158,11 @@ public class MecanumTeleop extends InitLinearOpMode
 
         controlSlides();
 
-<<<<<<< Updated upstream
-=======
+
         //presetClaws();
 
         //armNslidesLevs();
 
->>>>>>> Stashed changes
 
         opTimer.reset();
         liftTime = opTimer.milliseconds();

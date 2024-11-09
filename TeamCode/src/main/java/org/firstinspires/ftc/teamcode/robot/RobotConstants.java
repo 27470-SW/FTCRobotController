@@ -82,14 +82,13 @@ public class RobotConstants
   public static double[] EX_LEVS;
   public static int EL_MAX_ENCODER;
   public static int EL_MIN_ENCODER = 10;
-<<<<<<< Updated upstream
-=======
+
   public static int ARM_MAX_ENCODER;
   public static int ARM_MIN_ENCODER = 10;
   public static int EL_LEV1 = 5;
   public static int EL_LEV2 = 7;
   public static int EL_LEV3 = 9;
->>>>>>> Stashed changes
+
   public static int   EX_MAX = 3200;
   public static int   EX_MIN = 6;
   public static double   SLIDE_POWER = 1;
