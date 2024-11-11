@@ -22,7 +22,7 @@ route = constructorRoute;
     {
 
 
-        if (highway == DOOR) {
+        if (highway == Park1) {
             route.addEvent(Route.Action.TANGENT, Math.toRadians(90));
             route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR, Math.toRadians(90));
             route.addLocation(route.dropCenterPixel,SPLINE, HEAD_SPLINE, Math.toRadians(30));
@@ -40,7 +40,7 @@ route = constructorRoute;
             //route.addEvent(Route.Action.TANGENT, Math.toRadians(45));
         }
 
-        if (highway == CENTER) {
+        if (highway == Park2) {
             route.addLocation(route.underCenter, LINE, HEAD_LINEAR);
             //route.addLocation(route.pointcuzwhynot, SPLINE, HEAD_LINEAR);
             route.addLocation(route.dropCenterPixel,SPLINE, HEAD_SPLINE);
@@ -63,14 +63,14 @@ route = constructorRoute;
             route.addFunction(route::armToDropHigher,2);
             route.addLocation(route.dropCenterPixelBackwards,SPLINE,HEAD_LINEAR, route.oneFifteen);
         }
-        if (highway == CENTER && pixelStack == WALL){
+        if (highway == Park2 && pixelStack == WALL){
             //wall to center
 //            route.addLocation(route.pickUpPixelStackRight, LINE, HEAD_LINEAR);
             route.addFunction(route::armDropSpikePos, 1);
             route.addLocation(route.dropCenterPixelBackwards,LINE,HEAD_LINEAR);
             route.addFunction(route::armToDropHigher,2);
         }
-        if (highway == DOOR && pixelStack == WALL){
+        if (highway == Park1 && pixelStack == WALL){
             //wall to door
 //            route.addLocation(route.pickUpPixelStackRight, LINE, HEAD_LINEAR);
             route.addEvent(Route.Action.TANGENT, route.oneFifteen);
@@ -82,7 +82,7 @@ route = constructorRoute;
             route.addLocation(route.dropCenterPixelBackwardsLeftBackdrop, SPLINE, HEAD_LINEAR,route.zero);
 
         }
-        if (highway == CENTER && pixelStack == CENTER){
+        if (highway == Park2 && pixelStack == Park2){
             //center to wall
 //            route.addLocation(route.pickUpPixelStackCenter,LINE,HEAD_LINEAR);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(35));
@@ -91,7 +91,7 @@ route = constructorRoute;
             route.addFunction(route::armToDropHigher,2);
             route.addLocation(route.dropCenterPixelBackwards,SPLINE,HEAD_LINEAR,Math.toRadians(90));
         }
-        if (highway == WALL && pixelStack == CENTER){
+        if (highway == WALL && pixelStack == Park2){
             //center to Wall
 //            route.addLocation(route.pickUpPixelStackCenter, LINE, HEAD_LINEAR);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(0));
@@ -101,7 +101,7 @@ route = constructorRoute;
             route.addFunction(route::armToDropHigher,2);
             route.addLocation(route.dropCenterPixelBackwards,SPLINE,HEAD_LINEAR, Math.toRadians(130));
         }
-        if (highway == DOOR && pixelStack == CENTER){
+        if (highway == Park1 && pixelStack == Park2){
             //center to door
 //            route.addLocation(route.pickUpPixelStackCenter,LINE,HEAD_LINEAR);
             route.addFunction(route::armDropSpikePos, 1);
@@ -110,7 +110,7 @@ route = constructorRoute;
             route.addFunction(route::armToDropHigher,2);
             route.addLocation(route.dropCenterPixelBackwards,SPLINE,HEAD_LINEAR,route.thirtyfive);
         }
-        if (highway == WALL && pixelStack == DOOR){
+        if (highway == WALL && pixelStack == Park1){
             //door to wall
 //            route.addLocation(route.pickUpPixelStackLeft,LINE,HEAD_LINEAR);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(20));
@@ -120,7 +120,7 @@ route = constructorRoute;
             route.addFunction(route::armToDropHigher,2);
             route.addLocation(route.dropCenterPixelBackwards,SPLINE,HEAD_LINEAR,Math.toRadians(120));
         }
-        if (highway == CENTER && pixelStack == DOOR){
+        if (highway == Park2 && pixelStack == Park1){
             //door to center
 //            route.addLocation(route.pickUpPixelStackLeft,LINE,HEAD_LINEAR);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(30));
@@ -129,7 +129,7 @@ route = constructorRoute;
             route.addFunction(route::armToDropHigher,2);
             route.addLocation(route.dropCenterPixelBackwards,SPLINE,HEAD_LINEAR,Math.toRadians(90));
         }
-        if (highway == DOOR && pixelStack == DOOR){
+        if (highway == Park1 && pixelStack == Park1){
             //door to door
 //            route.addLocation(route.pickUpPixelStackLeft,LINE,HEAD_LINEAR);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(90));

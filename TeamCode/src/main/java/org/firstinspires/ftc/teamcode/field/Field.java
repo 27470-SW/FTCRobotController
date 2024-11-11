@@ -130,8 +130,8 @@ public abstract class Field
 
     public enum StartPos implements PositionOption
     {
-        START_BACKDROP,
-        START_STACKS
+        START_SAMPLES,
+        START_SPECIMENS
     }
 
     public enum AutonDebug implements PositionOption
@@ -141,11 +141,11 @@ public abstract class Field
 
     }
 
-    public enum Highways implements PositionOption
+    public enum Parks implements PositionOption
     {
         WALL,
-        CENTER,
-        DOOR
+        Park2,
+        Park1
     }
 
     public enum FirstLocation implements PositionOption

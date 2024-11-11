@@ -15,14 +15,14 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import java.util.Locale;
 
-public class SpecimenRoute {
+public class SampleRoute {
     Route route;
     private Field.Highways stackToBack;
     private Field.Highways pixelStack;
 
     private Route.TeamElement teamElement;
     private Field.Alliance alliance;
-    public SpecimenRoute(Route constructorRoute) {
+    public SampleRoute(Route constructorRoute) {
 route = constructorRoute;
     }
 
@@ -40,60 +40,78 @@ route = constructorRoute;
         this.alliance = alliance;
     */
        //  qualifierRoute(startPos,parkPos,firstLocation);
-
-        //Working on
-        route.addLocation(route.startSpecimen, START, HEAD_DEFAULT);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        route.addLocation(route. startSample, START, HEAD_LINEAR);
         route.addFunction(route::closeClaw );
         route.addEvent(Route.Action.WAIT,0.2);
-        //Make slides up one and arm a little up.
+		//Make slides up one and arm a little up.
         route.addFunction(route::slidesUpOne, 0.1);
-        route.addFunction(route::armUpLittle, 1.65);
-        route.addLocation(route.forward, SPLINE, HEAD_LINEAR, Math.toRadians(90));
-        route.addFunction(route::openclaw );
-        route.addEvent(Route.Action.WAIT,0.2);
-        route.addFunction(route::moveToDrive);
-
-        route.addLocation(route.specimen1, LINE, HEAD_LINEAR, Math.toRadians(45));
-        pickUpSpecimenFromTape();
-
-        route.addLocation(route.corner, LINE, HEAD_LINEAR, Math.toRadians(45));
-        route.addFunction(route::openclaw );
-        route.addEvent(Route.Action.WAIT,0.2);
-
-        route.addLocation(route.specimen2, LINE, HEAD_LINEAR, Math.toRadians(45));
-        pickUpSpecimenFromTape();
-
-        route.addLocation(route.corner2, LINE, HEAD_LINEAR, Math.toRadians(45));
-        route.addFunction(route::openclaw );
-        route.addEvent(Route.Action.WAIT,0.2);
-
-        route.addLocation(route.specimen3, LINE, HEAD_LINEAR, Math.toRadians(45));
-        pickUpSpecimenFromTape();
-
-        route.addLocation(route.corner3, LINE, HEAD_LINEAR, Math.toRadians(45));
-        route.addFunction(route::openclaw );
-        route.addEvent(Route.Action.WAIT,0.2);
-
-        route.addLocation(route.specimenPark1, LINE, HEAD_LINEAR, Math.toRadians(45));
         //route.addEvent(Route.Action.TANGENT, Math.toRadians(90));
-        //route.addLocation(route.start_route, LINE, HEAD_DEFAULT);
-        //route.addLocation(route.dropCenterPixel, SPLINE, HEAD_LINEAR);
-        // route.addLocation(route.dropCenterPixel, SPLINE, HEAD_LINEAR, Math.toRadians(45));
-    }
+		route.addFunction(route::armUpLittle, 1.65);
 
-    private void pickUpSpecimenFromTape(){
+        route.addLocation(route.hangSpecimen, SPLINE, HEAD_LINEAR, Math.toRadians(0));
+        //route.addEvent(Route.Action.WAIT,0.5);
+        //route.addFunction(route::moveArmToDrive );
+        //route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::openclaw );
+        route.addEvent(Route.Action.WAIT,0.2);
+        //Make slides down one and arm down.
+		route.addFunction(route::moveToDrive);
+       // route.addLocation(route.moveBackFromSpecimen, LINE, HEAD_LINEAR, Math.toRadians(0));
+
+        route.addLocation(route.sample1, LINE, HEAD_CONSTANT, Math.toRadians(0));
+        pickupSampleFromTape();
+
+        route.addLocation(route.deliverSampleToBasket,LINE, HEAD_LINEAR);
+        deliverSample();
+
+        route.addLocation(route.sample2, LINE, HEAD_LINEAR);
+        pickupSampleFromTape();
+
+        route.addLocation(route.deliverSample2ToBasket,TURN, HEAD_LINEAR);
+        deliverSample();
+
+         route.addLocation(route.sample3, LINE, HEAD_LINEAR);
+         pickupSampleFromTape();
+
+        route.addLocation(route.deliverSample3ToBasket,TURN, HEAD_LINEAR, Math.toRadians(90));
+        deliverSample();
+
+        route.addLocation(route.positionToPark,LINE,HEAD_LINEAR,Math.toRadians(-180));
+
+        if(parkPos== Park1) {
+            route.addLocation(route.park, LINE, HEAD_LINEAR, Math.toRadians(90));
+        }
+        else {
+            route.addLocation(route.park2, LINE, HEAD_LINEAR, Math.toRadians(90));
+        }
+
+
+    }
+    private void pickupSampleFromTape(){
         route.addFunction(route::moveArmToPickup );
         route.addEvent(Route.Action.WAIT,0.2);
         route.addFunction(route::closeClaw );
         route.addEvent(Route.Action.WAIT,0.2);
-        route.addFunction(route::moveArmToBack );
+        route.addFunction(route::moveArmTo90 );
+        route.addFunction(route::maxSlides);
     }
 
+    private void deliverSample(){
+        route.addFunction(route::moveArmToDrop );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::openclaw);
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::moveArmTo90 );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::minSlides);
+    }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
     private void goToBackdrop(Pose2d backdrop){
         if(stackToBack == WALL)
             viaWall(backdrop);
-        else if(stackToBack == Park2){
+        else if(stackToBack == Field.Highways.Park2){
             viaCenter(backdrop);
         }
         else{//DOOR
@@ -162,9 +180,7 @@ route = constructorRoute;
 ////                            route.addMovement(TURN, -0.5);
 //                            route.addEvent(Route.Action.WAIT, 0.1);
                             // my old route
-                            route.addLocation(route.startSpecimenSide, LINE, HEAD_LINEAR, Math.toRadians(100));
-                            route.addLocation(route.dropPreSpecimen, LINE, HEAD_LINEAR, Math.toRadians(100));
-                           /* route.addEvent(Route.Action.TANGENT, route.oneFifteen);
+                            route.addEvent(Route.Action.TANGENT, route.oneFifteen);
 //                            route.addLocation(route.dropPixelRedLeftTapeBackdropAdj,SPLINE,HEAD_LINEAR, 180);
                             route.addLocation(route.dropPixelRedLeftTapeBackdrop, LINE, HEAD_LINEAR, route.twofifity);
                             route.addFunction(route::armDropSpikePos);
@@ -178,7 +194,7 @@ route = constructorRoute;
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .75);
 //                            route.addFunction(route::outPixel);
-//                            route.addEvent(Route.Action.WAIT, .2);*/
+//                            route.addEvent(Route.Action.WAIT, .2);
                             break;
                         case CENTER:
                             // Red Center Backdrop (7252)

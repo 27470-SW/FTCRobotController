@@ -143,8 +143,8 @@ public class CommonUtil
 
         WebcamName webcamName;
         if(
-                (alliance == Field.Alliance.RED && side == Field.StartPos.START_STACKS) ||
-                        (alliance == Field.Alliance.BLUE && side == Field.StartPos.START_STACKS)
+                (alliance == Field.Alliance.RED && side == Field.StartPos.START_SAMPLES) ||
+                        (alliance == Field.Alliance.BLUE && side == Field.StartPos.START_SAMPLES)
         )
         {
             webcamName = h.get(WebcamName.class, "webcamRIGHT");

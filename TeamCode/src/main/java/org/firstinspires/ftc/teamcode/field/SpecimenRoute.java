@@ -1,24 +1,21 @@
-package com.example.meepmeeptesting;
+package org.firstinspires.ftc.teamcode.field;
 
-import static com.example.meepmeeptesting.Field.FirstLocation.*;
-import static com.example.meepmeeptesting.Field.Highways.*;
-import static com.example.meepmeeptesting.Field.StartPos.*;
-import static com.example.meepmeeptesting.ITD_Route.preLoadedCone.high;
-import static com.example.meepmeeptesting.ITD_Route.preLoadedCone.low;
-import static com.example.meepmeeptesting.ITD_Route.preLoadedCone.lowHigh;
-import static com.example.meepmeeptesting.ITD_Route.preLoadedCone.med;
-import static com.example.meepmeeptesting.Route.Heading.*;
-import static com.example.meepmeeptesting.Route.Movement.*;
-import static com.example.meepmeeptesting.Route.TeamElement.*;
+import static org.firstinspires.ftc.teamcode.field.Field.FirstLocation.*;
+import static org.firstinspires.ftc.teamcode.field.Field.StartPos.*;
+import static org.firstinspires.ftc.teamcode.field.Route.Movement.*;
+import static org.firstinspires.ftc.teamcode.field.Route.Heading.*;
+import static org.firstinspires.ftc.teamcode.field.Route.TeamElement.*;
+import static org.firstinspires.ftc.teamcode.field.Field.Parks.*;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
-import java.util.Locale;
+
 
 public class SpecimenRoute {
+    String TAG = "SPECIMEN_ROUTE";
     Route route;
-    private Field.Highways stackToBack;
-    private Field.Highways pixelStack;
+    private Field.Parks stackToBack;
+    private Field.Parks pixelStack;
 
     private Route.TeamElement teamElement;
     private Field.Alliance alliance;
@@ -26,7 +23,7 @@ public class SpecimenRoute {
 route = constructorRoute;
     }
 
-    public void makeTraj(PositionOption startPos, Field.Highways parkPos, Field.FirstLocation firstLocation) {
+    public void makeTraj(PositionOption startPos, Field.Parks parkPos, Field.FirstLocation firstLocation) {
   /*
         this.stackToBack = stackToBack;
         if(firstLocation == PIXEL_CENTER){
@@ -130,7 +127,7 @@ route = constructorRoute;
     }
 
 
-    private void qualifierRoute(PositionOption startPos, Field.Highways parkPos, Field.FirstLocation firstLocation) {
+    private void qualifierRoute(PositionOption startPos, Field.Parks parkPos, Field.FirstLocation firstLocation) {
         if (alliance == Field.Alliance.RED) {
             switch ((Field.StartPos) startPos) {
                 case START_SAMPLES:
@@ -437,8 +434,6 @@ route = constructorRoute;
                                 route.addEvent(Route.Action.WAIT, .2);
                                 //route.addLocation(route.moveFromRedLeftTapeStacks, LINE, HEAD_LINEAR);
                                 //route.addMovement(TURN, -.5);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, Route.TeamElement.CENTER, alliance);
                                 route.addLocation(route.dropOnBackdropRedCenterStacks, SPLINE, HEAD_LINEAR, 270);
                             } else if(firstLocation == PIXEL_DOOR){
                                 goToBackdrop(route.dropOnBackdropRedCenterStacks);
@@ -516,8 +511,6 @@ route = constructorRoute;
                                 // route.addLocation(route.moveFromRedLeftTapeStacks, LINE, HEAD_LINEAR);
                                 //route.addLocation(route.dropPixelRedLeftTapeStacks, LINE, HEAD_LINEAR);
                                 //route.addMovement(TURN, -.5);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, RIGHT, alliance);
                                 route.addLocation(route.dropOnBackdropRedRightStacks, LINE, HEAD_LINEAR);
                             }
 //                            route.addLocation(route.byBlueLoadStation, SPLINE, HEAD_LINEAR);
@@ -691,8 +684,6 @@ route = constructorRoute;
                                 route.addFunction(route::outFrontPixel);
                                 route.addEvent(Route.Action.WAIT, .15);
                                 route.addFunction(route::armDropSpikePos);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, LEFT, alliance);
                             }
 
 //                            route.addLocation(route.backAwayFromBlueTape, SPLINE, HEAD_LINEAR);
@@ -765,8 +756,6 @@ route = constructorRoute;
                                 route.addFunction(route::armDropSpikePos);
                                 route.addLocation(route.moveFromBlueRightTapeStacks, LINE, HEAD_LINEAR);
                                 route.addEvent(Route.Action.TANGENT, 180);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, Route.TeamElement.CENTER, alliance);
 
                             }
 //                            route.addLocation(route.backAwayFromBlueTape, SPLINE, HEAD_LINEAR);
@@ -838,8 +827,6 @@ route = constructorRoute;
                                 route.addEvent(Route.Action.WAIT, .15);
                                 route.addFunction(route::armDropSpikePos);
                                 route.addEvent(Route.Action.WAIT, .2);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, RIGHT, alliance);
                             }
 //                            route.addLocation(route.backAwayFromBlueTape, SPLINE, HEAD_LINEAR, Math.toRadians(125));
 //                            route.addEvent(Route.Action.TANGENT, 180);
@@ -1111,10 +1098,7 @@ route = constructorRoute;
     }
 
     public enum preLoadedCone{low,med,high,lowHigh}
-    public static ITD_Route.preLoadedCone preLoadedConeJunc = low;
-    public static ITD_Route.preLoadedCone firstConeStackCone = med;
-    public static ITD_Route.preLoadedCone secondConeStackCone = lowHigh;
-    public static ITD_Route.preLoadedCone thirdConeStackCone = high;
+
 
     public void elvToConeStack()
     {
@@ -1145,28 +1129,8 @@ route = constructorRoute;
     public final static int INIT_CONE_STACK = 5;
     public static int conestackNum = INIT_CONE_STACK;
 
-    protected void openClaw()
-    {
-        System.out.println("OPEN Claw");
 
-    }
 
-    /* Grab the cone in the stack or in the terminal */
-    protected void closeClaw()
-    {
-        System.out.println("Close Claw");
-
-    }
-
-    protected void elvConeStackSecondOption() {
-        setClawPos(.6);
-        liftElvGndJnct();
-        setClawPos(.9);
-        liftElvMediumPoleJnct();
-    }
-    protected void setClawPos(double pos){
-        System.out.printf(Locale.US,"set claw pos to %f",pos );
-    }
 
    /*rotected final int sx;
     protected final int sy;

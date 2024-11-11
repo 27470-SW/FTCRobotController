@@ -269,7 +269,7 @@ public MotorComponent arm=null;
 //        }
         updTimer.reset();
 
-        if(VERBOSE) { RobotLog.dd(TAG, "UPD BOT:%.2f LFT:%.2f CLW:%.2f", botTime, lftTime, clawTime); }
+//        if(VERBOSE) { RobotLog.dd(TAG, "UPD BOT:%.2f LFT:%.2f CLW:%.2f", botTime, lftTime, clawTime); }
         ledUpdate();
     }
 
@@ -312,12 +312,13 @@ public MotorComponent arm=null;
         Thread.sleep(3000);
         arm.setMode(STOP_AND_RESET_ENCODER);
         arm.setMode(RUN_USING_ENCODER);
-        arm.moveToCnt(-600, 0.4);
+        arm.moveToCnt(-300, 0.4);
         Thread.sleep(2000);
-        arm.moveToCnt(-515, 0.1);
+        arm.moveToCnt(-215, 0.1);
     }
     public void initClaw() {
         claw.setClawPos(1);
+        RobotLog.dd(TAG, "claw open init");
     }
 
     public void initSlides() throws InterruptedException {

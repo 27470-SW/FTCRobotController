@@ -105,8 +105,8 @@ public abstract class Field
     public enum Highways implements PositionOption
     {
         WALL,
-        CENTER,
-        DOOR
+        Park2,
+        Park1
     }
 
     public enum FirstLocation implements PositionOption

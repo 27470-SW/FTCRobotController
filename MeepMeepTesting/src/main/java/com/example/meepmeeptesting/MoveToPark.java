@@ -20,7 +20,7 @@ public class MoveToPark {
             route.addLocation(route.parkWall,SPLINE,HEAD_LINEAR,route.eightyfive);
             route.addFunction(route::armDropSpikePos);
         }
-        if(parkPos == DOOR){
+        if(parkPos == Park1){
             route.addEvent(Route.Action.TANGENT, route.threeFifty);
             route.addLocation(route.parkDoor,SPLINE,HEAD_LINEAR, route.sixtyfive);
             route.addFunction(route::armDropSpikePos);
@@ -28,7 +28,7 @@ public class MoveToPark {
         else{
 
         }
-        if(parkPos != CENTER){
+        if(parkPos != Park2){
                 Pose2d backedUp = new Pose2d(route.getLastPose().getX(), route.getLastPose().getY()+16, route.getLastPose().getHeading());
                 route.addLocation(backedUp, LINE, HEAD_LINEAR);
         }

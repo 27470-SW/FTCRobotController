@@ -29,11 +29,11 @@ route = constructorRoute;
     public void makeTraj(Route.TeamElement teamElement, Field.Alliance alliance, PositionOption startPos, Field.FirstLocation firstLocation, Field.Highways stackToBack) {
         this.stackToBack = stackToBack;
         if(firstLocation == PIXEL_CENTER){
-            pixelStack = Field.Highways.CENTER;
+            pixelStack = Field.Highways.Park2;
         }else if(firstLocation == PIXEL_WALL){
             pixelStack = WALL;
         }else{
-            pixelStack = DOOR;
+            pixelStack = Park1;
         }
         this.teamElement = teamElement;
         this.alliance = alliance;
@@ -43,7 +43,7 @@ route = constructorRoute;
     private void goToBackdrop(Pose2d backdrop){
         if(stackToBack == WALL)
             viaWall(backdrop);
-        else if(stackToBack == Field.Highways.CENTER){
+        else if(stackToBack == Field.Highways.Park2){
             viaCenter(backdrop);
         }
         else{//DOOR

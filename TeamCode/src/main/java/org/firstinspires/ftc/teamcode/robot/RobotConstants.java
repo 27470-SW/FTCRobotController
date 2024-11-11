@@ -236,7 +236,7 @@ public class RobotConstants
   public static double BORD_SPD = .1;
   public static Chassis bot= Chassis.B7252;
   public static Field.Alliance alliance = Field.Alliance.RED;
-  public static PositionOption startPos = Field.StartPos.START_STACKS;
+  public static PositionOption startPos = Field.StartPos.START_SPECIMENS;
 
   public static BasicBot.DriveDir  DT_DIR = BasicBot.DriveDir.PUSHER;
   public static DcMotorSimple.Direction DT_LDIR = DcMotorSimple.Direction.REVERSE;
@@ -370,7 +370,8 @@ public class RobotConstants
 
     Field.StartPos sPos = (Field.StartPos)startPos;
     EL_MIN_ENCODER = 10;
-    EL_MAX_ENCODER = 10000;
+    EL_MAX_ENCODER = 2100;
+
     ARM_MAX_ENCODER = 10;
     ARM_MIN_ENCODER = -2000;
 

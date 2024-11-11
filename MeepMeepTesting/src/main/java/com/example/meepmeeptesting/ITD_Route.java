@@ -2,6 +2,7 @@ package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
+import static com.example.meepmeeptesting.Field.StartPos.*;
 import static com.example.meepmeeptesting.ITD_Route.preLoadedCone.high;
 import static com.example.meepmeeptesting.ITD_Route.preLoadedCone.low;
 import static com.example.meepmeeptesting.ITD_Route.preLoadedCone.lowHigh;
@@ -166,9 +167,16 @@ public class ITD_Route extends Route
    {
 
        Pose2d lastPose;
-       SpecimenRoute t1 = new SpecimenRoute(this);
-       t1.makeTraj(startPos, parkPos, firstLocation);
+       if(startPos == START_SAMPLES) {
+           SampleRoute t1 = new SampleRoute(this);
+           t1.makeTraj(startPos, parkPos, firstLocation);
+       }
+       else if(startPos == START_SPECIMENS)
+       {
+           SpecimenRoute t1 = new SpecimenRoute(this);
+           t1.makeTraj(startPos, parkPos, firstLocation);
 
+       }
        lastPose = this.getEnd();
 
         //Always do this at the end of initTrajectories2

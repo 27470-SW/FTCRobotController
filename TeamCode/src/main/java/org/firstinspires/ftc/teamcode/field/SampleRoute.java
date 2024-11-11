@@ -1,33 +1,33 @@
 package org.firstinspires.ftc.teamcode.field;
 
 import static org.firstinspires.ftc.teamcode.field.Field.FirstLocation.*;
-import static org.firstinspires.ftc.teamcode.field.Field.Highways.*;
-import static org.firstinspires.ftc.teamcode.field.Field.Highways.CENTER;
 import static org.firstinspires.ftc.teamcode.field.Field.StartPos.*;
 import static org.firstinspires.ftc.teamcode.field.Route.Movement.*;
 import static org.firstinspires.ftc.teamcode.field.Route.Heading.*;
 import static org.firstinspires.ftc.teamcode.field.Route.TeamElement.*;
+import static org.firstinspires.ftc.teamcode.field.Field.Parks.*;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.util.RobotLog;
 
-public class DropOnTapeThenBackdrop {
-    String TAG = "SJH+DTTB";
+
+
+public class SampleRoute {
+    String TAG = "SAMPLE_ROUTE";
     Route route;
-    private Field.Highways stackToBack;
-    private Field.Highways pixelStack;
+    private Field.Parks stackToBack;
+    private Field.Parks pixelStack;
 
     private Route.TeamElement teamElement;
     private Field.Alliance alliance;
-    public DropOnTapeThenBackdrop(Route constructorRoute) {
+    public SampleRoute(Route constructorRoute) {
 route = constructorRoute;
     }
 
-    public void makeTraj(Route.TeamElement teamElement, Field.Alliance alliance, PositionOption startPos, Field.FirstLocation firstLocation, Field.Highways stackToBack) {
-        RobotLog.dd(TAG, String.format("element: %s, alliance: %s, startPos: %s, firstLocation: %s ", teamElement, alliance, startPos, firstLocation, stackToBack));
+    public void makeTraj(PositionOption startPos, Field.Parks parkPos, Field.FirstLocation firstLocation) {
+  /*
         this.stackToBack = stackToBack;
         if(firstLocation == PIXEL_CENTER){
-            pixelStack = CENTER;
+            pixelStack = Field.Highways.CENTER;
         }else if(firstLocation == PIXEL_WALL){
             pixelStack = WALL;
         }else{
@@ -35,13 +35,80 @@ route = constructorRoute;
         }
         this.teamElement = teamElement;
         this.alliance = alliance;
-        qualifierRoute(teamElement, alliance,startPos,firstLocation);
+    */
+       //  qualifierRoute(startPos,parkPos,firstLocation);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        route.addLocation(route. startSample, START, HEAD_LINEAR);
+        route.addFunction(route::closeClaw );
+        route.addEvent(Route.Action.WAIT,0.2);
+		//Make slides up one and arm a little up.
+        route.addFunction(route::slidesUpOne, 0.1);
+        //route.addEvent(Route.Action.TANGENT, Math.toRadians(90));
+		route.addFunction(route::armUpLittle, 1.65);
+
+        route.addLocation(route.hangSpecimen, SPLINE, HEAD_LINEAR, Math.toRadians(0));
+        //route.addEvent(Route.Action.WAIT,0.5);
+        //route.addFunction(route::moveArmToDrive );
+        //route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::openclaw );
+        route.addEvent(Route.Action.WAIT,0.2);
+        //Make slides down one and arm down.
+		route.addFunction(route::moveToDrive);
+       // route.addLocation(route.moveBackFromSpecimen, LINE, HEAD_LINEAR, Math.toRadians(0));
+
+        route.addLocation(route.sample1, LINE, HEAD_CONSTANT, Math.toRadians(0));
+        pickupSampleFromTape();
+
+        route.addLocation(route.deliverSampleToBasket,LINE, HEAD_LINEAR);
+        deliverSample();
+
+        route.addLocation(route.sample2, LINE, HEAD_LINEAR);
+        pickupSampleFromTape();
+
+        route.addLocation(route.deliverSample2ToBasket,TURN, HEAD_LINEAR);
+        deliverSample();
+
+         route.addLocation(route.sample3, LINE, HEAD_LINEAR);
+         pickupSampleFromTape();
+
+        route.addLocation(route.deliverSample3ToBasket,TURN, HEAD_LINEAR, Math.toRadians(90));
+        deliverSample();
+
+        route.addLocation(route.positionToPark,LINE,HEAD_LINEAR,Math.toRadians(-180));
+
+        if(parkPos== Park1) {
+            route.addLocation(route.park, LINE, HEAD_LINEAR, Math.toRadians(90));
+        }
+        else {
+            route.addLocation(route.park2, LINE, HEAD_LINEAR, Math.toRadians(90));
+        }
+
+
+    }
+    private void pickupSampleFromTape(){
+        route.addFunction(route::moveArmToPickup );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::closeClaw );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::moveArmTo90 );
+        route.addFunction(route::maxSlides);
     }
 
+    private void deliverSample(){
+        route.addFunction(route::moveArmToDrop );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::openclaw);
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::moveArmTo90 );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::minSlides);
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
     private void goToBackdrop(Pose2d backdrop){
         if(stackToBack == WALL)
             viaWall(backdrop);
-        else if(stackToBack == CENTER){
+        else if(stackToBack == Field.Parks.Park2){
             viaCenter(backdrop);
         }
         else{//DOOR
@@ -67,7 +134,7 @@ route = constructorRoute;
     }
 
     private void viaDoor(Pose2d backdrop){
-        route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR, route.zero);
+        route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR, route.twoseventy);
         route.addEvent(Route.Action.TANGENT, route.oneHundred);
         route.addFunction(route::armToDrop, 2);
         if(alliance == Field.Alliance.RED && teamElement == RIGHT){
@@ -78,11 +145,10 @@ route = constructorRoute;
     }
 
 
-    private void qualifierRoute(Route.TeamElement teamElement, Field.Alliance alliance, PositionOption startPos, Field.FirstLocation firstLocation) {
+    private void qualifierRoute(PositionOption startPos, Field.Parks parkPos, Field.FirstLocation firstLocation) {
         if (alliance == Field.Alliance.RED) {
             switch ((Field.StartPos) startPos) {
-                case START_BACKDROP:
-
+                case START_SAMPLES:
                     route.addLocation(route.start, SPLINE, HEAD_LINEAR);
                     switch (teamElement) {
                         case LEFT:
@@ -149,14 +215,14 @@ route = constructorRoute;
 ////                            route.addMovement(TURN, -0.5);
 //                            route.addEvent(Route.Action.WAIT, 0.2);
                             // my old route
-                            route.addLocation(route.dropPixelRedCenterTapeBackdrop, LINE, HEAD_LINEAR);
+                            route.addLocation(route.dropPixelRedCenterTapeBackdrop,LINE,HEAD_LINEAR);
                             route.addFunction(route::armDropSpikePos, .3);
                             route.addEvent(Route.Action.WAIT, .3);
                             route.addFunction(route::outPurplePixel);
                             route.addEvent(Route.Action.WAIT, .55);
 //                            route.addEvent(Route.Action.TANGENT, route.thirty);
                             route.addFunction(route::armToDrop);
-                            route.addLocation(route.dropOnBackdropRedCenterBackdrop, SPLINE, HEAD_LINEAR, route.oneFifteen);
+                            route.addLocation(route.dropOnBackdropRedCenterBackdrop, SPLINE, HEAD_LINEAR,route.oneFifteen);
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .5);
                             break;
@@ -196,10 +262,10 @@ route = constructorRoute;
 
 //                        route.addFunction(route::outPixel);
 //                        route.addEvent(Route.Action.WAIT, .5);
-                            break;
+                        break;
                     }
                     break;
-                case START_STACKS:
+                case START_SPECIMENS:
                     route.addLocation(route.start, START, HEAD_LINEAR);
                     switch (teamElement) {
                         case LEFT:
@@ -298,6 +364,16 @@ route = constructorRoute;
 //                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
 //                                t4.makeTraj(stackToBack, pixelStack,LEFT, alliance);
                                 route.addLocation(route.dropOnBackdropRedLeftBackdrop, LINE, HEAD_LINEAR);
+                            }else if(firstLocation == PIXEL_DOOR)
+                            {
+                                route.makeNewTraj();
+                                route.addFunction(route::armToDrop);
+                                route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR, route.oneeighty);
+                                route.addFunction(route::armDropSpikePos);
+                                route.addEvent(Route.Action.TANGENT, route.oneHundred);
+                                route.addFunction(route::armToDrop, 2);
+                                route.addLocation(route.dropOnBackdropRedLeftStacks, SPLINE, HEAD_LINEAR, route.forty);
+
                             }
 //                            route.addLocation(route.byBlueLoadStation, SPLINE, HEAD_LINEAR, 0);
 //                            route.addLocation(route.moveTowardsRedBackdropLft, LINE, HEAD_LINEAR,route.ninety);
@@ -306,9 +382,9 @@ route = constructorRoute;
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .75);
                             route.addFunction(route::armToDropHigher);
-                            route.addLocation(route.dropOnBackdropRedLeftStacksHi, LINE, HEAD_LINEAR, route.ninety);
-                            route.addFunction(route::outPixel);
-                            route.addEvent(Route.Action.WAIT, .75);
+                            route.addLocation(route.dropOnBackdropRedLeftStacksHi, LINE, HEAD_LINEAR,route.ninety);
+                            route.addFunction(route::outPixel );
+                            route.addEvent(Route.Action.WAIT,.75);
                             break;
                         case CENTER:
                             // Red Center Stacks (7252)
@@ -354,7 +430,7 @@ route = constructorRoute;
 //                            route.addEvent(Route.Action.WAIT, 0.5);
 //                            route.addLocation(route.moveTowardsRedBackdropHdAdj, LINE, HEAD_LINEAR);
                             //my old route
-                            route.addLocation(route.dropPixelRedCenterTapeStacks, LINE, HEAD_LINEAR);
+                            route.addLocation(route.dropPixelRedCenterTapeStacks,LINE,HEAD_LINEAR);
                             route.addFunction(route::armDropSpikePos);
                             route.addEvent(Route.Action.WAIT, .05);
                             route.addFunction(route::outPurplePixel);
@@ -374,9 +450,9 @@ route = constructorRoute;
                                 route.addEvent(Route.Action.WAIT, .2);
                                 //route.addLocation(route.moveFromRedLeftTapeStacks, LINE, HEAD_LINEAR);
                                 //route.addMovement(TURN, -.5);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, Route.TeamElement.CENTER, alliance);
                                 route.addLocation(route.dropOnBackdropRedCenterStacks, SPLINE, HEAD_LINEAR, 270);
+                            } else if(firstLocation == PIXEL_DOOR){
+                                goToBackdrop(route.dropOnBackdropRedCenterStacks);
                             }
 //                            route.addLocation(route.byBlueLoadStation, SPLINE, HEAD_LINEAR);
 //                            route.addLocation(route.moveTowardsRedBackdrop, LINE, HEAD_LINEAR,route.ninety);
@@ -451,8 +527,6 @@ route = constructorRoute;
                                 // route.addLocation(route.moveFromRedLeftTapeStacks, LINE, HEAD_LINEAR);
                                 //route.addLocation(route.dropPixelRedLeftTapeStacks, LINE, HEAD_LINEAR);
                                 //route.addMovement(TURN, -.5);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, RIGHT, alliance);
                                 route.addLocation(route.dropOnBackdropRedRightStacks, LINE, HEAD_LINEAR);
                             }
 //                            route.addLocation(route.byBlueLoadStation, SPLINE, HEAD_LINEAR);
@@ -463,15 +537,15 @@ route = constructorRoute;
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .5);
                             route.addFunction(route::armToDropHigher);
-                            route.addLocation(route.dropOnBackdropRedRightStacksHi, SPLINE, HEAD_LINEAR, route.ninety);
+                            route.addLocation(route.dropOnBackdropRedRightStacksHi, SPLINE, HEAD_LINEAR,route.ninety);
                             route.addFunction(route::outPixel);
-                            route.addEvent(Route.Action.WAIT, .5);
+                            route.addEvent(Route.Action.WAIT,.5);
                             break;
                     }
             }
         } else {
             switch ((Field.StartPos) startPos) {
-                case START_BACKDROP:
+                case START_SAMPLES:
                     route.addLocation(route.start, SPLINE, HEAD_LINEAR);
                     switch (teamElement) {
                         case LEFT:
@@ -493,7 +567,6 @@ route = constructorRoute;
 //                            route.addEvent(Route.Action.WAIT, 0.5);
 //                            route.addLocation(route.reverseFromBlueBackdropBk, LINE, HEAD_LINEAR);
 //                            route.addEvent(Route.Action.WAIT, 0.2);
-
                             //my old route
                             route.addLocation(route.dropPixelRedRightTapeBackdrop, LINE, HEAD_LINEAR);
                             route.addFunction(route::armDropSpikePos, 1);
@@ -505,17 +578,6 @@ route = constructorRoute;
                             route.addLocation(route.dropOnBackdropBlueLeftBackdrop, SPLINE, HEAD_LINEAR, route.ninety);
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .5);
-                            //red before
-//                            route.addLocation(route.dropPixelBlueLeftTapeBackdrop2,LINE,HEAD_LINEAR);
-//                            route.addFunction(route::armDropSpikePos);
-//                            route.addEvent(Route.Action.WAIT, .2);
-//                            route.addFunction(route::outPurplePixel);
-//                            route.addEvent(Route.Action.WAIT, .5);
-//                            route.addFunction(route::armToDrop);
-//                            route.addLocation(route.dropOnBackdropBlueLeftBackdrop, SPLINE, HEAD_LINEAR, Math.toRadians(80));
-//                            route.addEvent(Route.Action.TANGENT, 120);
-//                            route.addFunction(route::outPixel);
-//                            route.addEvent(Route.Action.WAIT, .5);
                             break;
                         case CENTER:
                             // Blue Center Backdrop (7252)
@@ -534,7 +596,6 @@ route = constructorRoute;
 //                            route.addEvent(Route.Action.WAIT, 0.5);
 //                            route.addLocation(route.reverseFromBlueBackdropBk, LINE, HEAD_LINEAR);
 //                            route.addEvent(Route.Action.WAIT, 0.2);
-
                             // my old route
                             route.addLocation(route.dropPixelRedCenterTapeBackdrop, LINE, HEAD_LINEAR);
                             route.addFunction(route::armDropSpikePos, .3);
@@ -546,17 +607,6 @@ route = constructorRoute;
                             route.addLocation(route.dropOnBackdropBlueCenterBackdrop, SPLINE, HEAD_LINEAR, route.oneFifteen);
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .5);
-                            //red before
-//                            route.addLocation(route.dropPixelBlueCenterTapeBackdrop,LINE,HEAD_LINEAR);
-//                            route.addFunction(route::armDropSpikePos);
-//                            route.addEvent(Route.Action.WAIT, .3);
-//                            route.addFunction(route::outPixel);
-//                            route.addEvent(Route.Action.WAIT, .5);
-//                            route.addFunction(route::armToDrop);
-//                            route.addEvent(Route.Action.TANGENT, 180);
-//                            route.addLocation(route.dropOnBackdropBlueCenterBackdrop, LINE, HEAD_LINEAR);
-//                            route.addFunction(route::outPixel);
-//                            route.addEvent(Route.Action.WAIT, .5);
                             break;
                         case RIGHT:
                             // Blue Right Backdrop (7252)
@@ -588,21 +638,10 @@ route = constructorRoute;
                             route.addLocation(route.dropOnBackdropBlueRightBackdrop, LINE, HEAD_LINEAR);
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .75);
-                            // red before
-//                            route.addLocation(route.moveAwayFromWallBlueBackdrop,SPLINE,HEAD_LINEAR);
-//                            route.addLocation(route.dropPixelBlueRightTapeBackdrop,SPLINE,HEAD_LINEAR,route.twoTen);
-//                            route.addFunction(route::armDropSpikePos);
-//                            route.addEvent(Route.Action.WAIT, .3);
-//                            route.addFunction(route::outPixel);
-//                            route.addEvent(Route.Action.WAIT, .6);
-//                            route.addFunction(route::armToDrop, 3);
-//                            route.addLocation(route.dropOnBackdropBlueRightBackdrop, LINE, HEAD_LINEAR);
-//                            route.addFunction(route::outPixel);
-//                            route.addEvent(Route.Action.WAIT, .5);
                             break;
                     }
                     break;
-                case START_STACKS:
+                case START_SPECIMENS:
                     route.addLocation(route.start, START, HEAD_LINEAR);
                     switch (teamElement) {
                         case LEFT:
@@ -661,8 +700,6 @@ route = constructorRoute;
                                 route.addFunction(route::outFrontPixel);
                                 route.addEvent(Route.Action.WAIT, .15);
                                 route.addFunction(route::armDropSpikePos);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, LEFT, alliance);
                             }
 
 //                            route.addLocation(route.backAwayFromBlueTape, SPLINE, HEAD_LINEAR);
@@ -673,9 +710,9 @@ route = constructorRoute;
                             route.addFunction(route::outPixel);
                             route.addEvent(Route.Action.WAIT, .5);
                             route.addFunction(route::armToDropHigher);
-                            route.addLocation(route.dropOnBackdropBlueLeftStacksHi, SPLINE, HEAD_LINEAR, route.ninety);
-                            route.addFunction(route::outPixel);
-                            route.addEvent(Route.Action.WAIT, .5);
+                            route.addLocation(route.dropOnBackdropBlueLeftStacksHi, SPLINE, HEAD_LINEAR,route.ninety);
+                            route.addFunction(route::outPixel );
+                            route.addEvent(Route.Action.WAIT,.5);
                             break;
                         case CENTER:
                             // Blue Center Stacks (7252)
@@ -716,7 +753,7 @@ route = constructorRoute;
 //                            route.addFunction(route::outPixel);
 //                            route.addLocation(route.backupFromBackdropBlueStacksCenter, LINE, HEAD_LINEAR);
                             //my old route
-                            route.addLocation(route.dropPixelBlueCenterTapeStacks, LINE, HEAD_LINEAR);
+                            route.addLocation(route.dropPixelBlueCenterTapeStacks,LINE,HEAD_LINEAR);
                             route.addFunction(route::armDropSpikePos);
                             route.addEvent(Route.Action.WAIT, .2);
                             route.addFunction(route::outPixel);
@@ -735,8 +772,6 @@ route = constructorRoute;
                                 route.addFunction(route::armDropSpikePos);
                                 route.addLocation(route.moveFromBlueRightTapeStacks, LINE, HEAD_LINEAR);
                                 route.addEvent(Route.Action.TANGENT, 180);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, Route.TeamElement.CENTER, alliance);
 
                             }
 //                            route.addLocation(route.backAwayFromBlueTape, SPLINE, HEAD_LINEAR);
@@ -808,8 +843,6 @@ route = constructorRoute;
                                 route.addEvent(Route.Action.WAIT, .15);
                                 route.addFunction(route::armDropSpikePos);
                                 route.addEvent(Route.Action.WAIT, .2);
-                                MoveToBackdropFromPixelStack t4 = new MoveToBackdropFromPixelStack(route);
-                                t4.makeTraj(stackToBack, pixelStack, RIGHT, alliance);
                             }
 //                            route.addLocation(route.backAwayFromBlueTape, SPLINE, HEAD_LINEAR, Math.toRadians(125));
 //                            route.addEvent(Route.Action.TANGENT, 180);
@@ -826,15 +859,12 @@ route = constructorRoute;
                             break;
                     }
             }
-
-
         }
 
-        if ((alliance == Field.Alliance.BLUE && startPos == START_BACKDROP)){
+        if ((alliance == Field.Alliance.BLUE && startPos == START_SAMPLES)){
             route.addLocation(route.dropCenterPixelBackwards, LINE, HEAD_LINEAR);
         }
     }
-
     private void moveStartToLeft(){
 
     }
@@ -842,13 +872,10 @@ route = constructorRoute;
 
 
 
-    protected void startPos(){
-
-    }
 
     protected void firstMovement(Route.TeamElement teamElement, Field.Alliance alliance, PositionOption startPos, Field.FirstLocation firstLocation)
     {
-        if((teamElement ==LEFT &&alliance== Field.Alliance.RED ||teamElement ==RIGHT &&alliance== Field.Alliance.BLUE)  && startPos == START_BACKDROP && firstLocation == BACKDROP){
+        if((teamElement ==LEFT &&alliance== Field.Alliance.RED ||teamElement ==RIGHT &&alliance== Field.Alliance.BLUE)  && startPos == START_SAMPLES && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedHigh,START,HEAD_DEFAULT);
 //            route.addEvent(Route.Action.TANGENT,route.ninetyFive);
             route.addLocation(route.extraPointHigh,SPLINE,HEAD_LINEAR);
@@ -865,7 +892,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel);
             route.addEvent(Route.Action.WAIT, .5);
         }
-        if((teamElement ==RIGHT && alliance== Field.Alliance.RED || teamElement ==LEFT && alliance== Field.Alliance.BLUE) && startPos == START_BACKDROP && firstLocation == BACKDROP){
+        if((teamElement ==RIGHT && alliance== Field.Alliance.RED || teamElement ==LEFT && alliance== Field.Alliance.BLUE) && startPos == START_SAMPLES && firstLocation == BACKDROP){
             route.addLocation(route.start,START,HEAD_DEFAULT);
             route.addLocation(route.teamElementRight,LINE,HEAD_LINEAR);
             route.addFunction(route::armDropSpikePos, .3);
@@ -880,7 +907,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel);
             route.addEvent(Route.Action.WAIT, .5);
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_BACKDROP && firstLocation == BACKDROP){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SAMPLES && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedHigh,START,HEAD_DEFAULT);
             route.addLocation(route.teamElementCenter,LINE,HEAD_LINEAR);
             route.addFunction(route::armDropSpikePos, .3);
@@ -895,7 +922,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel);
             route.addEvent(Route.Action.WAIT, .5);
         }
-        if((teamElement ==LEFT && alliance== Field.Alliance.RED ||teamElement ==RIGHT && alliance== Field.Alliance.BLUE)  && startPos == START_STACKS && firstLocation == BACKDROP){
+        if((teamElement ==LEFT && alliance== Field.Alliance.RED ||teamElement ==RIGHT && alliance== Field.Alliance.BLUE)  && startPos == START_SPECIMENS && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addFunction(route::armDropSpikePos, .3);
             route.addEvent(Route.Action.TANGENT, route.oneHundred);
@@ -910,7 +937,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel );
             route.addEvent(Route.Action.WAIT,.5);
         }
-        if((teamElement ==RIGHT && alliance== Field.Alliance.RED || teamElement==LEFT && alliance== Field.Alliance.BLUE) && startPos == START_STACKS && firstLocation == BACKDROP){
+        if((teamElement ==RIGHT && alliance== Field.Alliance.RED || teamElement==LEFT && alliance== Field.Alliance.BLUE) && startPos == START_SPECIMENS && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addFunction(route::armDropSpikePos, 1.5);
             route.addLocation(route.extraPointLow,LINE,HEAD_LINEAR);
@@ -925,7 +952,7 @@ route = constructorRoute;
             route.addFunction(route::outPixel );
             route.addEvent(Route.Action.WAIT,.5);
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_STACKS && firstLocation == BACKDROP){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SPECIMENS && firstLocation == BACKDROP){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addFunction(route::armDropSpikePos, 1);
             route.addLocation(route.teamElementCenterLow,LINE,HEAD_LINEAR);
@@ -939,56 +966,56 @@ route = constructorRoute;
             route.addFunction(route::outPixel );
             route.addEvent(Route.Action.WAIT,.5);
         }
-        if(teamElement ==LEFT && startPos == START_STACKS && firstLocation == PIXEL_WALL){
+        if(teamElement ==LEFT && startPos == START_SPECIMENS && firstLocation == PIXEL_WALL){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(330));
             route.addLocation(route.teamElementLeftLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackRight, SPLINE, HEAD_LINEAR,Math.toRadians(270));
         }
-        if(teamElement ==LEFT && startPos == START_STACKS && firstLocation == PIXEL_CENTER){
+        if(teamElement ==LEFT && startPos == START_SPECIMENS && firstLocation == PIXEL_CENTER){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(330));
             route.addLocation(route.teamElementLeftLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackRight, SPLINE, HEAD_LINEAR,Math.toRadians(270));
             route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement ==LEFT && startPos == START_STACKS && firstLocation == PIXEL_DOOR){
+        if(teamElement ==LEFT && startPos == START_SPECIMENS && firstLocation == PIXEL_DOOR){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(330));
             route.addLocation(route.teamElementLeftLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackRight, SPLINE, HEAD_LINEAR,Math.toRadians(270));
             route.addLocation(route.pickUpPixelStackLeft, LINE, HEAD_LINEAR,Math.toRadians(330));
         }
-        if(teamElement ==RIGHT && startPos == START_STACKS && firstLocation == PIXEL_WALL){
+        if(teamElement ==RIGHT && startPos == START_SPECIMENS && firstLocation == PIXEL_WALL){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addLocation(route.teamElementRightLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackRight, LINE, HEAD_LINEAR,Math.toRadians(130));
         }
-        if(teamElement ==RIGHT && startPos == START_STACKS && firstLocation == PIXEL_CENTER){
+        if(teamElement ==RIGHT && startPos == START_SPECIMENS && firstLocation == PIXEL_CENTER){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(220));
             route.addLocation(route.teamElementRightLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackCenter, LINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement ==RIGHT && startPos == START_STACKS && firstLocation == PIXEL_DOOR){
+        if(teamElement ==RIGHT && startPos == START_SPECIMENS && firstLocation == PIXEL_DOOR){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(220));
             route.addLocation(route.teamElementRightLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackLeft, LINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_STACKS && firstLocation == PIXEL_CENTER){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SPECIMENS && firstLocation == PIXEL_CENTER){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(300));
             route.addLocation(route.teamElementCenterLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_STACKS && firstLocation == PIXEL_DOOR){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SPECIMENS && firstLocation == PIXEL_DOOR){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(300));
             route.addLocation(route.teamElementCenterLow,LINE,HEAD_LINEAR);
             route.addLocation(route.pickUpPixelStackLeft, SPLINE, HEAD_LINEAR,Math.toRadians(200));
         }
-        if(teamElement == Route.TeamElement.CENTER && startPos == START_STACKS && firstLocation == PIXEL_WALL){
+        if(teamElement == Route.TeamElement.CENTER && startPos == START_SPECIMENS && firstLocation == PIXEL_WALL){
             route.addLocation(route.startCSRedLow,START,HEAD_DEFAULT);
             route.addEvent(Route.Action.TANGENT, Math.toRadians(330));
             route.addLocation(route.teamElementCenterLow,LINE,HEAD_LINEAR);
@@ -1007,6 +1034,140 @@ route = constructorRoute;
     }
 
 
+
+
+
+
+    protected void moveFromStart() {
+
+        route.addLocation(route.start, LINE, HEAD_LINEAR);
+        //addLocation(extra1, LINE, HEAD_LINEAR);
+        //addLocation(Start, LINE, HEAD_LINEAR);
+        //addLocation(awayFromStart, LINE, HEAD_LINEAR);;
+      /*addFunction( this::liftElvLowPoleJnct);
+      addLocation(extra3, LINE, HEAD_LINEAR);
+      addLocation(extra2, LINE, HEAD_SPLINE);
+      addFunction( this::elvToConeStack);
+      addEvent(Action.WAIT, 0.5);
+      addFunction( this::openClaw);
+      addLocation(extra3, LINE, HEAD_SPLINE);
+      addLocation(preGrabCone[0], LINE, HEAD_SPLINE);
+      addLocation(strafeGrabCone[0], LINE, HEAD_LINEAR);
+      addFunction( this::closeClaw);
+      addEvent(Action.WAIT, 0.3);*/
+        //addFunction( this::liftElvMediumPoleJnct);
+        //addLocation(toTurnBox, LINE, HEAD_LINEAR);
+    }
+
+
+    protected Pose2d awayFromStart;
+    protected void liftElvGndJnct()
+    {
+        System.out.println("Lift Elevator to GND JNCT");
+    }
+
+    protected void liftElvLowPoleJnct()
+    {
+        System.out.println("Lift Elevator to LOW POLE JNCT");
+    }
+
+    protected void liftElvMediumPoleJnct()
+    {
+        System.out.println("Lift Elevator to MED POLE JNCT");
+    }
+
+    /* Lift Elevator to the Highest Level to prepare to drop Cone */
+    protected void liftElvHighPoleJnct()
+    {
+        System.out.println("Lift Elevator to HIGH POLE JNCT");
+    }
+
+    /* Lift Elevator to the Highest Level to prepare to drop Cone */
+    protected void liftElvConeStackLvlFive()
+    {
+        System.out.println("Lift Elevator to CONE STACK LVL 5");
+
+    }
+
+    protected void liftElvConeStackLvlFour()
+    {
+        System.out.println("Lift Elevator to CONE STACK LVL 4");
+
+    }
+
+    protected void liftElvConeStackLvlThree()
+    {
+        System.out.println("Lift Elevator to CONE STACK LVL 3");
+
+    }
+
+    protected void liftElvConeStackLvlTwo()
+    {
+        System.out.println("Lift Elevator to CONE STACK LVL 2");
+
+    }
+
+    protected void liftElvConeStackLvlOne()
+    {
+        System.out.println("Lift Elevator to CONE STACK LVL 1");
+
+    }
+
+    public enum preLoadedCone{low,med,high,lowHigh}
+
+
+    public void elvToConeStack()
+    {
+        switch (conestackNum)
+        {
+            case 1:
+                liftElvConeStackLvlOne();
+                break;
+            case 2:
+                liftElvConeStackLvlTwo();
+                break;
+            case 3:
+                liftElvConeStackLvlThree();
+                break;
+            case 4:
+                liftElvConeStackLvlFour();
+                break;
+            case 5:
+                liftElvConeStackLvlFive();
+                break;
+            default:
+                liftElvConeStackLvlOne();
+                break;
+        }
+        conestackNum --;
+    }
+
+    public final static int INIT_CONE_STACK = 5;
+    public static int conestackNum = INIT_CONE_STACK;
+
+
+
+
+
+
+
+   /*rotected final int sx;
+    protected final int sy;
+    protected int sh;
+    protected int sf;
+    protected int sr;
+    protected final double flip;
+    protected final double strtX;
+    protected final double strtY;
+    protected final double strtH;
+    protected Field.Alliance alliance;
+    protected PositionOption startPos;
+    protected final double botBackToCtr;
+    protected final double botSideToCtr;
+    double rightSideLineUpToBorderAdjustment = 0.5;
+
+    protected Pose2d moveFromStart;
+    protected Pose2d start;*/
 
 }
 

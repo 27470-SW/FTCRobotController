@@ -27,18 +27,18 @@ public class AutonConfig extends InitLinearOpMode implements FtcMenu.MenuButtons
     private static int curcuit;
     private static float xOffset;
     private static Field.AutonDebug autonDebugEnable;
-    private static Field.Highways parkPos;
+    private static Field.Parks parkPos;
     private static Field.FirstLocation firstLoc;
-    private static Field.Highways stackSideHighwayToBackdrop;
-    private static Field.Highways Highway1Var;
-    private static Field.Highways Pixel1Var;
-    private static Field.Highways Highway12Var;
-    private static Field.Highways Highway22Var;
-    private static Field.Highways Highway32Var;
-    private static Field.Highways Pixel2Var;
-    private static Field.Highways Pixel3Var;
-    private static Field.Highways Highway2Var;
-    private static Field.Highways Highway3Var;
+    private static Field.Parks stackSideHighwayToBackdrop;
+    private static Field.Parks Highway1Var;
+    private static Field.Parks Pixel1Var;
+    private static Field.Parks Highway12Var;
+    private static Field.Parks Highway22Var;
+    private static Field.Parks Highway32Var;
+    private static Field.Parks Pixel2Var;
+    private static Field.Parks Pixel3Var;
+    private static Field.Parks Highway2Var;
+    private static Field.Parks Highway3Var;
     private static Field.AutonDebug uniqecircuits;
 
     static
@@ -123,11 +123,11 @@ public class AutonConfig extends InitLinearOpMode implements FtcMenu.MenuButtons
         }
         try
         {
-            parkPos = Field.Highways.values()[PreferenceMgr.getParkPosition()];
+            parkPos = Field.Parks.values()[PreferenceMgr.getParkPosition()];
         }
         catch(Exception e)
         {
-            parkPos = Field.Highways.values()[0];
+            parkPos = Field.Parks.values()[0];
         }
         try
         {
@@ -234,39 +234,39 @@ public class AutonConfig extends InitLinearOpMode implements FtcMenu.MenuButtons
             0.0, 12.0, 1.0, xOffset, "%5.2f");
         FtcChoiceMenu<Field.AutonDebug> autoDebugMenu
                 = new FtcChoiceMenu<>("AUTON DEBUG:",   xOffsetMenu, this);
-        FtcChoiceMenu<Field.Highways> parkPosMenu
+        FtcChoiceMenu<Field.Parks> parkPosMenu
                 = new FtcChoiceMenu<>("Park Position:",   autoDebugMenu, this);
         FtcChoiceMenu<Field.FirstLocation> firstLocationMenu
                 = new FtcChoiceMenu<>("First Location:",   parkPosMenu, this);
-        FtcChoiceMenu<Field.Highways> stackHighwayToBdMenu
+        FtcChoiceMenu<Field.Parks> stackHighwayToBdMenu
                 = new FtcChoiceMenu<>("Highway To Backdrop:",   firstLocationMenu, this);
         //
         FtcValueMenu  curcuitMenu
                 = new FtcValueMenu("Amount of Curcuits:",       stackHighwayToBdMenu,     this,
                 0.0, 3.0, 1.0, curcuit, "%5.2f");
         //
-        FtcChoiceMenu<Field.Highways> Highway1
+        FtcChoiceMenu<Field.Parks> Highway1
                 = new FtcChoiceMenu<>("Highway1 ToPixel:",   curcuitMenu, this);
-        FtcChoiceMenu<Field.Highways> Pixelstack1
+        FtcChoiceMenu<Field.Parks> Pixelstack1
                 = new FtcChoiceMenu<>("Pixelstack1:",   Highway1, this);
-        FtcChoiceMenu<Field.Highways> Highway12
+        FtcChoiceMenu<Field.Parks> Highway12
                 = new FtcChoiceMenu<>("Highway1 ToBackdrop:",   Pixelstack1, this);
         FtcChoiceMenu<Field.AutonDebug> sameCurcuitMenu
                 = new FtcChoiceMenu<>("Unique Circuits:",   Highway12, this);
 
 
 
-        FtcChoiceMenu<Field.Highways> Highway2
+        FtcChoiceMenu<Field.Parks> Highway2
                 = new FtcChoiceMenu<>("Highway2 ToPixel:",   null, this);
-        FtcChoiceMenu<Field.Highways> Pixelstack2
+        FtcChoiceMenu<Field.Parks> Pixelstack2
                 = new FtcChoiceMenu<>("Pixelstack2:",   Highway2, this);
-        FtcChoiceMenu<Field.Highways> Highway22
+        FtcChoiceMenu<Field.Parks> Highway22
                 = new FtcChoiceMenu<>("Highway2 ToBackdrop:",   Pixelstack2, this);
-        FtcChoiceMenu<Field.Highways> Highway3
+        FtcChoiceMenu<Field.Parks> Highway3
                 = new FtcChoiceMenu<>("Highway3 ToPixel:",   Highway22, this);
-        FtcChoiceMenu<Field.Highways> Pixelstack3
+        FtcChoiceMenu<Field.Parks> Pixelstack3
                 = new FtcChoiceMenu<>("Pixelstack3:",   Highway3, this);
-        FtcChoiceMenu<Field.Highways> Highway32
+        FtcChoiceMenu<Field.Parks> Highway32
                 = new FtcChoiceMenu<>("Highway3 ToBackdrop:",   Pixelstack3, this);
 
         //
@@ -285,27 +285,27 @@ public class AutonConfig extends InitLinearOpMode implements FtcMenu.MenuButtons
 
         for(Field.StartPos p : Field.StartPos.values())
         {
-            startPosMenu.addChoice(p.toString(), p, p==startPosition, p==Field.StartPos.START_STACKS?firstLocationMenu:curcuitMenu);
+            startPosMenu.addChoice(p.toString(), p, p==startPosition, p==Field.StartPos.START_SAMPLES?firstLocationMenu:curcuitMenu);
         }
 
         for(Field.FirstLocation f : Field.FirstLocation.values())
         {
             firstLocationMenu.addChoice(f.toString(), f, f == firstLoc, stackHighwayToBdMenu);
         }
-        for(Field.Highways g : Field.Highways.values())
+        for(Field.Parks g : Field.Parks.values())
         {
             stackHighwayToBdMenu.addChoice(g.toString(), g, g == stackSideHighwayToBackdrop, curcuitMenu);
         }
         curcuitMenu.setChildMenu(null);
-        for(Field.Highways g : Field.Highways.values())
+        for(Field.Parks g : Field.Parks.values())
         {
             Highway1.addChoice(g.toString(), g, g == Highway1Var, Pixelstack1);
         }
-        for(Field.Highways h : Field.Highways.values())
+        for(Field.Parks h : Field.Parks.values())
         {
             Pixelstack1.addChoice(h.toString(), h, h == Pixel1Var, Highway12);
         }
-        for(Field.Highways i : Field.Highways.values())
+        for(Field.Parks i : Field.Parks.values())
         {
             Highway12.addChoice(i.toString(), i, i == Highway12Var, null);
         }
@@ -313,32 +313,32 @@ public class AutonConfig extends InitLinearOpMode implements FtcMenu.MenuButtons
         {
             sameCurcuitMenu.addChoice(p.toString(), p, p == uniqecircuits, null);
         }
-        for(Field.Highways j : Field.Highways.values())
+        for(Field.Parks j : Field.Parks.values())
         {
             Highway2.addChoice(j.toString(), j, j == Highway2Var, Pixelstack2);
         }
-        for(Field.Highways k : Field.Highways.values())
+        for(Field.Parks k : Field.Parks.values())
         {
             Pixelstack2.addChoice(k.toString(), k, k == Pixel2Var, Highway22);
         }
-        for(Field.Highways l : Field.Highways.values())
+        for(Field.Parks l : Field.Parks.values())
         {
             Highway22.addChoice(l.toString(), l, l == Highway22Var, Highway3);
         }
-        for(Field.Highways m : Field.Highways.values())
+        for(Field.Parks m : Field.Parks.values())
         {
             Highway3.addChoice(m.toString(), m, m == Highway3Var, Pixelstack3);
         }
-        for(Field.Highways n : Field.Highways.values())
+        for(Field.Parks n : Field.Parks.values())
         {
             Pixelstack3.addChoice(n.toString(), n, n == Pixel3Var, Highway32);
         }
-        for(Field.Highways o : Field.Highways.values())
+        for(Field.Parks o : Field.Parks.values())
         {
             Highway32.addChoice(o.toString(), o, o == Highway32Var, parkPosMenu);
         }
 
-        for(Field.Highways e : Field.Highways.values())
+        for(Field.Parks e : Field.Parks.values())
         {
             parkPosMenu.addChoice(e.toString(), e, e == parkPos, delayMenu);
         }
@@ -399,10 +399,10 @@ public class AutonConfig extends InitLinearOpMode implements FtcMenu.MenuButtons
 
                 Pixelstack2.removeAllChoices();
                 Pixelstack3.removeAllChoices();
-                for (Field.Highways k : Field.Highways.values()) {
+                for (Field.Parks k : Field.Parks.values()) {
                     Pixelstack2.addChoice(k.toString(), k, k == Pixel2Var, Pixelstack3);
                 }
-                for (Field.Highways n : Field.Highways.values()) {
+                for (Field.Parks n : Field.Parks.values()) {
                     Pixelstack3.addChoice(n.toString(), n, n == Pixel3Var, parkPosMenu);
                 }
                 FtcMenu.walkMenuTree(Pixelstack2, this);
@@ -423,7 +423,7 @@ public class AutonConfig extends InitLinearOpMode implements FtcMenu.MenuButtons
         xOffset = (float)xOffsetMenu.getCurrentValue();
         autonDebugEnable = autoDebugMenu.getCurrentChoiceObject();
         parkPos = parkPosMenu.getCurrentChoiceObject();
-        if(startPosition == Field.StartPos.START_BACKDROP) { firstLoc = Field.FirstLocation.BACKDROP; }
+        if(startPosition == Field.StartPos.START_SPECIMENS) { firstLoc = Field.FirstLocation.BACKDROP; }
         else { firstLoc = firstLocationMenu.getCurrentChoiceObject(); }
         stackSideHighwayToBackdrop = stackHighwayToBdMenu.getCurrentChoiceObject();
 

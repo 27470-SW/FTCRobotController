@@ -132,6 +132,8 @@ public class MecanumTeleop extends InitLinearOpMode
 
     }
 
+    public int clawLev;
+    public int armNslidesLev;
     public boolean pixelDetected = false;
     private int ONE_CONSTANT = 1;
 
@@ -209,7 +211,7 @@ public class MecanumTeleop extends InitLinearOpMode
         dashboard.displayText(l++, String.format(Locale.US, "lyftpowr %4.2f", liftSpd ));
         dashboard.displayText(14, String.format(Locale.US,"SW Ver SC Build 12_8_2022"));
         //dashboard.displayText(l++,String.format(Locale.US, "PixelDistance: %f", robot.colorFindDistance()));
-        dashboard.displayText(l++, String.format(Locale.US, "arm encoder: %4.2f", robot.arm.getCurEnc() ));
+        dashboard.displayText(l++, String.format(Locale.US, "arm encoder: %d", robot.arm.getCurEnc() ));
 
 
         if(VERBOSE) RobotLog.dd(TAG, "TEL SHT:%.1f ARM:%.1f INT:%.1f DRV:%.1f",
@@ -391,11 +393,13 @@ public class MecanumTeleop extends InitLinearOpMode
         else if(closeClaw != 0){
             robot.claw.closeClaw(closeClaw);
         }
-
+/*
         if (robot.claw != null)
         {
             if (openClaw > 0.05)
             {
+
+                robot.claw.openClaw(openClaw);
 
                 RobotLog.dd(TAG, "openclaw: %f", openClaw);
                 robot.claw.K1R2 = 1;
@@ -405,6 +409,9 @@ public class MecanumTeleop extends InitLinearOpMode
             }
             if (closeClaw > 0.05)
             {
+
+                robot.claw.closeClaw(closeClaw);
+
                 RobotLog.dd(TAG, "closeclaw: %f", closeClaw);
                 robot.claw.K1R2 = 2;
                 robot.claw.Triggr = true;
@@ -412,7 +419,7 @@ public class MecanumTeleop extends InitLinearOpMode
 
             }
         }
-
+*/
     }
     private void controlSlides()
     {
@@ -422,7 +429,7 @@ public class MecanumTeleop extends InitLinearOpMode
             //robot.elev.moveToCnt(robot.elev.getCurEnc(), RobotConstants.EL_SPD);
         }
 
-        
+    /*    
     private void presetClaws()
     {
 
@@ -437,7 +444,7 @@ public class MecanumTeleop extends InitLinearOpMode
        }
 
     }
-         
+     */    
 
     private Pose2d tempPose = new Pose2d();
     private int goLeft = 0;
@@ -681,17 +688,17 @@ public class MecanumTeleop extends InitLinearOpMode
 
                 velPose = new Pose2d(drive, strafe, turnA);
             RobotLog.dd(TAG, String.format("drive: %f, turnA: %f, strafe: %f", drive, turnA, strafe));
-        }
-        else{
+        }*/
+      //  else{
             velPose = new Pose2d(driveInput, -turn);
-        }
+   //     }
 
 //        if(goBrd == 1){
 //            moveRobot(drive, strafe, turnA);
 //        }else {
             mechDrv.setWeightedDrivePower(velPose);
 //        }
-        */
+
     }
     private void clearDriverOveride(){
         goRight = 0;

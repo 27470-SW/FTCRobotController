@@ -13,7 +13,11 @@ public class Claw {
     public Claw(HardwareMap map)
     {
         this.hwMap = map;
-        clawServo = hwMap.get(Servo.class, "clawservo");
+        try {
+            clawServo = hwMap.get(Servo.class, "clawservo");
+        }catch(Exception e){
+            RobotLog.ee(TAG, "Unable to find claw");
+        }
         percent = 1;
         maxOpen = 0;
         maxClosed = 1;
@@ -28,7 +32,7 @@ public class Claw {
         RobotLog.dd(TAG, "Percent:%f POS:%f", percent, pos);
 
     }
-
+/*
     public void setClawLev(double lev)
     {
         if (lev == 0){
@@ -41,7 +45,7 @@ public class Claw {
             setClawPos(1);
         }
         
-    }
+    }*/
 
 public void update(){
         setClawPos(percent);
@@ -52,10 +56,14 @@ public void update(){
 
         percent = percent - .07*val;
 
-        if (percent > maxClosed)
+        if (percent < maxOpen)
         {
             percent = maxClosed;
         }
+
+        //temporary
+        percent = maxOpen;
+
         setClawPos(percent);
     }
 
@@ -69,10 +77,14 @@ public void update(){
         {
             percent = maxClosed;
         }
+
+        //temporary
+        percent = maxClosed;
+
         setClawPos(percent);
     }
 
-    
+    /*
     public void clawFunctions(double var){
         RobotLog.dd(TAG, "var: %f K1R2: %d Triggr: %b, percent:%f", var, K1R2, Triggr, percent);
         if (Triggr == true){
@@ -87,7 +99,7 @@ public void update(){
             setClawLev(var);
         }
     }
-     
+     */
 
 
     public boolean init(){

@@ -308,9 +308,11 @@ public class MotorComponent
 //    if (motor == null) return;
 //    if (motor instanceof DcMotorEx)
 //    {
+    if(motor != null) {
       curEnc = ((DcMotorEx) motor).getCurrentPosition();
       curSpd = ((DcMotorEx) motor).getVelocity();
       curLoc = curEnc / cpi;
+    }
 //
 //      if (waitingOnTimer && mtrTmr.seconds() > mtrTimeout)
 //      {

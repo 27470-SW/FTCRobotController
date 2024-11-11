@@ -67,14 +67,14 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
         RobotLog.dd(TAG, "PPAuto CTOR");
         alliance = Field.Alliance.valueOf(PreferenceMgr.getAllianceColor());
         startPos = Field.StartPos.values()[PreferenceMgr.getStartPosition()];
-        parkPos = Field.Highways.values()[PreferenceMgr.getParkPosition()];
+        parkPos = Field.Parks.values()[PreferenceMgr.getParkPosition()];
         delay    = PreferenceMgr.getDelay();
         xOffset  = PreferenceMgr.getXOffset();
         autonDebug  = Field.AutonDebug.values()[PreferenceMgr.getEnableAutonDebug()];
         firstLocation = Field.FirstLocation.values()[PreferenceMgr.getFirstLoc()];
         stackToBack = PreferenceMgr.getStackHighwayToBd();
-        highways = new Field.Highways[]{PreferenceMgr.getHighway1(), PreferenceMgr.getHighway12(), PreferenceMgr.getHighway2(),PreferenceMgr.getHighway22(), PreferenceMgr.getHighway3(),PreferenceMgr.getHighway32()};
-        pixelStacks = new Field.Highways[]{PreferenceMgr.getPixel1(), PreferenceMgr.getPixel2(), PreferenceMgr.getPixel3()};
+        highways = new Field.Parks[]{PreferenceMgr.getHighway1(), PreferenceMgr.getHighway12(), PreferenceMgr.getHighway2(),PreferenceMgr.getHighway22(), PreferenceMgr.getHighway3(),PreferenceMgr.getHighway32()};
+        pixelStacks = new Field.Parks[]{PreferenceMgr.getPixel1(), PreferenceMgr.getPixel2(), PreferenceMgr.getPixel3()};
 
         RobotConstants.init(chas, alliance, startPos, xOffset);
     }
@@ -122,12 +122,12 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
 
             gpad1.update();
             double camPos = RobotConstants.CAM_RED_1;
-            if(startPos == START_BACKDROP)
+            if(startPos == START_SPECIMENS)
             {
                 if(alliance == Field.Alliance.BLUE)
                     camPos = RobotConstants.CAM_BLU_1;
             }
-            if(startPos == START_STACKS)
+            if(startPos == START_SAMPLES)
             {
                 camPos = RobotConstants.CAM_RED_2;
                 if(alliance == Field.Alliance.BLUE)
@@ -183,7 +183,9 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
                         advTmr.reset();
                         //ffdet.toggleStage();
                         ffdet.advanceStage();
-                        camera.showFpsMeterOnViewport(false);
+                        if (camera != null) {
+                            camera.showFpsMeterOnViewport(false);
+                        }
 
 //                        boolean pipeLineRaw = ffdet.isPipeLineRaw();
 //
@@ -260,8 +262,8 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
 
         if(camera != null)
         {
-            camera.stopStreaming();
-            camera.closeCameraDevice();
+  //          camera.stopStreaming();
+   //         camera.closeCameraDevice();
         }
     }
 
@@ -338,12 +340,10 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
         setupBotComponents();
 
         /* Build our Auton Trajectories */
-        routeRight = new ITD_Route(robot, Route.TeamElement.RIGHT, startPos, parkPos, alliance,firstLocation, stackToBack, highways, pixelStacks);
-        routeLeft = new ITD_Route(robot, Route.TeamElement.LEFT, startPos, parkPos, alliance,firstLocation, stackToBack, highways, pixelStacks);
-        routeCenter = new ITD_Route(robot, Route.TeamElement.CENTER, startPos, parkPos, alliance,firstLocation, stackToBack, highways, pixelStacks);
+        routeMain = new ITD_Route(robot, startPos, parkPos, firstLocation);
 
-        resetBotLocation(routeCenter.start);
-        initHdg = routeCenter.start.getHeading();
+        resetBotLocation(routeMain.start);
+        initHdg = routeMain.start.getHeading();
         BasicBot.DriveDir startDdir = BasicBot.DriveDir.PUSHER;
         robot.setDriveDir(startDdir);
         robot.setInitHdg(initHdg);
@@ -503,12 +503,14 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
     {
         startTimer.reset();
         dl.resetTime();
-        camera.setPipeline(det);
+        if (camera != null) {
+            camera.setPipeline(det);
+        }
 
         RobotLog.ii(TAG, "STARTING AT %.2f %.2f", startTimer.seconds(), timer.seconds());
         if (logData)
         {
-            Pose2d spt = routeCenter.start;
+            Pose2d spt = routeMain.start;
             dl.addField("START");
             dl.addField(initHdg);
             dl.addField(spt.getX());
@@ -530,7 +532,8 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
 //        RobotLog.ii(TAG, "START CHDG %6.3f", robot.getGyroHdgDeg());
 
         RobotLog.ii(TAG, "Action SCAN_IMAGE");
-
+        route = routeMain;
+/*
         doScan();
 
         if (detectedTeamElementPosition == ITD_Detector.Position.LEFT)
@@ -547,7 +550,7 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
         {
             route = routeCenter;
 
-        }
+        }*/
         try {
             int lnum = 8;
             dashboard.displayText(lnum++, "Start:    " + startPos);
@@ -776,6 +779,7 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
     }
 
     private void doAutonParking(){
+        /*
         TrajectorySequence parkSeq = route.parkMap.get(detectedTeamElementPosition);
         if(null != parkSeq) {
             String seqName = "unknown";
@@ -819,14 +823,15 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
             dashboard.displayText(4, seqName);
             performTrajSeq(parkSeq, seqName);
         }
-
+*/
     }
 
     private void doScan()
     {
         RobotLog.dd(TAG, "doScan");
-
+        if (camera != null){
         detectedTeamElementPosition =  getImageTargetPos();
+        }
         RobotLog.dd(TAG, "doScan scanPos = %s", detectedTeamElementPosition);
 
         setScanPoint();
@@ -872,19 +877,20 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
             if(tmpScanPos == ITD_Detector.Position.NONE)
                 sleep(10);
         }
-
-        camera.setPipeline(null);
-        camera.stopStreaming();
-        det.saveImages();
+            if (camera != null){
+                camera.setPipeline(null);
+                camera.stopStreaming();
+                det.saveImages();
+            }
 
         dashboard.displayText(2, "scanPos: " + tmpScanPos);
         RobotLog.dd(TAG, "scanPos = %s", tmpScanPos);
         if (tmpScanPos == ITD_Detector.Position.NONE) {
-            if (alliance == Field.Alliance.RED && startPos == START_STACKS || alliance == Field.Alliance.BLUE && startPos == START_BACKDROP) {
+            if (alliance == Field.Alliance.RED && startPos == START_SPECIMENS || alliance == Field.Alliance.BLUE && startPos == START_SPECIMENS) {
                     RobotLog.dd(TAG, "No image answer found - defaulting to RIGHT");
                     tmpScanPos = ITD_Detector.Position.RIGHT;
                     dashboard.displayText(6, "No image answer found " + tmpScanPos);
-            } else if (alliance == Field.Alliance.BLUE && startPos == START_STACKS || alliance == Field.Alliance.RED && startPos == START_BACKDROP) {
+            } else if (alliance == Field.Alliance.BLUE && startPos == START_SAMPLES || alliance == Field.Alliance.RED && startPos == START_SPECIMENS) {
                     RobotLog.dd(TAG, "No image answer found - defaulting to LEFT");
                     tmpScanPos = ITD_Detector.Position.LEFT;
                     dashboard.displayText(6, "No image answer found " + tmpScanPos);
@@ -1034,7 +1040,7 @@ public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButton
     private final ExecutorService es = Executors.newSingleThreadExecutor();
 
     private ITD_Route route;
-    private ITD_Route routeRight;
+    private ITD_Route routeMain;
     private ITD_Route routeLeft;
     private ITD_Route routeCenter;
 

@@ -142,17 +142,44 @@ public abstract class Route
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Put new poses here
-
+        startSample = new Pose2d(sx * 9, 65, flip + sh*Math.toRadians(270));
         //specimen points
         startSpecimenSide = new Pose2d(sx * -5, 63.25, flip + sh*Math.toRadians(270));
+		startSpecimen = new Pose2d(sx * -5, 55, flip + sh*Math.toRadians(270));
+        specimenPark1 = new Pose2d(sx * -61, 62, flip + sh*Math.toRadians(270));
+        specimen3 = new Pose2d(sx * -59.01, 55, flip + sh*Math.toRadians(245));
+        specimen2 = new Pose2d(sx * -59, 55, flip + sh*Math.toRadians(270));
         dropPreSpecimen = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
-
+        forward = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
         startCSRedHigh = new Pose2d(sx * 63.25, 16, flip + sh*Math.toRadians(180));
+       specimen1 = new Pose2d(sx * -48,55, flip + sh*Math.toRadians(270));
+       corner = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
+        corner2 = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
+        corner3 = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
         startCSRedLow = new Pose2d(sx*63.25, -32, flip + sh*Math.toRadians(180));
         startCBlueHigh = new Pose2d(sx * -63.25, 16, flip + sh*Math.toRadians(0));
         startCSBlueLow = new Pose2d(sx * -63.25, -15.5, flip + sh*Math.toRadians(0));
          purplePixelPlaceCenterTop = new Pose2d(sx * 28, 23.5, flip + sh*Math.toRadians(230));
-         dropCenterPixel = new Pose2d(sx * 33, 56.5, flip + sh*Math.toRadians(270));
+         dropCenterPixel = new Pose2d(sx * 6, 65, flip + sh*Math.toRadians(270));
+        hangSpecimen = new Pose2d(sx * 9, 32, flip + sh*Math.toRadians(270));
+        moveBackFromSpecimen = new Pose2d(sx * 9, 55, flip + sh*Math.toRadians(270));
+        sample1 = new Pose2d(sx * 48, 55, flip + sh*Math.toRadians(270));
+        deliverSampleToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
+        deliverSample2ToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
+        deliverSample3ToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
+        sample2 = new Pose2d(sx * 55, 55, flip + sh*Math.toRadians(150));
+        rotateToSample2 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-90));
+        turnStraight = new Pose2d (sx * 56, 54, flip + sh*Math.toRadians(-90));
+        sample3 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-60));
+        park = new Pose2d(sx * -52, 63, flip + sh*Math.toRadians(-90));
+        positionToPark = new Pose2d(sx * 40, 63, flip + sh*Math.toRadians(-180));
+        park2 = new Pose2d(sx * -70, 63, flip + sh*Math.toRadians(-90));
+
+
+
+
+
+
         dropCenterPixelAdj = new Pose2d(sx * 27, 57.75, flip + sh*Math.toRadians(270));
         dropCenterPixelStacksAdj = new Pose2d(sx * 20, 50, flip + sh*Math.toRadians(270));
         dropCenterPixelLeftAdj = new Pose2d(sx *31.5, 50.35, flip + sh*Math.toRadians(270));
@@ -590,6 +617,14 @@ public abstract class Route
          System.out.printf(Locale.US,"set claw pos to %f",pos );
      }
 
+
+     public void openclaw (){
+         System.out.printf(Locale.US,"set claw pos to 1" );
+
+
+     }
+
+
      protected void elvConeStackSecondOption() {
          setClawPos(.6);
          liftElvGndJnct();
@@ -604,7 +639,50 @@ public abstract class Route
 
      }
 
-    /* Grab the cone in the stack or in the terminal */
+public void slidesUpOne(){
+    System.out.printf(Locale.US,"set slides pos to 1");
+}
+
+    public void moveArmToBack(){
+        System.out.printf(Locale.US,"moveArmToBack");
+    }
+
+     protected void moveArmForward(){
+         System.out.println("MOVE ARM FORWARD");
+     }
+
+     protected void closeclaw(){
+         System.out.println("CLOSE Claw");
+
+     }
+     protected void moveArmBackward(){
+         System.out.println("MOVE Arm Back");
+     }
+
+    public void armUpLittle(){
+        System.out.printf(Locale.US,"Arm up pos little");
+    }
+
+    protected void linearSlidesUp(){
+        System.out.println("MOVE SLIDES UPWARDS");
+
+     }
+
+    protected void linearSlidesDown(){
+        System.out.println("MOVE SLIDES Downwards");
+
+    }
+
+
+
+
+
+
+
+
+
+
+     /* Grab the cone in the stack or in the terminal */
      protected void closeClaw()
      {
          System.out.println("Close Claw");
@@ -672,9 +750,30 @@ public abstract class Route
      protected Pose2d back_drop;
      protected Pose2d startCSRedHigh;
      protected Pose2d startSpecimenSide;
+     protected Pose2d specimen1;
      protected Pose2d dropPreSpecimen;
+    protected Pose2d corner;
+    protected Pose2d corner2;
+    protected Pose2d corner3;
+     protected Pose2d startSample;
+    protected Pose2d startSpecimen;
      protected Pose2d purplePixelPlaceCenterTop;
     protected Pose2d dropCenterPixel;
+    protected Pose2d hangSpecimen;
+    protected Pose2d moveBackFromSpecimen;
+    protected Pose2d sample1;
+    protected Pose2d sample2;
+    protected Pose2d rotateToSample2;
+    protected Pose2d sample3;
+    protected Pose2d positionSample3;
+    protected Pose2d turnStraight;
+    protected Pose2d positionToPark;
+    protected Pose2d park;
+    protected Pose2d park2;
+
+    protected Pose2d deliverSample3ToBasket;
+    protected Pose2d deliverSample2ToBasket;
+    protected Pose2d deliverSampleToBasket;
     protected Pose2d dropCenterPixelAdj;
     protected Pose2d dropCenterPixelStacksAdj;
     protected Pose2d dropCenterPixelLeftAdj;
@@ -867,6 +966,15 @@ public abstract class Route
      public Pose2d ajustForWheelHittingWall;
      protected Pose2d coneDropLowJunct;
 
+    protected Pose2d start2;
+
+    protected Pose2d specimen2;
+
+    protected Pose2d specimen3;
+
+    protected Pose2d specimenPark1;
+
+    protected Pose2d forward;
      protected Pose2d fourPtJunctDropSpline;
      protected Pose2d fourPtJunctDropSplineAJUSTED;
 
@@ -1241,10 +1349,31 @@ public abstract class Route
         };
         timer.schedule(task, 500);
     }
-     public void armToDrop(){
-         System.out.printf(Locale.US, "in armToDrop\n");
+     public void moveToDrive(){
+         System.out.printf(Locale.US, "in moveToDrive\n");
      }
 
+    public void moveArmToPickup(){
+        System.out.printf(Locale.US, "in moveArmToPickup\n");
+    }
+
+    public void moveArmTo90(){
+        System.out.printf(Locale.US, "in moveArmTo90\n");
+    }
+    public void maxSlides(){
+        System.out.printf(Locale.US, "in maxSlides\n");
+    }
+    public void moveArmToDrop(){
+        System.out.printf(Locale.US, "in moveArmToDrop\n");
+    }
+    public void minSlides(){
+        System.out.printf(Locale.US, "in minSlides\n");
+    }
+
+
+    public void armToDrop(){
+        System.out.printf(Locale.US, "in armToDrop\n");
+    }
     public void armToDropHigher(){
         System.out.printf(Locale.US, "in armToDropHigher\n");
     }

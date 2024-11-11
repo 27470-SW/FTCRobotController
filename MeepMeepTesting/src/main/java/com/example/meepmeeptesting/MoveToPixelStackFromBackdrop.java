@@ -49,7 +49,7 @@ public class MoveToPixelStackFromBackdrop {
 
             }
 
-            if (highway == WALL && pixelStack == CENTER) {
+            if (highway == WALL && pixelStack == Park2) {
 
                 // route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, route.threefortyfive);
@@ -59,7 +59,7 @@ public class MoveToPixelStackFromBackdrop {
                 route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR, route.twosixty);
                 route.addEvent(Route.Action.TANGENT, route.oneten);
             }
-            if (highway == WALL && pixelStack == DOOR) {
+            if (highway == WALL && pixelStack == Park1) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, route.threefortyfive);
@@ -67,14 +67,14 @@ public class MoveToPixelStackFromBackdrop {
                 route.addLocation(route.pointForRobotToPixelStack, SPLINE, HEAD_LINEAR);
                 route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR);
             }
-            if (highway == CENTER && pixelStack == WALL) {
+            if (highway == Park2 && pixelStack == WALL) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addFunction(route::armDrivePos, 1.5);
                 route.addLocation(route.underMiddlePoint, LINE, HEAD_SPLINE);
                 route.addLocation(route.pickUpPixelStackRightCircuit, SPLINE, HEAD_LINEAR);
             }
-            if (highway == CENTER && pixelStack == CENTER) {
+            if (highway == Park2 && pixelStack == Park2) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addFunction(route::armDrivePos, 1.5);
@@ -82,7 +82,7 @@ public class MoveToPixelStackFromBackdrop {
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(270));
                 route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR, Math.toRadians(200));
             }
-            if (highway == CENTER && pixelStack == DOOR) {
+            if (highway == Park2 && pixelStack == Park1) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addFunction(route::armDrivePos, 1.5);
@@ -90,7 +90,7 @@ public class MoveToPixelStackFromBackdrop {
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(180));
                 route.addLocation(route.pickUpPixelStackLeft, SPLINE, HEAD_LINEAR, Math.toRadians(200));
             }
-            if (highway == DOOR && pixelStack == WALL) {
+            if (highway == Park1 && pixelStack == WALL) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(210));
@@ -98,7 +98,7 @@ public class MoveToPixelStackFromBackdrop {
                 route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR);
                 route.addLocation(route.pickUpPixelStackRightCircuit, SPLINE, HEAD_LINEAR);
             }
-            if (highway == DOOR && pixelStack == CENTER) {
+            if (highway == Park1 && pixelStack == Park2) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(210));
@@ -106,7 +106,7 @@ public class MoveToPixelStackFromBackdrop {
                 route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR);
                 route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR);
             }
-            if (highway == DOOR && pixelStack == DOOR) {
+            if (highway == Park1 && pixelStack == Park1) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(210));
@@ -142,7 +142,7 @@ public class MoveToPixelStackFromBackdrop {
 
             }
 
-            if (highway == WALL && pixelStack == CENTER) {
+            if (highway == WALL && pixelStack == Park2) {
 
                 // route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, route.threefortyfive);
@@ -152,7 +152,7 @@ public class MoveToPixelStackFromBackdrop {
                 route.addLocation(route.pickUpPixelStackCenterBlue, SPLINE, HEAD_LINEAR, route.twosixty);
                 route.addEvent(Route.Action.TANGENT, route.oneten);
             }
-            if (highway == WALL && pixelStack == DOOR) {
+            if (highway == WALL && pixelStack == Park1) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, route.threefortyfive);
@@ -189,14 +189,14 @@ public class MoveToPixelStackFromBackdrop {
 //                route.addLocation(route.pointForRobotToPixelStack, SPLINE, HEAD_LINEAR);
 //                route.addLocation(route.pickUpPixelStackLeft, SPLINE, HEAD_LINEAR);
 //            }
-            if (highway == CENTER && pixelStack == WALL) {
+            if (highway == Park2 && pixelStack == WALL) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addFunction(route::armDrivePos, 1.5);
                 route.addLocation(route.underMiddlePoint, LINE, HEAD_SPLINE);
                 route.addLocation(route.pickUpPixelStackRightCircuit, SPLINE, HEAD_LINEAR);
             }
-            if (highway == CENTER && pixelStack == CENTER) {
+            if (highway == Park2 && pixelStack == Park2) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addFunction(route::armDrivePos, 1.5);
@@ -204,7 +204,7 @@ public class MoveToPixelStackFromBackdrop {
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(270));
                 route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR, Math.toRadians(200));
             }
-            if (highway == CENTER && pixelStack == DOOR) {
+            if (highway == Park2 && pixelStack == Park1) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addFunction(route::armDrivePos, 1.5);
@@ -212,14 +212,14 @@ public class MoveToPixelStackFromBackdrop {
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(180));
                 route.addLocation(route.pickUpPixelStackLeft, SPLINE, HEAD_LINEAR, Math.toRadians(200));
             }
-            if (highway == DOOR && pixelStack == WALL) {
+            if (highway == Park1 && pixelStack == WALL) {
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(300));
                 route.addFunction(route::armDrivePos, 1.5);
                 route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR);
                 route.addLocation(route.pickUpPixelStackRightCircuit, SPLINE, HEAD_LINEAR);
             }
-            if (highway == DOOR && pixelStack == CENTER) {
+            if (highway == Park1 && pixelStack == Park2) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(300));
@@ -227,7 +227,7 @@ public class MoveToPixelStackFromBackdrop {
                 route.addLocation(route.underdoor, SPLINE, HEAD_LINEAR);
                 route.addLocation(route.pickUpPixelStackCenter, SPLINE, HEAD_LINEAR);
             }
-            if (highway == DOOR && pixelStack == DOOR) {
+            if (highway == Park1 && pixelStack == Park1) {
 
 //                route.addLocation(route.dropCenterPixel, LINE, HEAD_SPLINE);
                 route.addEvent(Route.Action.TANGENT, Math.toRadians(300));

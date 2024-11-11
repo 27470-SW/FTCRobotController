@@ -63,33 +63,16 @@ public class Route
 
     //default; do not use
     public Route(Route copyRoute){
-        this(copyRoute.robot, copyRoute.teamElement, copyRoute.startPos, copyRoute.parkPos, copyRoute.alliance, copyRoute.firstLocation, copyRoute.stackHighway, copyRoute.highways, copyRoute.pixelStacks);
+        this(copyRoute.robot, copyRoute.startPos, copyRoute.parkPos, copyRoute.firstLocation);
     }
-
      public Route(MecanumBot robot,
-                  TeamElement teamElement,
                   PositionOption startPos,
-	 			  Field.Highways parkPos,
-                  Field.Alliance alliance,
-                  Field.FirstLocation firstLocation,
-                  Field.Highways stackHighway,
-                  Field.Highways[] highways,
-                  Field.Highways[] pixelStacks)
+	 			  Field.Parks parkPos,
+                  Field.FirstLocation firstLocation)
     {
-           this.robot = robot;
-           this.teamElement = teamElement;
            this.startPos = startPos;
            this.parkPos  = parkPos;
-           this.alliance = alliance;
-           this.highways = highways;
-		   this.pixelStacks = pixelStacks;
            this.firstLocation = firstLocation;
-           this.stackHighway = stackHighway;
-		   
-           defVelLim = RobotConstants.defVelConstraint;
-           defAccelLim = RobotConstants.defAccelConstraint;
-           wobVelLim = RobotConstants.slwVelConstraint;
-           wobAccelLim = RobotConstants.slwAccelConstraint;
 
            botLen = RobotConstants.BOT_LEN;
            botWid = RobotConstants.BOT_WID;
@@ -121,7 +104,7 @@ public class Route
              sf = 0;
              sx = -1;
              flip = Math.toRadians(180);
-             if (startPos == START_BACKDROP)
+             if (startPos == START_SAMPLES)
 			 {
                  /* Blue Right quadrant II */
                  sf = 1;
@@ -142,7 +125,7 @@ public class Route
              sf = -1;
              sx =1;
              flip = Math.toRadians(0);
-             if (startPos == START_STACKS)
+             if (startPos == START_SPECIMENS)
 			 {
                  /* Red Right quadrant IV */
                  sf = 0;
@@ -156,7 +139,7 @@ public class Route
              }
          }
 
-         if (startPos == START_BACKDROP)
+         if (startPos == START_SAMPLES)
          {
              strtY = 0.5 * ITD_Field.tileWidth;
           }
@@ -173,10 +156,43 @@ public class Route
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Put new poses here
+		startSample = new Pose2d(sx * 9, 65, flip + sh*Math.toRadians(270));
+        //specimen points
+        startSpecimenSide = new Pose2d(sx * -5, 63.25, flip + sh*Math.toRadians(270));
+		startSpecimen = new Pose2d(sx * -5, 55, flip + sh*Math.toRadians(270));
+        specimenPark1 = new Pose2d(sx * -61, 62, flip + sh*Math.toRadians(270));
+        specimen3 = new Pose2d(sx * -59.01, 55, flip + sh*Math.toRadians(245));
+        specimen2 = new Pose2d(sx * -59, 55, flip + sh*Math.toRadians(270));
+        dropPreSpecimen = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
+        forward = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
         startCSRedHigh = new Pose2d(sx * 63.25, 16, flip + sh*Math.toRadians(180));
+       specimen1 = new Pose2d(sx * -48,55, flip + sh*Math.toRadians(270));
+       corner = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
+        corner2 = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
+        corner3 = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
         startCSRedLow = new Pose2d(sx*63.25, -32, flip + sh*Math.toRadians(180));
         startCBlueHigh = new Pose2d(sx * -63.25, 16, flip + sh*Math.toRadians(0));
         startCSBlueLow = new Pose2d(sx * -63.25, -15.5, flip + sh*Math.toRadians(0));
+         purplePixelPlaceCenterTop = new Pose2d(sx * 28, 23.5, flip + sh*Math.toRadians(230));
+         dropCenterPixel = new Pose2d(sx * 6, 65, flip + sh*Math.toRadians(270));
+        hangSpecimen = new Pose2d(sx * 9, 32, flip + sh*Math.toRadians(270));
+        moveBackFromSpecimen = new Pose2d(sx * 9, 55, flip + sh*Math.toRadians(270));
+        sample1 = new Pose2d(sx * 48, 55, flip + sh*Math.toRadians(270));
+        deliverSampleToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
+        deliverSample2ToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
+        deliverSample3ToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
+        sample2 = new Pose2d(sx * 55, 55, flip + sh*Math.toRadians(150));
+        rotateToSample2 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-90));
+        turnStraight = new Pose2d (sx * 56, 54, flip + sh*Math.toRadians(-90));
+        sample3 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-60));
+        park = new Pose2d(sx * -52, 63, flip + sh*Math.toRadians(-90));
+        positionToPark = new Pose2d(sx * 40, 63, flip + sh*Math.toRadians(-180));
+        park2 = new Pose2d(sx * -70, 63, flip + sh*Math.toRadians(-90));
+        startCSRedHigh = new Pose2d( -15, 63, Math.toRadians(180));
+        startCBlueHigh = new Pose2d( -15, 100, Math.toRadians(180));
+        startCSRedLow = new Pose2d(-70, 60, Math.toRadians(180));
+        parked = new Pose2d(-70, 60, Math.toRadians(180));
+        startCSBlueLow = new Pose2d(-63.25, -15.5, Math.toRadians(0));
          purplePixelPlaceCenterTop = new Pose2d(sx * 28, 23.5, flip + sh*Math.toRadians(230));
          dropCenterPixel = new Pose2d(sx * 33, 56.5, flip + sh*Math.toRadians(270));
         dropCenterPixelAdj = new Pose2d(sx * 27, 57.75, flip + sh*Math.toRadians(270));
@@ -209,7 +225,7 @@ public class Route
         dropRightPixelCircuit = new Pose2d(sx * 45, 54.5, flip + sh*Math.toRadians(270));
         dropLeftPixelBlue = new Pose2d(sx * 45, 53, flip + sh*Math.toRadians(270));
         pickUpPixelStackRight = new Pose2d(sx * 34.5, -59, flip + sh*Math.toRadians(-90));
-        pickUpPixelStackRightCircuit = new Pose2d(sx * 31, -58.5, flip + sh*Math.toRadians(-90));
+        pickUpPixelStackRightCircuit = new Pose2d(sx * 36, -58.5, flip + sh*Math.toRadians(-90));
         pickUpPixelStackRightRedLeft = new Pose2d(sx * 31, -57, flip + sh*Math.toRadians(-90));
         pickUpPixelStackRightCircuitBlue = new Pose2d(sx * 30, -59, flip + sh*Math.toRadians(-90));
         pickUpPixelStackRightCircuitBlueCenter = new Pose2d(sx * 30.5, -59, flip + sh*Math.toRadians(-90));
@@ -225,12 +241,12 @@ public class Route
         aboveRiggingBackwards = new Pose2d(sx * 61, 8, flip + sh*Math.toRadians(90));
         underCenter = new Pose2d(sx * 36, -9, flip + sh*Math.toRadians(270));
         pointcuzwhynot = new Pose2d(sx * 36, -37, flip + sh*Math.toRadians(270));
-        underdoor = new Pose2d(sx*5.5, -52, flip + sh*Math.toRadians(270));
+        underdoor = new Pose2d(sx*11, -63, flip + sh*Math.toRadians(270));
         underMiddlePoint = new Pose2d(sx*35, -22, flip + sh*Math.toRadians(270));
         bottom =new Pose2d( sx*30,24, flip + sh*Math.toRadians(0));
         middle=new Pose2d( sx* 25,18, flip + sh*Math.toRadians(180));
         top=new Pose2d( sx*35,21, flip + sh*Math.toRadians(90));
-        parkDoor = new Pose2d(sx*4, 44.5, flip + sh*Math.toRadians(270));
+        parkDoor = new Pose2d(sx*10, 44.5, flip + sh*Math.toRadians(270));
         parkWall = new Pose2d(sx*68, 44.5, flip + sh*Math.toRadians(270));
         teamElementLeft = new Pose2d(sx*28, 8, flip + sh*Math.toRadians(90));
         teamElementRight = new Pose2d(sx*36, 23, flip + sh*Math.toRadians(20));
@@ -312,7 +328,7 @@ public class Route
             dropOnBackdropBlueRightBackdropHi = new Pose2d(-25, 55.5, Math.toRadians(270));
             dropOnBackdropBlueCenterBackdropHi = new Pose2d(-37, 55.5, Math.toRadians(270));
 
-            dropOnBackdropRedLeftBackdrop = new Pose2d(21, 52, Math.toRadians(270));
+            dropOnBackdropRedLeftBackdrop = new Pose2d(28, 52, Math.toRadians(270));
             dropOnBackdropRedRightBackdrop = new Pose2d(45.5, 56.3, Math.toRadians(270));
             dropOnBackdropRedCenterBackdrop = new Pose2d(36.5, 55.5, Math.toRadians(270));
 
@@ -343,11 +359,11 @@ public class Route
 
             dropOnBackdropRedLeftStacks = new Pose2d(27.5, 53.5, Math.toRadians(270));
             dropOnBackdropRedRightStacks = new Pose2d(51, 61, Math.toRadians(270));
-            dropOnBackdropRedCenterStacks = new Pose2d(42.5, 60.5, Math.toRadians(270));
+            dropOnBackdropRedCenterStacks = new Pose2d(42.5, 50.5, Math.toRadians(270));
 
             dropOnBackdropRedLeftStacksHi = new Pose2d(27.5, 54.5, Math.toRadians(270));
             dropOnBackdropRedRightStacksHi = new Pose2d(51, 62.5, Math.toRadians(270));
-            dropOnBackdropRedCenterStacksHi = new Pose2d(44, 62, Math.toRadians(270));
+            dropOnBackdropRedCenterStacksHi = new Pose2d(44, 52, Math.toRadians(270));
 
             backAwayFromRedTape = new Pose2d(64.5, -36, Math.toRadians(270));
             backAwayFromBlueTape = new Pose2d(-60, -45, Math.toRadians(270));
@@ -455,7 +471,7 @@ public class Route
 
         dropOnBackdropRedLeftStacks = new Pose2d(sx*30, 53.5, flip + sh*Math.toRadians(270));
         dropOnBackdropRedRightStacks = new Pose2d(46, 54, Math.toRadians(270));
-        dropOnBackdropRedCenterStacks = new Pose2d(37, 55.5, Math.toRadians(270));
+        dropOnBackdropRedCenterStacks = new Pose2d(37, 48.5, Math.toRadians(270));
 
         dropOnBackdropRedLeftStacksHi = new Pose2d(29, 56, Math.toRadians(270));
         dropOnBackdropRedRightStacksHi = new Pose2d(41.5, 60, Math.toRadians(270));
@@ -530,6 +546,7 @@ public class Route
      {
 
      }
+
 
 //	 public void elvToConeStack()
 //     {
@@ -651,6 +668,16 @@ public class Route
 //         }
 //     }
 //
+    protected void setClawPos(double pos){
+         
+     }
+
+
+     public void openclaw (){
+         
+
+
+     }
 //     protected void elvConeStackSecondOption()
 //	 {
 //         //setClawPos(.6);
@@ -668,15 +695,45 @@ public class Route
 ////         }
 //     }
 //
-//    /* Grab the cone in the stack or in the terminal */
-//     protected void closeClaw()
-//     {
-////         if(robot.claw != null)
-////         {
-////             robot.claw.closeClaw();
-////
-////         }
-//     }
+public void slidesUpOne(){
+    RobotLog.dd(TAG, "set slides pos to 1");
+}
+
+    public void moveArmToBack(){
+        RobotLog.dd(TAG, "moveArmToBack");
+    }
+
+     protected void moveArmForward(){
+         RobotLog.dd(TAG, "MOVE ARM FORWARD");
+     }
+
+     protected void moveArmBackward(){
+         RobotLog.dd(TAG, "MOVE Arm Back");
+     }
+
+    public void armUpLittle(){
+        RobotLog.dd(TAG, "Arm up pos little");
+    }
+
+    protected void linearSlidesUp(){
+        RobotLog.dd(TAG, "MOVE SLIDES UPWARDS");
+
+     }
+
+    protected void linearSlidesDown(){
+        RobotLog.dd(TAG, "MOVE SLIDES Downwards");
+
+    }
+
+     protected void closeClaw()
+     {
+         RobotLog.dd(TAG, "Close Claw");
+         if(robot.claw != null)
+         {
+             robot.claw.closeClaw(0);
+
+         }
+     }
      protected void doPark()
      {
          if(VERBOSE) { RobotLog.dd(TAG, "Parking bot"); }
@@ -692,15 +749,15 @@ public class Route
      public final static int INIT_CONE_STACK = 5;
      public static int conestackNum = INIT_CONE_STACK;
      protected MecanumBot robot;
-	 protected Field.Highways parkPos;
+	 protected Field.Parks parkPos;
      protected PositionOption startPos;
      protected Field.Alliance alliance;
      protected Field.Route routeStrategy;
      protected Field.FirstLocation firstLocation;
-     protected Field.Highways stackHighway;
+     protected Field.Parks stackHighway;
      public TeamElement teamElement;
-     protected Field.Highways[] highways;
-	 protected Field.Highways[] pixelStacks;
+     protected Field.Parks[] highways;
+	 protected Field.Parks[] pixelStacks;
      protected int numCycles = 0;
      protected double botLen;
      protected double botWid;
@@ -739,8 +796,31 @@ public class Route
      protected Pose2d white_pixel_middle;
      protected Pose2d back_drop;
      protected Pose2d startCSRedHigh;
+     protected Pose2d startSpecimenSide;
+     protected Pose2d specimen1;
+     protected Pose2d dropPreSpecimen;
+    protected Pose2d corner;
+    protected Pose2d corner2;
+    protected Pose2d corner3;
+     protected Pose2d startSample;
+    protected Pose2d startSpecimen;
      protected Pose2d purplePixelPlaceCenterTop;
     protected Pose2d dropCenterPixel;
+    protected Pose2d hangSpecimen;
+    protected Pose2d moveBackFromSpecimen;
+    protected Pose2d sample1;
+    protected Pose2d sample2;
+    protected Pose2d rotateToSample2;
+    protected Pose2d sample3;
+    protected Pose2d positionSample3;
+    protected Pose2d turnStraight;
+    protected Pose2d positionToPark;
+    protected Pose2d park;
+    protected Pose2d park2;
+
+    protected Pose2d deliverSample3ToBasket;
+    protected Pose2d deliverSample2ToBasket;
+    protected Pose2d deliverSampleToBasket;
     protected Pose2d dropCenterPixelAdj;
     protected Pose2d dropCenterPixelStacksAdj;
     protected Pose2d dropCenterPixelLeftAdj;
@@ -792,6 +872,7 @@ public class Route
     protected Pose2d pointcuzwhynot;
     protected Pose2d underdoor;
     protected Pose2d startCSRedLow;
+    protected Pose2d parked;
     protected Pose2d startCBlueHigh;
     protected Pose2d startCSBlueLow;
     protected Pose2d underMiddlePoint;
@@ -933,6 +1014,15 @@ public class Route
      public Pose2d ajustForWheelHittingWall;
      protected Pose2d coneDropLowJunct;
 
+    protected Pose2d start2;
+
+    protected Pose2d specimen2;
+
+    protected Pose2d specimen3;
+
+    protected Pose2d specimenPark1;
+
+    protected Pose2d forward;
      protected Pose2d fourPtJunctDropSpline;
      protected Pose2d fourPtJunctDropSplineAJUSTED;
 
@@ -1334,10 +1424,32 @@ public class Route
     public void outFrontPixel(){
 
     }
-     public void armToDrop(){
 
+ public void moveToDrive(){
+        RobotLog.dd(TAG, "in moveToDrive\n");
      }
 
+    public void moveArmToPickup(){
+        RobotLog.dd(TAG, "in moveArmToPickup\n");
+    }
+
+    public void moveArmTo90(){
+        RobotLog.dd(TAG, "in moveArmTo90\n");
+    }
+    public void maxSlides(){
+        RobotLog.dd(TAG, "in maxSlides\n");
+    }
+    public void moveArmToDrop(){
+        RobotLog.dd(TAG, "in moveArmToDrop\n");
+    }
+    public void minSlides(){
+        RobotLog.dd(TAG,  "in minSlides\n");
+    }
+
+
+    public void armToDrop(){
+        RobotLog.dd(TAG, "in armToDrop\n");
+    }
     public void armToDropMid(){
 
     }

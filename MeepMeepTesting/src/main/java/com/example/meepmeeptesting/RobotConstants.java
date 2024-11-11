@@ -134,8 +134,8 @@ public class RobotConstants
   public static final double MMPERIN = 25.4;
 
   public static double DT_TRACK_WIDTH = 16.34;
-  public static double BOT_LEN = 16.3;
-  public static double BOT_WID = 13.0;
+  public static double BOT_LEN = 18;
+  public static double BOT_WID = 18.0;
 
   public static Chassis bot= Chassis.B7253;
   public static Field.Alliance alliance = Field.Alliance.RED;
@@ -285,8 +285,8 @@ public class RobotConstants
 
         CAM_STOW = 0.11;
 
-        BOT_LEN=13.125;
-        BOT_WID=13.125;
+        BOT_LEN=18;
+        BOT_WID=18;
         MAX_VEL = 50;
         LATERAL_MULTIPLIER = 1.10;
         DT_TRACK_WIDTH = 11.826;
@@ -370,8 +370,8 @@ public class RobotConstants
         CAM_BLU_2 = 0.325;
         CAM_STOW  = 0.444;
 
-        BOT_LEN = 13.125;
-        BOT_WID = 13.125;
+        BOT_LEN = 18;
+        BOT_WID = 18;
         MAX_VEL = 50;
         LATERAL_MULTIPLIER = 1.10;
         DT_TRACK_WIDTH = 11.826;

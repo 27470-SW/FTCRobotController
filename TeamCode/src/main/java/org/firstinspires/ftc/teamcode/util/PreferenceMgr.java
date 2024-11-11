@@ -20,16 +20,16 @@ public class PreferenceMgr
    private static String alliance;
    private static int    startPos;
    private static int    parkPos;
-   private static Field.Highways pixel1;
-   private static Field.Highways pixel2;
-   private static Field.Highways pixel3;
-   private static Field.Highways Highway1;
-   private static Field.Highways Highway2;
-   private static Field.Highways Highway3;
-   private static Field.Highways Highway12;
-   private static Field.Highways Highway22;
-   private static Field.Highways Highway32;
-   private static Field.Highways stackHighwayToBackdrop;
+   private static Field.Parks pixel1;
+   private static Field.Parks pixel2;
+   private static Field.Parks pixel3;
+   private static Field.Parks Highway1;
+   private static Field.Parks Highway2;
+   private static Field.Parks Highway3;
+   private static Field.Parks Highway12;
+   private static Field.Parks Highway22;
+   private static Field.Parks Highway32;
+   private static Field.Parks stackHighwayToBackdrop;
    private static int autonStrgy;
    private static float  delay;
    private static int  circuit = -1;
@@ -59,16 +59,16 @@ public class PreferenceMgr
    public static String getClubName() { return CLUBNAME; }
    public static int getParkPosition() { return parkPos; }
    public static int getFirstLoc() { return firstLoc; }
-   public static Field.Highways getStackHighwayToBd() { return stackHighwayToBackdrop; }
-   public static Field.Highways getPixel1() { return pixel1; }
-   public static Field.Highways getPixel2() { return pixel2; }
-   public static Field.Highways getPixel3() { return pixel3; }
-   public static Field.Highways getHighway1() { return Highway1; }
-   public static Field.Highways getHighway2() { return Highway2; }
-   public static Field.Highways getHighway3() { return Highway3; }
-   public static Field.Highways getHighway12() { return Highway12; }
-   public static Field.Highways getHighway22() { return Highway22; }
-   public static Field.Highways getHighway32() { return Highway32; }
+   public static Field.Parks getStackHighwayToBd() { return stackHighwayToBackdrop; }
+   public static Field.Parks getPixel1() { return pixel1; }
+   public static Field.Parks getPixel2() { return pixel2; }
+   public static Field.Parks getPixel3() { return pixel3; }
+   public static Field.Parks getHighway1() { return Highway1; }
+   public static Field.Parks getHighway2() { return Highway2; }
+   public static Field.Parks getHighway3() { return Highway3; }
+   public static Field.Parks getHighway12() { return Highway12; }
+   public static Field.Parks getHighway22() { return Highway22; }
+   public static Field.Parks getHighway32() { return Highway32; }
    public static String getBotName()  { return botName; }
    public static String getAllianceColor() { return alliance; }
    public static int getStartPosition() { return startPos; }
@@ -107,83 +107,83 @@ public class PreferenceMgr
 
       try
       {
-         Highway1 = Field.Highways.values()[Highway1Var];
+         Highway1 = Field.Parks.values()[Highway1Var];
       }
       catch(Exception e)
       {
-         Highway1 = Field.Highways.values()[0];
+         Highway1 = Field.Parks.values()[0];
       }
       try
       {
-         Highway2 = Field.Highways.values()[Highway2Var];
+         Highway2 = Field.Parks.values()[Highway2Var];
       }
       catch(Exception e)
       {
-         Highway2 = Field.Highways.values()[0];
+         Highway2 = Field.Parks.values()[0];
       }
       try
       {
-         Highway3 = Field.Highways.values()[Highway3Var];
+         Highway3 = Field.Parks.values()[Highway3Var];
       }
       catch(Exception e)
       {
-         Highway3 = Field.Highways.values()[0];
+         Highway3 = Field.Parks.values()[0];
       }
       try
       {
-         Highway12 = Field.Highways.values()[Highway12Var];
+         Highway12 = Field.Parks.values()[Highway12Var];
       }
       catch(Exception e)
       {
-         Highway12 = Field.Highways.values()[0];
+         Highway12 = Field.Parks.values()[0];
       }
       try
       {
-         Highway22 = Field.Highways.values()[Highway22Var];
+         Highway22 = Field.Parks.values()[Highway22Var];
       }
       catch(Exception e)
       {
-         Highway22 = Field.Highways.values()[0];
+         Highway22 = Field.Parks.values()[0];
       }
       try
       {
-         Highway32 = Field.Highways.values()[Highway32Var];
+         Highway32 = Field.Parks.values()[Highway32Var];
       }
       catch(Exception e)
       {
-         Highway32 = Field.Highways.values()[0];
+         Highway32 = Field.Parks.values()[0];
       }
       try
       {
-         pixel3 = Field.Highways.values()[Pixel3Var];
+         pixel3 = Field.Parks.values()[Pixel3Var];
       }
       catch(Exception e)
       {
-         pixel3 = Field.Highways.values()[0];
+         pixel3 = Field.Parks.values()[0];
       }
       try
       {
-         pixel2 = Field.Highways.values()[Pixel2Var];
+         pixel2 = Field.Parks.values()[Pixel2Var];
       }
       catch(Exception e)
       {
-         pixel2 = Field.Highways.values()[0];
+         pixel2 = Field.Parks.values()[0];
       }
       try
       {
-         pixel1 = Field.Highways.values()[Pixel1Var];
+         pixel1 = Field.Parks.values()[Pixel1Var];
       }
       catch(Exception e)
       {
-         pixel1 = Field.Highways.values()[0];
+         pixel1 = Field.Parks.values()[0];
       }
       try
       {
-            stackHighwayToBackdrop = Field.Highways.values()[stackHighwayToBackdropVar];
+            stackHighwayToBackdrop = Field.Parks.values()[stackHighwayToBackdropVar];
       }
       catch(Exception e)
       {
-         stackHighwayToBackdrop = Field.Highways.values()[0];
+         stackHighwayToBackdrop = Field.Parks.values()[0];
       }
 
    }
