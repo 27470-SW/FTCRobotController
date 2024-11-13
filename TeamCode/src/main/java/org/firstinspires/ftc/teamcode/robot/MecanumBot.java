@@ -2,11 +2,14 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_NUM_LEVS;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEVS;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_NUM_LEVS;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD_DWN;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EX_MAX;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EX_MIN;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.SLIDECPI;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.WR_SENSE;
 
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -232,7 +235,11 @@ public MotorComponent arm=null;
                 RobotConstants.ARM_LEVS[1],
                 RobotConstants.ARM_LEVS[2],
                 RobotConstants.ARM_LEVS[3],
-                RobotConstants.ARM_LEVS[4]);
+                RobotConstants.ARM_LEVS[4],
+                RobotConstants.ARM_LEVS[5],
+                RobotConstants.ARM_LEVS[6]);
+
+
         armLevel =0;
         slides.init();
         slides.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
@@ -356,19 +363,72 @@ public MotorComponent arm=null;
     Timer timer = new Timer();
 
 public  int armLevel;
+public  int slideLevel;
+
+    //TODO: combine arm and slide together into a single level concept
     public void armLevelUp(){
-        if(armLevel != EL_NUM_LEVS){
+        if(armLevel != ARM_NUM_LEVS - 1){
             armLevel ++;
+            if(currentMode==ElbowPositions.SPECIMEN_MODE){
+                if (armLevel>4){
+                    armLevel=4;
+                }
+
+
+            }
+            else //currentMode==SAMPLE_MODE
+            {
+                switch (armLevel){
+                    case 1:
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        armLevel=5;
+                        break;
+                    case 5:
+                    case 6:
+                }
+            }
+
+
             arm.moveToLevel(armLevel, 1);
+            slides.moveToLevel(armLevel);
+
         }
     }
 
     public void armLevelDown() {
         if(armLevel != 0){
             armLevel--;
+            if(currentMode==ElbowPositions.SPECIMEN_MODE){
+                if (armLevel>4){
+                    armLevel=4;
+                }
+            }
+            else //currentMode==SAMPLE_MODE
+            {
+                switch (armLevel) {
+                    case 0:
+                    case 1:
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        armLevel = 1;
+                        break;
+                    case 5:
+                    case 6:
+                }
+            }
             arm.moveToLevel(armLevel, -1);
+            slides.moveToLevel(armLevel);
         }
     }
+
+
+
+
 
     public double getElSpd(int targetEncoder){
         if(targetEncoder > slides.getLiftPos()){
@@ -379,11 +439,14 @@ public  int armLevel;
     }
 
     public enum ElbowPositions {
-        START,
-        DRIVE,
-        BACKDROP1,
-        BACKDROP2
+        SAMPLE_MODE,
+        SPECIMEN_MODE
     }
+
+public ElbowPositions currentMode=ElbowPositions.SAMPLE_MODE;
+
+
+
 
 
 }

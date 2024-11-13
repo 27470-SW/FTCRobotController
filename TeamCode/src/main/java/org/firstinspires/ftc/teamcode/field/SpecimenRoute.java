@@ -80,6 +80,7 @@ route = constructorRoute;
 
     private void pickUpSpecimenFromTape(){
         route.addFunction(route::moveArmToPickup );
+        route.addFunction(route::moveSlidesToPickup );
         route.addEvent(Route.Action.WAIT,0.2);
         route.addFunction(route::closeClaw );
         route.addEvent(Route.Action.WAIT,0.2);

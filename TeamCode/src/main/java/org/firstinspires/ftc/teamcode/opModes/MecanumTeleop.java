@@ -36,8 +36,10 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_MAX_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_MIN_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEVS;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.POSE_EQUAL;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.SLIDECPI;
 
 
 @Config
@@ -85,6 +87,13 @@ public class MecanumTeleop extends InitLinearOpMode
             {
                 robot.initArmMot();
             }
+            // fo testin
+            Thread.sleep(3000);
+            robot.arm.moveToLevel(3,.5);
+            robot.slides.moveToLevel(3);
+            robot.armLevel = 3;
+            robot.slideLevel = 3;
+
         }
         else
         {
@@ -94,6 +103,13 @@ public class MecanumTeleop extends InitLinearOpMode
             if(VERBOSE) {  RobotLog.dd(TAG, "Start Aend fHdg %.2f", Math.toDegrees(autonEndHdg));
             RobotLog.dd(TAG, "Start Pos %s", autonEndPos.toString());}
         }
+
+
+
+
+
+
+
 
         /* Opportunity for a telop assist using Trajectory sequences */
 
@@ -1154,13 +1170,31 @@ public class MecanumTeleop extends InitLinearOpMode
         }
         /* disable triangele button during Teleop to prevent accidental Drone Deployment */
 
-//       if(gpad2.just_pressed(ManagedGamepad.Button.D_DOWN)){
-//            robot.armLevelDown();
-//        }
-//
-//        if(gpad2.just_pressed(ManagedGamepad.Button.D_UP)){
-//            robot.armLevelUp();
-//        }
+       if(gpad2.just_pressed(ManagedGamepad.Button.D_DOWN)){
+           robot.currentMode= MecanumBot.ElbowPositions.SAMPLE_MODE;
+           robot.armLevelDown(); //move arm and slides down
+
+        }
+
+        if(gpad2.just_pressed(ManagedGamepad.Button.D_UP)){
+            robot.currentMode= MecanumBot.ElbowPositions.SAMPLE_MODE;
+            robot.armLevelUp(); //move arm and slides up
+
+        }
+
+        if(gpad2.just_pressed(ManagedGamepad.Button.D_RIGHT)) {
+            robot.currentMode = MecanumBot.ElbowPositions.SPECIMEN_MODE;
+            robot.armLevelUp(); //move arm and slides up
+        }
+
+
+        if(gpad2.just_pressed(ManagedGamepad.Button.D_LEFT)) {
+            robot.currentMode = MecanumBot.ElbowPositions.SPECIMEN_MODE;
+            robot.armLevelDown(); //move arm and slides up
+        }
+
+
+
         controlArm();
 
         controlSlides();

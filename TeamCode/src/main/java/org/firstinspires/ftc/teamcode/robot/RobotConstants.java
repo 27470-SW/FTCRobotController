@@ -78,6 +78,7 @@ public class RobotConstants
   public static double   EL_SPD = 0.03;
   public static double   EL_SPD_DWN = .3333333;
   public static double[] EL_LEVS;
+  public static double SLIDECPI;
   public static double[] ARM_LEVS;
   public static double[] EX_LEVS;
   public static int EL_MAX_ENCODER;
@@ -85,9 +86,12 @@ public class RobotConstants
 
   public static int ARM_MAX_ENCODER;
   public static int ARM_MIN_ENCODER = 10;
-  public static int EL_LEV1 = 5;
-  public static int EL_LEV2 = 7;
-  public static int EL_LEV3 = 9;
+  //public static double EL_LEV1 = EL_MIN_ENCODER;
+  //public static double EL_LEV2 = EL_MIN_ENCODER;
+
+  public static double EL_LEV3 = 6.5;
+  public static double EL_LEV4 = 6.5;    //For hanging specimen
+  public static double EL_LEV5 = EL_MAX_ENCODER;
 
   public static int   EX_MAX = 3200;
   public static int   EX_MIN = 6;
@@ -370,27 +374,35 @@ public class RobotConstants
 
     Field.StartPos sPos = (Field.StartPos)startPos;
     EL_MIN_ENCODER = 10;
-    EL_MAX_ENCODER = 2100;
+    EL_MAX_ENCODER = 3000;
 
     ARM_MAX_ENCODER = 10;
     ARM_MIN_ENCODER = -2000;
 
     EL_SPD = 1;
 
-    EL_NUM_LEVS = 5;
+    EL_NUM_LEVS = 6;
     EL_LEVS = new double[EL_NUM_LEVS];
-    EL_LEVS[0] = 0.0;
-    EL_LEVS[1] = 5.00;
-    EL_LEVS[2] = 7.83;
-    EL_LEVS[3] = 9;
-    //EL_LEVS[4] = 1.63;
-    ARM_NUM_LEVS = 5;
+    SLIDECPI = 120;
+    EL_LEVS[0] = EL_MIN_ENCODER / SLIDECPI;
+    EL_LEVS[1] = EL_MIN_ENCODER / SLIDECPI;
+    EL_LEVS[2] = EL_MIN_ENCODER / SLIDECPI;
+    EL_LEVS[3] = EL_LEV3;
+    EL_LEVS[4] = EL_LEV4;
+    EL_LEVS[5] = EL_MAX_ENCODER / SLIDECPI;
+    EL_LEVS[6] = EL_MAX_ENCODER / SLIDECPI;
+
+
+
+    ARM_NUM_LEVS = 7;
     ARM_LEVS = new double[ARM_NUM_LEVS];
-    ARM_LEVS[0] = 0.0;
-    ARM_LEVS[1] = 1.00;
-    ARM_LEVS[2] = 4.83;
-    ARM_LEVS[3] = 7;
-    ARM_LEVS[4] = 9;
+    ARM_LEVS[0] = -2;
+    ARM_LEVS[1] = -1.75;
+    ARM_LEVS[2] = -1.25;
+    ARM_LEVS[3] = -2;
+    ARM_LEVS[4] = -1.25;
+    ARM_LEVS[5] = -1.5;
+    ARM_LEVS[6] = 0;
 
     IP_IMG_TOP = 0.20;
     IP_IMG_BOT = 0.80;

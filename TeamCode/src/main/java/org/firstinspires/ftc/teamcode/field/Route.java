@@ -674,7 +674,12 @@ public class Route
 
 
      public void openclaw (){
-         
+
+         if(robot.claw != null)
+         {
+             robot.claw.openClaw(1);
+
+         }
 
 
      }
@@ -697,31 +702,40 @@ public class Route
 //
 public void slidesUpOne(){
     RobotLog.dd(TAG, "set slides pos to 1");
+    robot.slides.moveToLevel(4);
 }
 
     public void moveArmToBack(){
         RobotLog.dd(TAG, "moveArmToBack");
+        robot.arm.moveToLevel(6, .5);
     }
 
      protected void moveArmForward(){
          RobotLog.dd(TAG, "MOVE ARM FORWARD");
+         robot.arm.moveToLevel(0,.5);
+
      }
 
      protected void moveArmBackward(){
          RobotLog.dd(TAG, "MOVE Arm Back");
+         robot.arm.moveToLevel(2,.5);
+
      }
 
     public void armUpLittle(){
         RobotLog.dd(TAG, "Arm up pos little");
+        robot.arm.moveToLevel(4, .5);
+
     }
 
     protected void linearSlidesUp(){
         RobotLog.dd(TAG, "MOVE SLIDES UPWARDS");
-
+        robot.slides.moveToLevel(6);
      }
 
     protected void linearSlidesDown(){
         RobotLog.dd(TAG, "MOVE SLIDES Downwards");
+        robot.slides.moveToLevel(0);
 
     }
 
@@ -1427,23 +1441,35 @@ public void slidesUpOne(){
 
  public void moveToDrive(){
         RobotLog.dd(TAG, "in moveToDrive\n");
+     robot.arm.moveToLevel(3, .5);
+     robot.slides.setLiftPos(RobotConstants.EL_MIN_ENCODER);
      }
 
     public void moveArmToPickup(){
         RobotLog.dd(TAG, "in moveArmToPickup\n");
+        robot.arm.moveToLevel(0, .5);
+    }
+
+    public void moveSlidesToPickup(){
+        RobotLog.dd(TAG, "in moveArmToPickup\n");
+        robot.slides.setLiftPos(RobotConstants.EL_MIN_ENCODER);
     }
 
     public void moveArmTo90(){
         RobotLog.dd(TAG, "in moveArmTo90\n");
+        robot.arm.moveToLevel(3, .5);
     }
     public void maxSlides(){
         RobotLog.dd(TAG, "in maxSlides\n");
+        robot.slides.setLiftPos(RobotConstants.EL_MAX_ENCODER);
     }
     public void moveArmToDrop(){
         RobotLog.dd(TAG, "in moveArmToDrop\n");
+        robot.arm.moveToLevel(5, .5);
     }
     public void minSlides(){
         RobotLog.dd(TAG,  "in minSlides\n");
+        robot.slides.setLiftPos(RobotConstants.EL_MIN_ENCODER);
     }
 
 

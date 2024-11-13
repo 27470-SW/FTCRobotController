@@ -11,8 +11,10 @@ import java.util.Locale;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEVS;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EX_MIN;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.INIT_SLIDE_POWER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.SLIDECPI;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.SLIDE_POWER;
 
 
@@ -107,6 +109,13 @@ public class Lifter
         {
             setLiftPwr(SLIDE_POWER);
         }
+
+    }
+
+    public void moveToLevel(int level){
+
+        setLiftPos((int)Math.round(EL_LEVS[level] * SLIDECPI));
+
 
     }
 
