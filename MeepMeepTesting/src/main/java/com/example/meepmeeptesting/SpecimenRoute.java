@@ -57,6 +57,8 @@ route = constructorRoute;
         pickUpSpecimenFromTape();
 
         route.addLocation(route.corner, LINE, HEAD_LINEAR, Math.toRadians(45));
+        route.addFunction(route::moveArmForward );
+        //wait
         route.addFunction(route::openclaw );
         route.addEvent(Route.Action.WAIT,0.2);
 
@@ -64,17 +66,60 @@ route = constructorRoute;
         pickUpSpecimenFromTape();
 
         route.addLocation(route.corner2, LINE, HEAD_LINEAR, Math.toRadians(45));
+        //wait
+        route.addFunction(route::moveArmForward );
+
         route.addFunction(route::openclaw );
         route.addEvent(Route.Action.WAIT,0.2);
 
         route.addLocation(route.specimen3, LINE, HEAD_LINEAR, Math.toRadians(45));
         pickUpSpecimenFromTape();
-
         route.addLocation(route.corner3, LINE, HEAD_LINEAR, Math.toRadians(45));
+        //waot
+        route.addFunction(route::moveArmForward );
         route.addFunction(route::openclaw );
         route.addEvent(Route.Action.WAIT,0.2);
 
-        route.addLocation(route.specimenPark1, LINE, HEAD_LINEAR, Math.toRadians(45));
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(135));
+        route.addLocation(route.waitForHumanPlayer, LINE, HEAD_LINEAR);
+        route.addFunction(route::armUpLittle);
+
+        route.addEvent(Route.Action.WAIT,3);
+        pickUpSpecimenFromWall();
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addLocation(route.subPos, LINE, HEAD_LINEAR, Math.toRadians(90));
+        route.addFunction(route::moveToPosition4);
+//        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::openclaw );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::moveToDrive); // this should put arm back up all the way
+
+
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(135));
+        route.addLocation(route.waitForHumanPlayer, SPLINE, HEAD_SPLINE);
+        pickUpSpecimenFromWall();
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addLocation(route.subPos, LINE, HEAD_LINEAR, Math.toRadians(90));
+        route.addFunction(route::moveToPosition4);
+//        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::openclaw );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::moveToDrive);
+
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(135));
+        route.addLocation(route.waitForHumanPlayer, SPLINE, HEAD_SPLINE);
+        pickUpSpecimenFromWall();
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addLocation(route.subPos, LINE, HEAD_LINEAR, Math.toRadians(90));
+        route.addFunction(route::moveToPosition4);
+//        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::openclaw );
+        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::moveToDrive);
+
+
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(135));
+        route.addLocation(route.specimenPark1, SPLINE, HEAD_LINEAR, Math.toRadians(95));
         //route.addEvent(Route.Action.TANGENT, Math.toRadians(90));
         //route.addLocation(route.start_route, LINE, HEAD_DEFAULT);
         //route.addLocation(route.dropCenterPixel, SPLINE, HEAD_LINEAR);
@@ -83,12 +128,19 @@ route = constructorRoute;
 
     private void pickUpSpecimenFromTape(){
         route.addFunction(route::moveArmToPickup );
-        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addEvent(Route.Action.WAIT,0.2);
         route.addFunction(route::closeClaw );
-        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addEvent(Route.Action.WAIT,0.2);
         route.addFunction(route::moveArmToBack );
     }
 
+    private void pickUpSpecimenFromWall(){
+       // route.addFunction(route::arm.moveToLevel (3); btw this makes it to move to level 3 but i dont work
+//        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::closeClaw );
+//        route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::moveArmToBack );
+    }
 
     private void goToBackdrop(Pose2d backdrop){
         if(stackToBack == WALL)

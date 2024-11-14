@@ -145,7 +145,7 @@ public abstract class Route
         startSample = new Pose2d(sx * 9, 65, flip + sh*Math.toRadians(270));
         //specimen points
         startSpecimenSide = new Pose2d(sx * -5, 63.25, flip + sh*Math.toRadians(270));
-		startSpecimen = new Pose2d(sx * -5, 55, flip + sh*Math.toRadians(270));
+		startSpecimen = new Pose2d(sx * -5, 63, flip + sh*Math.toRadians(270));
         specimenPark1 = new Pose2d(sx * -61, 62, flip + sh*Math.toRadians(270));
         specimen3 = new Pose2d(sx * -59.01, 55, flip + sh*Math.toRadians(245));
         specimen2 = new Pose2d(sx * -59, 55, flip + sh*Math.toRadians(270));
@@ -153,9 +153,9 @@ public abstract class Route
         forward = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
         startCSRedHigh = new Pose2d(sx * 63.25, 16, flip + sh*Math.toRadians(180));
        specimen1 = new Pose2d(sx * -48,55, flip + sh*Math.toRadians(270));
-       corner = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
-        corner2 = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
-        corner3 = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
+       corner = new Pose2d(sx * -55,55, flip + sh*Math.toRadians(310));
+        corner2 = new Pose2d(sx * -55,55, flip + sh*Math.toRadians(310));
+        corner3 = new Pose2d(sx * -55,55, flip + sh*Math.toRadians(310));
         startCSRedLow = new Pose2d(sx*63.25, -32, flip + sh*Math.toRadians(180));
         startCBlueHigh = new Pose2d(sx * -63.25, 16, flip + sh*Math.toRadians(0));
         startCSBlueLow = new Pose2d(sx * -63.25, -15.5, flip + sh*Math.toRadians(0));
@@ -173,7 +173,9 @@ public abstract class Route
         sample3 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-60));
         park = new Pose2d(sx * -52, 63, flip + sh*Math.toRadians(-90));
         positionToPark = new Pose2d(sx * 40, 63, flip + sh*Math.toRadians(-180));
+        waitForHumanPlayer = new Pose2d(sx * -48, 48, flip + sh*Math.toRadians(89.9));
         park2 = new Pose2d(sx * -70, 63, flip + sh*Math.toRadians(-90));
+        subPos = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
 
 
 
@@ -561,6 +563,11 @@ public abstract class Route
          conestackNum --;
      }
 
+    public void moveToPosition4(){
+        slidesUpOne();
+        armUpLittle();
+    }
+
      protected void liftElvGndJnct()
      {
          System.out.println("Lift Elevator to GND JNCT");
@@ -685,7 +692,7 @@ public void slidesUpOne(){
      /* Grab the cone in the stack or in the terminal */
      protected void closeClaw()
      {
-         System.out.println("Close Claw");
+//         System.out.println("Close Claw");
 
      }
      protected void doPark()
@@ -754,6 +761,7 @@ public void slidesUpOne(){
      protected Pose2d dropPreSpecimen;
     protected Pose2d corner;
     protected Pose2d corner2;
+    protected Pose2d subPos;
     protected Pose2d corner3;
      protected Pose2d startSample;
     protected Pose2d startSpecimen;
@@ -973,6 +981,7 @@ public void slidesUpOne(){
     protected Pose2d specimen3;
 
     protected Pose2d specimenPark1;
+    protected Pose2d waitForHumanPlayer;
 
     protected Pose2d forward;
      protected Pose2d fourPtJunctDropSpline;
@@ -1351,6 +1360,8 @@ public void slidesUpOne(){
     }
      public void moveToDrive(){
          System.out.printf(Locale.US, "in moveToDrive\n");
+//         minSlides();
+//         moveArmBackward();
      }
 
     public void moveArmToPickup(){

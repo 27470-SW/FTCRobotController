@@ -705,6 +705,14 @@ public void slidesUpOne(){
     robot.slides.moveToLevel(4);
 }
 
+
+
+public void moveToPosition4(){
+    slidesUpOne();
+    armUpLittle();
+}
+
+
     public void moveArmToBack(){
         RobotLog.dd(TAG, "moveArmToBack");
         robot.arm.moveToLevel(6, .5);
