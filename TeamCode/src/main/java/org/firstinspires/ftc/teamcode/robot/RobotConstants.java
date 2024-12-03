@@ -75,6 +75,7 @@ public class RobotConstants
   public static int      EL_NUM_LEVS=3;
   public static int      EX_NUM_LEVS=2;
   public static double   EL_MAX_IPS = 1.0;
+  public static double   ARM_SPD = 1;
   public static double   EL_SPD = 0.03;
   public static double   EL_SPD_DWN = .3333333;
   public static double[] EL_LEVS;
@@ -89,8 +90,8 @@ public class RobotConstants
   //public static double EL_LEV1 = EL_MIN_ENCODER;
   //public static double EL_LEV2 = EL_MIN_ENCODER;
 
-  public static double EL_LEV3 = 6.5;
-  public static double EL_LEV4 = 6.5;    //For hanging specimen
+  public static double EL_LEV3 = 10;
+  public static double EL_LEV4 = 3.845;    //For hanging specimen
   public static double EL_LEV5 = EL_MAX_ENCODER;
 
   public static int   EX_MAX = 3200;
@@ -299,10 +300,17 @@ public class RobotConstants
    * inches.
    */
 
-  public static double MAX_VEL = 50; //RR tune  maxVel 59.96
+
+  public static double MAX_VEL = 60; //RR tune  maxVel 59.96
   public static double MAX_ACCEL = 35;
   public static double MAX_ANG_VEL = 2.0167280197143556;
   public static double MAX_ANG_ACCEL = Math.toRadians(180);
+//old 2024
+
+//  public static double MAX_VEL = 70; //RR tune  maxVel 59.96
+//  public static double MAX_ACCEL = 60;
+//  public static double MAX_ANG_VEL = Math.toRadians(180);
+//  public static double MAX_ANG_ACCEL = Math.toRadians(270);
 
   public static double SLW_VEL = 35;
   public static double SLW_ACCEL = 30;
@@ -374,35 +382,36 @@ public class RobotConstants
 
     Field.StartPos sPos = (Field.StartPos)startPos;
     EL_MIN_ENCODER = 10;
-    EL_MAX_ENCODER = 3000;
+    EL_MAX_ENCODER = 4000;
 
     ARM_MAX_ENCODER = 10;
-    ARM_MIN_ENCODER = -2000;
+    ARM_MIN_ENCODER = -4200;
 
     EL_SPD = 1;
 
-    EL_NUM_LEVS = 6;
+    EL_NUM_LEVS = 8;
     EL_LEVS = new double[EL_NUM_LEVS];
     SLIDECPI = 120;
-    EL_LEVS[0] = EL_MIN_ENCODER / SLIDECPI;
+    EL_LEVS[0] = 450 / SLIDECPI;
     EL_LEVS[1] = EL_MIN_ENCODER / SLIDECPI;
     EL_LEVS[2] = EL_MIN_ENCODER / SLIDECPI;
     EL_LEVS[3] = EL_LEV3;
     EL_LEVS[4] = EL_LEV4;
     EL_LEVS[5] = EL_MAX_ENCODER / SLIDECPI;
     EL_LEVS[6] = EL_MAX_ENCODER / SLIDECPI;
+    EL_LEVS[7] = 3000 / SLIDECPI;
 
 
 
     ARM_NUM_LEVS = 7;
     ARM_LEVS = new double[ARM_NUM_LEVS];
-    ARM_LEVS[0] = -2;
-    ARM_LEVS[1] = -1.75;
+    ARM_LEVS[0] = -2.95;
+    ARM_LEVS[1] = -2.4;
     ARM_LEVS[2] = -1.25;
-    ARM_LEVS[3] = -2;
-    ARM_LEVS[4] = -1.25;
-    ARM_LEVS[5] = -1.5;
-    ARM_LEVS[6] = 0;
+    ARM_LEVS[3] = -2.78;
+    ARM_LEVS[4] = -1.71;
+    ARM_LEVS[5] = -2;
+    ARM_LEVS[6] = 0.2;
 
     IP_IMG_TOP = 0.20;
     IP_IMG_BOT = 0.80;
@@ -412,11 +421,11 @@ public class RobotConstants
     DT_LDIR = DcMotorSimple.Direction.REVERSE;
     DT_RDIR = DcMotorSimple.Direction.FORWARD;
 
-    BOT_LEN = 13.125;
-    BOT_WID = 13.125;
+    BOT_LEN = 18;
+    BOT_WID = 18;
 
     MAX_VEL = 50;
-    LATERAL_MULTIPLIER = 1.122;
+    LATERAL_MULTIPLIER = 0.963;
     DT_MOTOR = Motors.MotorModel.GOBILDA_5202_19_2;
     DT_EXT_GEAR_RATIO = 0.997;
     DT_WHEEL_DIAM = 96.0/MMPERIN;

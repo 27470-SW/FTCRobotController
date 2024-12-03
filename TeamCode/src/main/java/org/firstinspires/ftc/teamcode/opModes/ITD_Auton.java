@@ -45,7 +45,7 @@ import static org.firstinspires.ftc.teamcode.field.Field.StartPos.*;
 //@SuppressWarnings("ConstantConditions")
 @SuppressWarnings("StatementWithEmptyBody")
 @Config
-@Autonomous(name="CenterStageAuton", group="Auton")
+@Autonomous(name="IntoTheDeepAuton", group="Auton")
 //@Disabled
 public class ITD_Auton extends InitLinearOpMode // implements FtcMenu.MenuButtons
 {

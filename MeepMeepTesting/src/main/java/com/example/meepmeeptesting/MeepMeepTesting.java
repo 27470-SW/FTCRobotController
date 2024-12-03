@@ -45,7 +45,7 @@ public class MeepMeepTesting
 
          RobotConstants.init(RobotConstants.Chassis.B7252);
          RobotConstants.MAX_LOOPS = 1;
-         ITD_Route ffr = new ITD_Route(START_SPECIMENS, Park1, Field.FirstLocation.BACKDROP) ;
+         ITD_Route ffr = new ITD_Route(START_SAMPLES, Park1, Field.FirstLocation.BACKDROP) ;
 
          TrajectorySequence seq = ffr.fullSeq;
 

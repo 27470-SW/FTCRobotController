@@ -39,52 +39,121 @@ route = constructorRoute;
        //  qualifierRoute(startPos,parkPos,firstLocation);
 
         //Working on
-        route.addLocation(route.startSpecimen, START, HEAD_DEFAULT);
+        route.addLocation(route.startSpecimenSide, START, HEAD_DEFAULT);
         route.addFunction(route::closeClaw );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,0.45);
         //Make slides up one and arm a little up.
-        route.addFunction(route::slidesUpOne, 0.1);
-        route.addFunction(route::armUpLittle, 1.65);
+        route.addFunction(route::slidesUpOne);
+        route.addFunction(route::armUpLittle);
+        route.addEvent(Route.Action.WAIT,.4);
         route.addLocation(route.forward, SPLINE, HEAD_LINEAR, Math.toRadians(90));
         route.addFunction(route::openclaw );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,.3);
         route.addFunction(route::moveToDrive);
+
+        route.addFunction(route::delayedArmToPickup);
 
         route.addLocation(route.specimen1, LINE, HEAD_LINEAR, Math.toRadians(45));
         pickUpSpecimenFromTape();
 
         route.addLocation(route.corner, LINE, HEAD_LINEAR, Math.toRadians(45));
-        route.addFunction(route::openclaw );
         route.addEvent(Route.Action.WAIT,0.2);
+        route.addFunction(route::openclaw );
+        route.addEvent(Route.Action.WAIT,0.30);
+        route.addFunction(route::moveArmForward );
+        //wait
+
 
         route.addLocation(route.specimen2, LINE, HEAD_LINEAR, Math.toRadians(45));
+        moveArmDelay = 0.8;
         pickUpSpecimenFromTape();
 
         route.addLocation(route.corner2, LINE, HEAD_LINEAR, Math.toRadians(45));
-        route.addFunction(route::openclaw );
+
+
+//temp
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::openclaw );
+//        route.addEvent(Route.Action.WAIT,0.25);
+//        route.addFunction(route::moveArmForward );
+//
+//
+//
+//        route.addLocation(route.specimen3, LINE, HEAD_LINEAR, Math.toRadians(45));
+//        pickUpSpecimenFromTape();
+//
+//        route.addLocation(route.corner3, LINE, HEAD_LINEAR, Math.toRadians(45));
+        //wait
         route.addEvent(Route.Action.WAIT,0.2);
-
-        route.addLocation(route.specimen3, LINE, HEAD_LINEAR, Math.toRadians(45));
-        pickUpSpecimenFromTape();
-
-        route.addLocation(route.corner3, LINE, HEAD_LINEAR, Math.toRadians(45));
         route.addFunction(route::openclaw );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,0.3);
 
-        route.addLocation(route.specimenPark1, LINE, HEAD_LINEAR, Math.toRadians(45));
+
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(135));
+        route.addLocation(route.waitForHumanPlayer, LINE, HEAD_LINEAR);
+        route.addEvent(Route.Action.WAIT,3);
+        route.addFunction(route::armUpLittle);
+
+        route.addEvent(Route.Action.WAIT,.3);
+        pickUpSpecimenFromWall();
+        route.addFunction(route::moveToPosition4);
+        route.addLocation(route.subPos, LINE, HEAD_LINEAR, Math.toRadians(90));
+     //   route.addEvent(Route.Action.WAIT,0.05);
+        route.addFunction(route::openclaw);
+        route.addEvent(Route.Action.WAIT,0.3);
+        route.addFunction(route::moveToDrive); // this should put arm back up all the way
+
+
+       // route.addEvent(Route.Action.TANGENT, Math.toRadians(135));
+        //route.addLocation(route.waitForHumanPlayer2, SPLINE, HEAD_SPLINE);
+        //pickUpSpecimenFromWall();
+//        route.addFunction(route::moveToPosition4);
+//        route.addLocation(route.subPos2, LINE, HEAD_LINEAR, Math.toRadians(90));
+////        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::openclaw );
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::moveToDrive);
+        route.addFunction(route::moveArmToZero);
+
+//temp
+//        route.addEvent(Route.Action.TANGENT, Math.toRadians(135));
+//        route.addLocation(route.waitForHumanPlayer3, SPLINE, HEAD_SPLINE);
+//        pickUpSpecimenFromWall();
+//        route.addFunction(route::moveToPosition4);
+//        route.addLocation(route.subPos3, LINE, HEAD_LINEAR, Math.toRadians(90));
+//        route.addFunction(route::openclaw );
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::moveToDrive);
+
+
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(135));
+        route.addLocation(route.specimenPark1, SPLINE, HEAD_LINEAR, Math.toRadians(95));
         //route.addEvent(Route.Action.TANGENT, Math.toRadians(90));
         //route.addLocation(route.start_route, LINE, HEAD_DEFAULT);
         //route.addLocation(route.dropCenterPixel, SPLINE, HEAD_LINEAR);
         // route.addLocation(route.dropCenterPixel, SPLINE, HEAD_LINEAR, Math.toRadians(45));
     }
 
+    private double moveArmDelay = 0;
+
     private void pickUpSpecimenFromTape(){
+
         route.addFunction(route::moveArmToPickup );
-        route.addFunction(route::moveSlidesToPickup );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,moveArmDelay);
         route.addFunction(route::closeClaw );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,.35);
         route.addFunction(route::moveArmToBack );
+
+    }
+
+    private void pickUpSpecimenFromWall(){
+
+        route.addFunction(route::armToSpecimenPickup );
+
+        route.addEvent(Route.Action.WAIT,2.5);
+//        route.addFunction(route::closeClaw );
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::armUpLittle );
     }
 
 

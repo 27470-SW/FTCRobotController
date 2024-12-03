@@ -12,6 +12,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEVS;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_MIN_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EX_MIN;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.INIT_SLIDE_POWER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.SLIDECPI;
@@ -92,22 +93,35 @@ public class Lifter
        return liftMotor.getCurrentPosition();
     }
 
+
+    private boolean slidesOff = false;
     //pos in counts
     public void setLiftPos(int pos)
     {
-        tgtCnt = pos;
-        if (liftMotor != null) liftMotor.setTargetPosition(pos);
-        if (liftMotor2 != null) liftMotor2.setTargetPosition(pos);
-
-        if (lastRunMode != RUN_TO_POSITION)
-        {
-            setMode(RUN_TO_POSITION);
+        //Sets the position when it needs to be held up
+        if (pos - EL_MIN_ENCODER < 19) {
+//                    int motor2cnts = liftMotor2.getCurrentPosition();
+//                    RobotLog.dd(TAG, "Slides near bottom, disengaging. slide1 = " + lftCnts + " slide2 = " + motor2cnts);
+//                    setLiftPwr(0.0);
+//                    setMode(RUN_USING_ENCODER);
+                    slidesOff = true;
+               } else{
+            slidesOff = false;
         }
 
-        if (liftMotor != null)
-            if (liftMotor2 != null)
         {
-            setLiftPwr(SLIDE_POWER);
+            tgtCnt = pos;
+            if (liftMotor != null) liftMotor.setTargetPosition(pos);
+            if (liftMotor2 != null) liftMotor2.setTargetPosition(pos);
+
+            if (lastRunMode != RUN_TO_POSITION) {
+                setMode(RUN_TO_POSITION);
+            }
+
+            if (liftMotor != null)
+                if (liftMotor2 != null) {
+                    setLiftPwr(SLIDE_POWER);
+                }
         }
 
     }
@@ -119,7 +133,7 @@ public class Lifter
 
     }
 
-    public void setLiftSpd(double pwr)
+    public void setLiftSpd(double pwr, double softLimit)
     {
 
         if (Math.abs(pwr) < 0.05 && lastRunMode != RUN_TO_POSITION)
@@ -130,6 +144,7 @@ public class Lifter
         }
         else if (Math.abs(pwr) >= 0.05)
         {
+            slidesOff = false;
             RobotLog.dd(TAG, "pwr: %f, lm1e: %d, lm2e: %d, lftCnts: %d, MIN: %d, MAX: %d",pwr, liftMotor.getCurrentPosition(), liftMotor2.getCurrentPosition(), lftCnts, RobotConstants.EL_MIN_ENCODER, RobotConstants.EL_MAX_ENCODER);
 
             if (lastRunMode != RUN_USING_ENCODER)
@@ -140,7 +155,7 @@ public class Lifter
             //safetycheck
             //TODO: replace with endstop check
             double lftmin = RobotConstants.EL_MIN_ENCODER;
-            double lftmax = RobotConstants.EL_MAX_ENCODER;
+            double lftmax = Math.min( RobotConstants.EL_MAX_ENCODER, softLimit);
             if (lftCnts <= lftmin && pwr < 0.0 ||
                 lftCnts >= lftmax  && pwr > 0.0) pwr = 0.0;
 
@@ -178,9 +193,20 @@ public class Lifter
     public void update()
     {
         if(liftMotor != null){
+
             lftCnts = liftMotor.getCurrentPosition();
-            int motor2cnts = liftMotor2.getCurrentPosition();
-            if(liftMotor2 != null) if (lftCnts > motor2cnts + 10 || lftCnts < motor2cnts - 10 ) RobotLog .dd(TAG, "Warning slides not on same motor count:slide1 = " + lftCnts+" slide2 = "+liftMotor2.getCurrentPosition());;
+            if(liftMotor2 != null) {
+                int motor2cnts = liftMotor2.getCurrentPosition();
+                if (lftCnts > motor2cnts + 30 || lftCnts < motor2cnts - 30)
+                    RobotLog.dd(TAG, "Warning slides not on same motor count:slide1 = " + lftCnts + " slide2 = " + liftMotor2.getCurrentPosition());
+
+                if (lftCnts - EL_MIN_ENCODER < 19 && slidesOff) {
+                    RobotLog.dd(TAG, "Slides near bottom, disengaging. slide1 = " + lftCnts + " slide2 = " + motor2cnts);
+                    setLiftPwr(0.0);
+                    setMode(RUN_USING_ENCODER);
+               }
+            }
+
         }
 
     }

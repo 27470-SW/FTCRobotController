@@ -1,27 +1,33 @@
 package org.firstinspires.ftc.teamcode.field;
 
 import static android.os.SystemClock.sleep;
-
-import org.firstinspires.ftc.teamcode.robot.MecanumBot;
-import org.firstinspires.ftc.teamcode.util.CommonUtil;
-import org.firstinspires.ftc.teamcode.util.HalDashboard;
-import org.firstinspires.ftc.teamcode.opModes.ITD_Auton;
-import org.firstinspires.ftc.teamcode.util.PreferenceMgr;
-
-import static org.firstinspires.ftc.teamcode.image.ITD_Detector.Position.*;
-import static org.firstinspires.ftc.teamcode.field.Field.StartPos.*;
+import static org.firstinspires.ftc.teamcode.field.Field.StartPos.START_SAMPLES;
+import static org.firstinspires.ftc.teamcode.field.Field.StartPos.START_SPECIMENS;
+import static org.firstinspires.ftc.teamcode.field.Route.Heading.HEAD_DEFAULT;
+import static org.firstinspires.ftc.teamcode.field.Route.Heading.HEAD_LINEAR;
+import static org.firstinspires.ftc.teamcode.field.Route.Movement.LINE;
+import static org.firstinspires.ftc.teamcode.field.Route.Movement.START;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.RobotLog;
 
-public class ITD_Route extends Route
+import org.firstinspires.ftc.teamcode.opModes.ITD_Auton;
+import org.firstinspires.ftc.teamcode.robot.MecanumBot;
+import org.firstinspires.ftc.teamcode.util.CommonUtil;
+import org.firstinspires.ftc.teamcode.util.HalDashboard;
+
+public class SpinRoute extends Route
 {
   private static final String TAG = "SJH_PPR";
 
-  public ITD_Route(       MecanumBot robot,
-                          Field.StartPos startPos,
-						  Field.Parks parkPos,
-                          Field.FirstLocation firstLocation)
+    public SpinRoute(MecanumBot robot){
+        this(robot, Field.StartPos.values()[0], Field.Parks.values()[0], Field.FirstLocation.values()[0]);
+    }
+
+  public SpinRoute(MecanumBot robot,
+                   Field.StartPos startPos,
+                   Field.Parks parkPos,
+                   Field.FirstLocation firstLocation)
   {
     super(robot, startPos, parkPos, firstLocation);
   }
@@ -60,34 +66,22 @@ public class ITD_Route extends Route
         //TODO: add code to make this work
     }
 
-    public void pickUpPixels(){
-        pickUpPixel();
-        pickUpPixel();
-    }
+
 
 
 
    protected void initTrajectories2()
    {
        RobotLog.dd(TAG, "in InitTrajectories2");
-       dashboardConfig();
 
        Pose2d lastPose;
 
 
        RobotLog.dd(TAG, "making route");
-	   
-       if(startPos == START_SAMPLES) {
-           SampleRoute t1 = new SampleRoute(this);
-           t1.makeTraj(startPos, parkPos, firstLocation);
 
-       }
-       else if(startPos == START_SPECIMENS)
-       {
-           SpecimenRoute t1 = new SpecimenRoute(this);
-           t1.makeTraj(startPos, parkPos, firstLocation);
+       addLocation(waitForHumanPlayer, START, HEAD_DEFAULT);
+       addLocation(preSubPos, LINE, HEAD_LINEAR, Math.toRadians(90));
 
-       }
        lastPose = this.getEnd();
 	   
 	   RobotLog.dd(TAG, "route made");

@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -17,10 +18,15 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.field.Field;
+import org.firstinspires.ftc.teamcode.field.ITD_Route;
+import org.firstinspires.ftc.teamcode.field.SpinRoute;
+import org.firstinspires.ftc.teamcode.field.SpinRoutebasket;
 import org.firstinspires.ftc.teamcode.robot.MecanumBot;
 import org.firstinspires.ftc.teamcode.robot.MecanumDriveLRR;
 import org.firstinspires.ftc.teamcode.robot.RobotConstants;
 import org.firstinspires.ftc.teamcode.robot.BasicBot;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.Input_Shaper;
 import org.firstinspires.ftc.teamcode.util.ManagedGamepad;
 import org.firstinspires.ftc.teamcode.util.Point2d;
@@ -28,14 +34,17 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_MAX_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_MIN_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_SPD;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEVS;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.POSE_EQUAL;
@@ -72,6 +81,8 @@ public class MecanumTeleop extends InitLinearOpMode
         robot.init(this, chas, true);
         robot.setBcm(LynxModule.BulkCachingMode.MANUAL);
 
+        armButton = hardwareMap.get(TouchSensor .class, "armL0");
+
 //        if(robot.claw != null)
 //        {
 //            /* keep the claw Open in case we have a cone in our grasp */
@@ -88,11 +99,11 @@ public class MecanumTeleop extends InitLinearOpMode
                 robot.initArmMot();
             }
             // fo testin
-            Thread.sleep(3000);
-            robot.arm.moveToLevel(3,.5);
-            robot.slides.moveToLevel(3);
-            robot.armLevel = 3;
-            robot.slideLevel = 3;
+//            Thread.sleep(3000);
+//            robot.arm.moveToLevel(3,.5);
+//            robot.slides.moveToLevel(3);
+//            robot.armLevel = 3;
+//            robot.slideLevel = 3;
 
         }
         else
@@ -107,7 +118,9 @@ public class MecanumTeleop extends InitLinearOpMode
 
 
 
+        spinRoute= new SpinRoute(robot);
 
+        spinRoutebasket= new SpinRoutebasket(robot);
 
 
 
@@ -228,6 +241,7 @@ public class MecanumTeleop extends InitLinearOpMode
         dashboard.displayText(14, String.format(Locale.US,"SW Ver SC Build 12_8_2022"));
         //dashboard.displayText(l++,String.format(Locale.US, "PixelDistance: %f", robot.colorFindDistance()));
         dashboard.displayText(l++, String.format(Locale.US, "arm encoder: %d", robot.arm.getCurEnc() ));
+        dashboard.displayText(l++, String.format(Locale.US, "arm limit switch value: %b", armButton.isPressed()));
 
 
         if(VERBOSE) RobotLog.dd(TAG, "TEL SHT:%.1f ARM:%.1f INT:%.1f DRV:%.1f",
@@ -274,7 +288,7 @@ public class MecanumTeleop extends InitLinearOpMode
 
         if(robot.arm == null) return;
         boolean start = gpad2.pressed(ManagedGamepad.Button.START);
-        double lftPwr = gpad2.value(ManagedGamepad.AnalogInput.R_STICK_Y);
+        double lftPwr = -gpad2.value(ManagedGamepad.AnalogInput.R_STICK_Y);
         /* Move the Elevator to desired HuB level */
        // boolean armLevelUp   = gpad2.just_pressed(ManagedGamepad.Button.D_UP);
         //boolean armLevelDown   = gpad2.just_pressed(ManagedGamepad.Button.D_DOWN);
@@ -287,11 +301,11 @@ public class MecanumTeleop extends InitLinearOpMode
             }
             else
             {
-                if(joystickUsed = true){
-                    targetEncoder = robot.arm.getCurEnc() + 50;
+                if(joystickUsed == true){
+                    targetEncoder = robot.arm.getCurEnc();
                     joystickUsed = false;
                 }
-                robot.arm.moveToCnt(targetEncoder, robot.getElSpd(targetEncoder));
+                robot.arm.moveToCnt(targetEncoder, ARM_SPD);
                 RobotLog.dd(TAG, "setting arm to encoder: %d", targetEncoder);
 
                 if(VERBOSE) { dashboard.displayText(13, String.format(Locale.US, "Target Encoder %d",targetEncoder));}
@@ -303,6 +317,7 @@ public class MecanumTeleop extends InitLinearOpMode
             robot.arm.setMode(RUN_USING_ENCODER);
             liftSpd = lftPwr;
             joystickUsed = true;
+            RobotLog.dd(TAG, "setting arm mode to RUN_USING_ENCODER");
 
             //robot.elev.moveToCnt(robot.elev.getCurEnc(), RobotConstants.EL_SPD);
         }
@@ -352,10 +367,11 @@ public class MecanumTeleop extends InitLinearOpMode
  */
         if (robot.arm.getMode() != RUN_TO_POSITION)
         {
+            double armLimit = Math.min (ARM_MAX_ENCODER,getArmSoftLimit());
             RobotLog.dd(TAG, "encoder = %d, MIN = %d, MAX = %d, the arm's mode: %s", robot.arm.getCurEnc(), ARM_MIN_ENCODER, ARM_MAX_ENCODER, robot.arm.getMode().name());
             if (
                     (liftSpd <= 0 && robot.arm.getCurEnc() > ARM_MIN_ENCODER ) ||
-                            (liftSpd >= 0 && robot.arm.getCurEnc() < ARM_MAX_ENCODER)
+                            (liftSpd >= 0 && robot.arm.getCurEnc() < armLimit)
             )
             {
                 double locSpeedLimit = 1;
@@ -401,6 +417,7 @@ public class MecanumTeleop extends InitLinearOpMode
     private void controlClaw()
     {
        double openClaw = gpad2.value(ManagedGamepad.AnalogInput.R_TRIGGER_VAL);
+        boolean halfClaw = gpad2.just_pressed(ManagedGamepad.Button.R_BUMP);
         double closeClaw = gpad2.value(ManagedGamepad.AnalogInput.L_TRIGGER_VAL);
 
         if(openClaw != 0){
@@ -408,6 +425,10 @@ public class MecanumTeleop extends InitLinearOpMode
         }
         else if(closeClaw != 0){
             robot.claw.closeClaw(closeClaw);
+        }
+
+        if(halfClaw){
+            robot.claw.halfClaw(openClaw);
         }
 /*
         if (robot.claw != null)
@@ -437,11 +458,21 @@ public class MecanumTeleop extends InitLinearOpMode
         }
 */
     }
+
+    private double getSlideSoftLimit() {
+        double x = robot.arm.getCurEnc();
+        return 0.0026 *x*x + 0.4735 * x + 1239.9;
+    }
+    private double getArmSoftLimit(){
+        double x = robot.slides.getCurEnc();
+        return 0.0002*x*x - 1.5184*x + 1790;
+    }
+
     private void controlSlides()
     {
 
         double lftPwr = -gpad2.value(ManagedGamepad.AnalogInput.L_STICK_Y);
-        robot.slides.setLiftSpd(lftPwr);
+        robot.slides.setLiftSpd(lftPwr, getSlideSoftLimit());
             //robot.elev.moveToCnt(robot.elev.getCurEnc(), RobotConstants.EL_SPD);
         }
 
@@ -494,7 +525,9 @@ public class MecanumTeleop extends InitLinearOpMode
         boolean drvbrd = gpad1.just_pressed(ManagedGamepad.Button.A) && !gpad1.pressed(ManagedGamepad.Button.START);
         boolean rightOne = gpad1.just_pressed(ManagedGamepad.Button.D_RIGHT);
         boolean leftOne = gpad1.just_pressed(ManagedGamepad.Button.D_LEFT);
-        boolean goto1 = gpad1.just_pressed(ManagedGamepad.Button.X);
+        boolean spin = gpad1.just_pressed(ManagedGamepad.Button.B);
+        boolean spinBasket = gpad1.just_pressed(ManagedGamepad.Button.X);
+
         boolean goto2 = gpad1.just_pressed(ManagedGamepad.Button.A) && !gpad1.pressed(ManagedGamepad.Button.START);
         boolean goto3 = gpad1.just_pressed(ManagedGamepad.Button.B) && !gpad1.pressed(ManagedGamepad.Button.START);
 
@@ -606,6 +639,50 @@ public class MecanumTeleop extends InitLinearOpMode
         if(Math.abs(lr)+Math.abs(fb) > .25){        //if joystick is being used
            clearDriverOveride();
         }
+
+
+        if(spin){
+            if(null != spinRoute) {
+                if (null != spinRoute.trajList) {
+                    robot.drive.setPoseEstimate(spinRoute.getStart());
+                    int trajNum = 0;
+                    autoDriveActive=true;
+
+                    for (TrajectorySequence tSeq : spinRoute.trajList)
+                    {
+                        trajNum++;
+
+                        String seqName = String.format(Locale.US, "Seq %d",
+                                trajNum);
+
+                        mechDrv.followTrajectorySequenceAsync(tSeq);
+                    }
+                }
+            }
+        }
+
+
+
+        if(spinBasket){
+            if(null != spinRoutebasket) {
+                if (null != spinRoutebasket.trajList) {
+                    robot.drive.setPoseEstimate(spinRoutebasket.getStart());
+                    int trajNum = 0;
+                    autoDriveActive=true;
+
+                    for (TrajectorySequence tSeq : spinRoutebasket.trajList)
+                    {
+                        trajNum++;
+
+                        String seqName = String.format(Locale.US, "Seq %d",
+                                trajNum);
+
+                        mechDrv.followTrajectorySequenceAsync(tSeq);
+                    }
+                }
+            }
+        }
+
 /*
         if (rightOne){
             goRight = 1;
@@ -652,7 +729,9 @@ public class MecanumTeleop extends InitLinearOpMode
             goRight = 1;
             goBrd = goBrd == 0?2:0;
             brdDis = getBrdDis();   //not for April tags, for distance sensor
-        }else if(goto4Tag){
+        }else*/
+
+        if(goto4Tag){
         goBrd = goBrd == 0?1:0;
     }
 
@@ -688,35 +767,39 @@ public class MecanumTeleop extends InitLinearOpMode
 
         RobotLog.dd(TAG, String.format("goLeft: %d, goRight: %d, goBrd: %d, targetFound: %d", goLeft, goRight, goBrd, targetFound?1:0));
 
-        if(goLeft == 1 || goRight == 1 || goBrd == 2){
-                velPose = new Pose2d(-BORD_SPD*goBrd, BUTT_SPD*goRight -BUTT_SPD*goLeft, Math.toRadians(0));
-        }else if(goBrd == 1 && targetFound) {
+//        if(goLeft == 1 || goRight == 1 || goBrd == 2){
+//                velPose = new Pose2d(-BORD_SPD*goBrd, BUTT_SPD*goRight -BUTT_SPD*goLeft, Math.toRadians(0));
+//        } else
+        if(goBrd == 1 && targetFound) {
             // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
             double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
             double headingError = desiredTag.ftcPose.bearing - DESIRED_HEADING;
-            double yawError = desiredTag.ftcPose.yaw;
+            double yawError = desiredTag.ftcPose.yaw - DESIRED_YAW;
 
             // Use the speed and turn "gains" to calculate how we want the robot to move.
-            drive = -Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            drive = Range.clip(yawError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
             turnA = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-            strafe = -Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-            atBrd(rangeError, headingError, yawError);
+            strafe = -Range.clip(-rangeError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+            //atBrd(rangeError, headingError, yawError);
 
                 velPose = new Pose2d(drive, strafe, turnA);
             RobotLog.dd(TAG, String.format("drive: %f, turnA: %f, strafe: %f", drive, turnA, strafe));
-        }*/
-      //  else{
+        }
+        else{
             velPose = new Pose2d(driveInput, -turn);
-   //     }
+       }
 
-//        if(goBrd == 1){
-//            moveRobot(drive, strafe, turnA);
-//        }else {
+        if(goBrd == 1 && targetFound) {
+            moveRobot(drive, strafe, turnA);
+        }
+        else if (!autoDriveActive) {
             mechDrv.setWeightedDrivePower(velPose);
-//        }
+        }
 
     }
     private void clearDriverOveride(){
+        mechDrv.cancelFollowing();
+        autoDriveActive=false;
         goRight = 0;
         goLeft = 0;
         goBrd = 0;
@@ -781,19 +864,20 @@ public class MecanumTeleop extends InitLinearOpMode
 
     /*********************** copied from robotAutoDriveToAprilTag2023 ***********************/
         // Adjust these numbers to suit your robot.
-        final double DESIRED_DISTANCE = 9.0; //  this is how close the camera should get to the target (inches)
-        double DESIRED_HEADING = 0; //  this is how close the camera should get to the target (inches)
+        final double DESIRED_DISTANCE = 13.0; //  this is how close the camera should get to the target (inches)
+        double DESIRED_HEADING = 0; 
+        final double DESIRED_YAW = -5;
 
         //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
         //  applied to the drive motors to correct the error.
         //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-        final double SPEED_GAIN  =  0.04  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-        final double STRAFE_GAIN =  0.01 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-        final double TURN_GAIN   =  0.025  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+        final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+        final double STRAFE_GAIN =  0.04 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+        final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
-        final double MAX_AUTO_SPEED = .4;   //  Clip the approach speed to this max value (adjust for your robot)
-        final double MAX_AUTO_STRAFE= .5;   //  Clip the approach speed to this max value (adjust for your robot)
-        final double MAX_AUTO_TURN  = 0.2;   //  Clip the turn speed to this max value (adjust for your robot)
+        final double MAX_AUTO_SPEED = .1;   //  Clip the approach speed to this max value (adjust for your robot)
+        final double MAX_AUTO_STRAFE= 1;   //  Clip the approach speed to this max value (adjust for your robot)
+        final double MAX_AUTO_TURN  = 0.1;   //  Clip the turn speed to this max value (adjust for your robot)
 
         private DcMotor leftFrontDrive   = null;  //  Used to control the left front drive wheel
         private DcMotor rightFrontDrive  = null;  //  Used to control the right front drive wheel
@@ -801,7 +885,7 @@ public class MecanumTeleop extends InitLinearOpMode
         private DcMotor rightBackDrive   = null;  //  Used to control the right back drive wheel
 
         private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-        private static int DESIRED_TAG_ID = 2;     // Choose the tag you want to approach or set to -1 for ANY tag.
+        private static int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
         private VisionPortal visionPortal;               // Used to manage the video source.
         private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
         private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
@@ -970,7 +1054,7 @@ public class MecanumTeleop extends InitLinearOpMode
             // Create the vision portal by using a builder.
             if (USE_WEBCAM) {
                 visionPortal = new VisionPortal.Builder()
-                        .setCamera(hardwareMap.get(WebcamName.class, "webcamREAR"))
+                        .setCamera(hardwareMap.get(WebcamName.class, "webcamRIGHT"))
                         .addProcessor(aprilTag)
                         .build();
                 setManualExposure(5, 250);  // Use low exposure time to reduce motion blur
@@ -1193,6 +1277,32 @@ public class MecanumTeleop extends InitLinearOpMode
             robot.armLevelDown(); //move arm and slides up
         }
 
+        if(gpad2.just_pressed(ManagedGamepad.Button.A)) {
+            robot.hangPos(); //move arm and slides up
+        }
+
+        if(gpad2.just_pressed(ManagedGamepad.Button.X)) {
+            robot.specimenPos(); //move arm and slides up
+        }
+
+        if(gpad2.just_pressed(ManagedGamepad.Button.Y)) {
+            robot.drivePos(); //move arm and slides up
+        }
+
+        if(gpad2.pressed(ManagedGamepad.Button.START) && gpad2.just_pressed(ManagedGamepad.Button.X)) {
+            DcMotor.RunMode modeVar;
+            modeVar = robot.arm.getMode();
+            robot.arm.setMode(STOP_AND_RESET_ENCODER);
+            robot.arm.setMode(modeVar);
+        }
+
+
+        if(gpad2.pressed(ManagedGamepad.Button.START) && gpad2.just_pressed(ManagedGamepad.Button.Y)) {
+            DcMotor.RunMode modeVar;
+            modeVar = robot.arm.getMode();
+            robot.arm.moveAtRate(0.3);
+            robot.arm.setMode(RUN_USING_ENCODER);
+        }
 
 
         controlArm();
@@ -1313,6 +1423,12 @@ public class MecanumTeleop extends InitLinearOpMode
     boolean ballfinalclim = false;
     boolean ballfinalclimout = false;
     private int numElem = 0;
+
+    private SpinRoute spinRoute;
+    private SpinRoutebasket spinRoutebasket;
+
+
+    private TouchSensor armButton;
 
     //private PPlayRoute route;
     boolean autoDriveActive = false;

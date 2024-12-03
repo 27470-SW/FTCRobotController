@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.util.ManagedGamepad;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_MAX_ENCODER;
 
 @TeleOp(name = "Testlifter", group = "Test")
 @Disabled
@@ -102,7 +103,7 @@ public class Testlifter extends InitLinearOpMode {
                     else if (mid)  lifter.setLiftPos(RobotConstants.LF_ARM_ROT_MID);
                     else if (high) lifter.setLiftPos(RobotConstants.LF_ARM_ROT_HIGH);
                     else if (grab) lifter.setLiftPos(RobotConstants.LF_ARM_ROT_GRAB);
-                    else lifter.setLiftSpd(lftPwr);
+                    else lifter.setLiftSpd(lftPwr, EL_MAX_ENCODER);
                 }
 
                 if (stop) lifter.setLiftPwr(0.0);

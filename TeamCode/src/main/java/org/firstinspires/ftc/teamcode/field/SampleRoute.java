@@ -40,21 +40,21 @@ route = constructorRoute;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         route.addLocation(route. startSample, START, HEAD_LINEAR);
         route.addFunction(route::closeClaw );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,0.45);
 		//Make slides up one and arm a little up.
-        route.addFunction(route::slidesUpOne, 0.1);
-        //route.addEvent(Route.Action.TANGENT, Math.toRadians(90));
-		route.addFunction(route::armUpLittle, 1.65);
-
-        route.addLocation(route.hangSpecimen, SPLINE, HEAD_LINEAR, Math.toRadians(0));
+        route.addFunction(route::slidesUpOne);
+        route.addFunction(route::armUpLittle);
+        route.addEvent(Route.Action.WAIT,.4);
+        route.addLocation(route.hangSpecimen, SPLINE, HEAD_LINEAR, Math.toRadians(90));
         //route.addEvent(Route.Action.WAIT,0.5);
         //route.addFunction(route::moveArmToDrive );
         //route.addEvent(Route.Action.WAIT,0.2);
         route.addFunction(route::openclaw );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,.3);
         //Make slides down one and arm down.
 		route.addFunction(route::moveToDrive);
        // route.addLocation(route.moveBackFromSpecimen, LINE, HEAD_LINEAR, Math.toRadians(0));
+        route.addFunction(route::delayedArmToPickup);
 
         route.addLocation(route.sample1, LINE, HEAD_CONSTANT, Math.toRadians(0));
         pickupSampleFromTape();
@@ -63,33 +63,34 @@ route = constructorRoute;
         deliverSample();
 
         route.addLocation(route.sample2, LINE, HEAD_LINEAR);
+        moveArmDelay = 0.8;
         pickupSampleFromTape();
 
-        route.addLocation(route.deliverSample2ToBasket,TURN, HEAD_LINEAR);
+        route.addLocation(route.deliverSample2ToBasket, SPLINE, HEAD_LINEAR);
         deliverSample();
-
+/*
          route.addLocation(route.sample3, LINE, HEAD_LINEAR);
          pickupSampleFromTape();
 
-        route.addLocation(route.deliverSample3ToBasket,TURN, HEAD_LINEAR, Math.toRadians(90));
+        route.addLocation(route.deliverSample3ToBasket,SPLINE, HEAD_LINEAR, Math.toRadians(90));
         deliverSample();
+*/
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(-110));
 
-        route.addLocation(route.positionToPark,LINE,HEAD_LINEAR,Math.toRadians(-180));
+        route.addLocation(route.positionToPark,SPLINE,HEAD_LINEAR,Math.toRadians(-90));
+        route.addFunction(route::armUpLittle);
 
-        if(parkPos== Park1) {
-            route.addLocation(route.park, LINE, HEAD_LINEAR, Math.toRadians(90));
-        }
-        else {
-            route.addLocation(route.park2, LINE, HEAD_LINEAR, Math.toRadians(90));
-        }
+            route.addLocation(route.park, SPLINE, HEAD_LINEAR, Math.toRadians(180));
+
 
 
     }
+    private double moveArmDelay = 0;
     private void pickupSampleFromTape(){
         route.addFunction(route::moveArmToPickup );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,moveArmDelay);
         route.addFunction(route::closeClaw );
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,.35);
         route.addFunction(route::moveArmTo90 );
         route.addFunction(route::maxSlides);
     }
@@ -98,7 +99,7 @@ route = constructorRoute;
         route.addFunction(route::moveArmToDrop );
         route.addEvent(Route.Action.WAIT,0.2);
         route.addFunction(route::openclaw);
-        route.addEvent(Route.Action.WAIT,0.2);
+        route.addEvent(Route.Action.WAIT,0.3);
         route.addFunction(route::moveArmTo90 );
         route.addEvent(Route.Action.WAIT,0.2);
         route.addFunction(route::minSlides);

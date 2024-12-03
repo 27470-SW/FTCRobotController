@@ -19,8 +19,8 @@ public class Claw {
             RobotLog.ee(TAG, "Unable to find claw");
         }
         percent = 1;
-        maxOpen = 0;
-        maxClosed = 1;
+        maxOpen = 1;
+        maxClosed = 0.1;
 
     }
 
@@ -63,6 +63,14 @@ public void update(){
 
         //temporary
         percent = maxOpen;
+
+        setClawPos(percent);
+    }
+
+    public void halfClaw(double val){
+        RobotLog.dd(TAG, "Percent:%f Val:%f", percent, val);
+
+        percent = 0.7;
 
         setClawPos(percent);
     }

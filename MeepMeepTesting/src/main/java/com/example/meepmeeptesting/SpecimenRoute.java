@@ -53,6 +53,12 @@ route = constructorRoute;
         route.addEvent(Route.Action.WAIT,0.2);
         route.addFunction(route::moveToDrive);
 
+        route.addLocation(route.specimen1PosPosToPush, LINE, HEAD_LINEAR, Math.toRadians(45));
+
+        route.addLocation(route.specimen1PosToPush, SPLINE, HEAD_LINEAR, Math.toRadians(180));
+
+       // route.addEvent(Route.Action.TANGENT,Math.toRadians(0));
+
         route.addLocation(route.specimen1, LINE, HEAD_LINEAR, Math.toRadians(45));
         pickUpSpecimenFromTape();
 

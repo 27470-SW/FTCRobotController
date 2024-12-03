@@ -303,9 +303,11 @@ public class MotorComponent
     cpi = model.getCpr() / extGear;
   }
 
+  private int updateCount=0;
+
   public void update()
   {
-//    if (motor == null) return;
+    if (motor == null) return;
 //    if (motor instanceof DcMotorEx)
 //    {
     if(motor != null) {
@@ -313,6 +315,13 @@ public class MotorComponent
       curSpd = ((DcMotorEx) motor).getVelocity();
       curLoc = curEnc / cpi;
     }
+
+    updateCount++;
+    if (updateCount==500){
+      RobotLog.dd(TAG, name+" Update working good!"  );
+    updateCount=0;
+    }
+
 //
 //      if (waitingOnTimer && mtrTmr.seconds() > mtrTimeout)
 //      {
@@ -330,99 +339,70 @@ public class MotorComponent
 //      curLoc += dt * cmdRate * maxIps;
 //    }
 //
-//    for (int l = 0; l < numLevelSensors; ++l)
-//    {
-//      sensorTriggered[l] = false;
-//      if (levelSensors[l] != null) sensorTriggered[l] = !(levelSensors[l].getState());
-//      if (touchSensors[l] != null)
-//        sensorTriggered[l] |= touchSensors[l].isPressed();
-//      if (clrRngSensors[l] != null)
-//        sensorTriggered[l] |= clrRngSensors[l].getDistance(DistanceUnit.INCH) < 2.0;
-//      if (sensorTriggered[l] != prevSensorTriggered[l])
-//      {
-//        RobotLog.dd(TAG, name + " Sensor State " + l + ":" + sensorTriggered[l]);
-//      }
+    for (int l = 0; l < numLevelSensors; ++l)
+    {
+      if (touchSensors[l] != null)
+        sensorTriggered[l] = touchSensors[l].isPressed();
+//
+      if (sensorTriggered[l] != prevSensorTriggered[l])
+      {
+        RobotLog.dd(TAG, name + " Sensor State " + l + ":" + sensorTriggered[l] + "numlvlsensors:" + numLevelSensors);
+      }
+    }
+//
+    if (numLevelSensors > 0)
+    {
+      minStopTriggered = sensorTriggered[0];
+      if(minStopTriggered){
+        RobotLog.dd(TAG, name + " Min Stop Triggered!");
+      }
+    }
+
+
+
+    if (movingToLevel >= 0 && movingToLevel < numLevelSensors)
+    {
+      if (sensorTriggered[movingToLevel] &&
+          !prevSensorTriggered[movingToLevel])
+      {
+        RobotLog.dd(TAG, "Reached dest level %d levelPos %.2f curLoc %.2f",
+                    movingToLevel, levelOffsets[movingToLevel], curLoc);
+        movingToLevel = -1;
+        moveAtRate(0.0);
+      }
+    }
+
+    if (!overrideHardstop &&
+        minStopTriggered && cmdRate < 0.0)
+    {
+      if (!prevSensorTriggered[0])
+      {
+        RobotLog.dd(TAG, "%s minstop stopping pwr rate:%.2f %.2f",
+                    name, cmdRate, curLoc);
+      }
+      movingToLevel = -1;
+      moveAtRate(0.0);
+
+
+      curLoc = levelOffsets[0];
+    }
+
+//    for (int l = 0; l < numLevelSensors; ++l){
+//
+//      prevSensorTriggered[l] = sensorTriggered[l];
+//
 //    }
-//
-//    if (numLevelSensors > 0)
-//    {
-//      minStopTriggered = sensorTriggered[0];
-//    }
-//    if (numLevelSensors > 1)
-//    {
-//      maxStopTriggered = sensorTriggered[numLevelSensors - 1];
-//    }
-//
-//    if (movingToLevel >= 0 && movingToLevel < numLevelSensors)
-//    {
-//      if (sensorTriggered[movingToLevel] &&
-//          !prevSensorTriggered[movingToLevel])
-//      {
-//        RobotLog.dd(TAG, "Reached dest level %d levelPos %.2f curLoc %.2f",
-//                    movingToLevel, levelOffsets[movingToLevel], curLoc);
-//        movingToLevel = -1;
-//        moveAtRate(0.0);
-//      }
-//    }
-//
-//    if (!overrideHardstop &&
-//        maxStopTriggered && cmdRate > 0.0)
-//    {
-//      if (!prevSensorTriggered[numLevelSensors - 1])
-//      {
-//        RobotLog.dd(TAG, "%s maxstop stopping pwr rate:%.2f %.2f",
-//                    name, cmdRate, curLoc);
-//      }
-//      movingToLevel = -1;
-//      moveAtRate(0.0);
-//
-//      if (motor instanceof CRServo &&
-//          usePwmDisable &&
-//          disableOnMaxstop &&
-//          !prevSensorTriggered[numLevelSensors - 1])
-//      {
-//        RobotLog.dd(TAG, "Disabling pwm");
-//        crsix.setPwmDisable(); //Try disabling when sitting on minstop
-//        pwmDisabled = true;
-//      }
-//
-//      curLoc = levelOffsets[numSoftLevels - 1];
-//    }
-//
-//    if (!overrideHardstop &&
-//        minStopTriggered && cmdRate < 0.0)
-//    {
-//      if (!prevSensorTriggered[0])
-//      {
-//        RobotLog.dd(TAG, "%s minstop stopping pwr rate:%.2f %.2f",
-//                    name, cmdRate, curLoc);
-//      }
-//      movingToLevel = -1;
-//      moveAtRate(0.0);
-//
-//      if (motor instanceof CRServo &&
-//          usePwmDisable &&
-//          disableOnMinstop &&
-//          !prevSensorTriggered[0])
-//      {
-//        RobotLog.dd(TAG, "Disabling pwm");
-//        crsix.setPwmDisable(); //Try disabling when sitting on minstop
-//        pwmDisabled = true;
-//      }
-//
-//      curLoc = levelOffsets[0];
-//    }
-//
-//    if (!overrideSoftstop &&
-//        (curLoc >= softMax && cmdRate > 0.0 ||
-//         curLoc <= softMin && cmdRate < 0.0))
-//    {
-//      RobotLog.dd(TAG, "Softstop reached pwr rate:%.2f %s %s %.2f",
-//                  cmdRate, softMin, softMax, curLoc);
-//    }
-//
-//    System.arraycopy(sensorTriggered, 0, prevSensorTriggered, 0, MAX_LEVELS);
-//
+
+    if (!overrideSoftstop &&
+        (curLoc >= softMax && cmdRate > 0.0 ||
+         curLoc <= softMin && cmdRate < 0.0))
+    {
+      RobotLog.dd(TAG, "Softstop reached pwr rate:%.2f %s %s %.2f",
+                  cmdRate, softMin, softMax, curLoc);
+    }
+
+    System.arraycopy(sensorTriggered, 0, prevSensorTriggered, 0, MAX_LEVELS);
+
 //    actionTriggered =false;
 //    for (DigitalChannel d : actionDigitalSensors)
 //    {
@@ -461,7 +441,7 @@ public class MotorComponent
 //      lock = true;
 //      lockTmr.reset();
 //    }
-//
+
 //    if(lockOnAction && lock && lockTmr.seconds() > lockActionDuration &&
 //       CommonUtil.getInstance().getLinearOpMode().opModeIsActive())
 //    {

@@ -228,8 +228,8 @@ public MotorComponent arm=null;
         */
          claw.init();
          arm.init(RobotConstants.ARM_MOT,1);
-        arm.setDir(RobotConstants.EXT_DIR);
-        arm.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
+        arm.setDir(RobotConstants.ARM_DIR);
+        //arm.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
         arm.setLevelOffset(
                 RobotConstants.ARM_LEVS[0],
                 RobotConstants.ARM_LEVS[1],
@@ -242,7 +242,7 @@ public MotorComponent arm=null;
 
         armLevel =0;
         slides.init();
-        slides.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
+      //  slides.setMode(STOP_AND_RESET_ENCODER);        //TODO: make not happen when comming back from auton;
         //elbowMotor.init(RobotConstants.EL_EXT_M, -2);
 
     }
@@ -314,9 +314,9 @@ public MotorComponent arm=null;
 
    public void initArmMot() throws InterruptedException {
 
-        arm.moveToCnt(2000,.05);
+        arm.moveToCnt(2000,.02);
 
-        Thread.sleep(3000);
+        Thread.sleep(1000);
         arm.setMode(STOP_AND_RESET_ENCODER);
         arm.setMode(RUN_USING_ENCODER);
         arm.moveToCnt(-300, 0.4);
@@ -367,7 +367,7 @@ public  int slideLevel;
 
     //TODO: combine arm and slide together into a single level concept
     public void armLevelUp(){
-        if(armLevel != ARM_NUM_LEVS - 1){
+        if(armLevel != ARM_NUM_LEVS - 2){  //change "-2" based on amount of levs needed
             armLevel ++;
             if(currentMode==ElbowPositions.SPECIMEN_MODE){
                 if (armLevel>4){
@@ -427,7 +427,22 @@ public  int slideLevel;
     }
 
 
+    public void hangPos(){
+        arm.moveToCnt(-900, 1);
+        slides.moveToLevel(7);
+    }
 
+    public void specimenPos(){
+        arm.moveToLevel(3, 0.8);
+        slides.moveToLevel(3);
+        armLevel = 3;
+    }
+
+    public void drivePos(){
+        arm.moveToLevel(2, 0.8);
+        slides.moveToLevel(2);
+        armLevel = 2;
+    }
 
 
     public double getElSpd(int targetEncoder){

@@ -57,7 +57,7 @@ public abstract class InitLinearOpMode extends LinearOpMode
     }
 
     protected static Field.Alliance alliance;
-    protected static PositionOption startPos;
+    protected static Field.StartPos startPos;
     protected static Field.Parks parkPos;
     protected static Field.FirstLocation firstLocation;
     protected static Field.Parks stackToBack;

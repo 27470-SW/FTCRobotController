@@ -65,11 +65,18 @@ public class Route
     public Route(Route copyRoute){
         this(copyRoute.robot, copyRoute.startPos, copyRoute.parkPos, copyRoute.firstLocation);
     }
+    public Route(MecanumBot robot){
+       this(robot, Field.StartPos.values()[0], Field.Parks.values()[0], Field.FirstLocation.values()[0]);
+
+    }
+
      public Route(MecanumBot robot,
-                  PositionOption startPos,
+                  Field.StartPos startPos,
 	 			  Field.Parks parkPos,
                   Field.FirstLocation firstLocation)
     {
+
+           this.robot = robot;
            this.startPos = startPos;
            this.parkPos  = parkPos;
            this.firstLocation = firstLocation;
@@ -156,37 +163,42 @@ public class Route
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Put new poses here
-		startSample = new Pose2d(sx * 9, 65, flip + sh*Math.toRadians(270));
+        startSample = new Pose2d(sx * 5, 63, flip + sh*Math.toRadians(270));
         //specimen points
         startSpecimenSide = new Pose2d(sx * -5, 63.25, flip + sh*Math.toRadians(270));
-		startSpecimen = new Pose2d(sx * -5, 55, flip + sh*Math.toRadians(270));
+		startSpecimen = new Pose2d(sx * -5, 63, flip + sh*Math.toRadians(270));
         specimenPark1 = new Pose2d(sx * -61, 62, flip + sh*Math.toRadians(270));
         specimen3 = new Pose2d(sx * -59.01, 55, flip + sh*Math.toRadians(245));
         specimen2 = new Pose2d(sx * -59, 55, flip + sh*Math.toRadians(270));
         dropPreSpecimen = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
         forward = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
         startCSRedHigh = new Pose2d(sx * 63.25, 16, flip + sh*Math.toRadians(180));
+        specimen1PosPosToPush = new Pose2d(sx * -27.7, 35, flip + sh*Math.toRadians(270));
+        specimen1PosToPush = new Pose2d(sx * -48, 10, flip + sh*Math.toRadians(270));
        specimen1 = new Pose2d(sx * -48,55, flip + sh*Math.toRadians(270));
-       corner = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
-        corner2 = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
-        corner3 = new Pose2d(sx * -60,60, flip + sh*Math.toRadians(310));
+       corner = new Pose2d(sx * -55,55, flip + sh*Math.toRadians(310));
+        corner2 = new Pose2d(sx * -55,55, flip + sh*Math.toRadians(310));
+        corner3 = new Pose2d(sx * -55,55, flip + sh*Math.toRadians(310));
         startCSRedLow = new Pose2d(sx*63.25, -32, flip + sh*Math.toRadians(180));
         startCBlueHigh = new Pose2d(sx * -63.25, 16, flip + sh*Math.toRadians(0));
         startCSBlueLow = new Pose2d(sx * -63.25, -15.5, flip + sh*Math.toRadians(0));
          purplePixelPlaceCenterTop = new Pose2d(sx * 28, 23.5, flip + sh*Math.toRadians(230));
          dropCenterPixel = new Pose2d(sx * 6, 65, flip + sh*Math.toRadians(270));
-        hangSpecimen = new Pose2d(sx * 9, 32, flip + sh*Math.toRadians(270));
+        hangSpecimen = new Pose2d(sx * 5, 45, flip + sh*Math.toRadians(270));
         moveBackFromSpecimen = new Pose2d(sx * 9, 55, flip + sh*Math.toRadians(270));
-        sample1 = new Pose2d(sx * 48, 55, flip + sh*Math.toRadians(270));
-        deliverSampleToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
-        deliverSample2ToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
-        deliverSample3ToBasket = new Pose2d(sx * 51, 52, flip + sh*Math.toRadians(225));
-        sample2 = new Pose2d(sx * 55, 55, flip + sh*Math.toRadians(150));
+        sample1 = new Pose2d(sx * 47, 53.5, flip + sh*Math.toRadians(270));
+        deliverSampleToBasket = new Pose2d(sx * 54, 55, sh*Math.toRadians(60));
+        deliverSample2ToBasket = new Pose2d(sx * 54, 55, sh*Math.toRadians(60));
+        deliverSample3ToBasket = new Pose2d(sx * 51, 52, sh*Math.toRadians(50));
+        sample2 = new Pose2d(sx * 58, 55.5, flip + sh*Math.toRadians(-119.9));
         rotateToSample2 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-90));
         turnStraight = new Pose2d (sx * 56, 54, flip + sh*Math.toRadians(-90));
         sample3 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-60));
-        park = new Pose2d(sx * -52, 63, flip + sh*Math.toRadians(-90));
-        positionToPark = new Pose2d(sx * 40, 63, flip + sh*Math.toRadians(-180));
+        park = new Pose2d(sx * 25, 10, flip + sh*Math.toRadians(-180));
+        positionToPark = new Pose2d(sx * 40,10 , flip + sh*Math.toRadians(-90));
+        waitForHumanPlayer = new Pose2d(sx * -48, 48, flip + sh*Math.toRadians(89.9));
+		waitForHumanPlayer2 = new Pose2d(sx * -46, 45.75, flip + sh*Math.toRadians(89.9));
+        waitForHumanPlayer3 = new Pose2d(sx * -47.25, 43.5, flip + sh*Math.toRadians(89.9));
         park2 = new Pose2d(sx * -70, 63, flip + sh*Math.toRadians(-90));
         startCSRedHigh = new Pose2d( -15, 63, Math.toRadians(180));
         startCBlueHigh = new Pose2d( -15, 100, Math.toRadians(180));
@@ -195,6 +207,10 @@ public class Route
         startCSBlueLow = new Pose2d(-63.25, -15.5, Math.toRadians(0));
          purplePixelPlaceCenterTop = new Pose2d(sx * 28, 23.5, flip + sh*Math.toRadians(230));
          dropCenterPixel = new Pose2d(sx * 33, 56.5, flip + sh*Math.toRadians(270));
+        subPos = new Pose2d(sx * -5, 35, flip + sh*Math.toRadians(270));
+        subPos2 = new Pose2d(sx * 0, 34, flip + sh*Math.toRadians(280.1));
+        subPos3 = new Pose2d(sx * 5, 30, flip + sh*Math.toRadians(280.1));
+        preSubPos = new Pose2d(sx * -5, 40, flip + sh*Math.toRadians(286.1));
         dropCenterPixelAdj = new Pose2d(sx * 27, 57.75, flip + sh*Math.toRadians(270));
         dropCenterPixelStacksAdj = new Pose2d(sx * 20, 50, flip + sh*Math.toRadians(270));
         dropCenterPixelLeftAdj = new Pose2d(sx *31.5, 50.35, flip + sh*Math.toRadians(270));
@@ -701,7 +717,7 @@ public class Route
 //     }
 //
 public void slidesUpOne(){
-    RobotLog.dd(TAG, "set slides pos to 1");
+    RobotLog.dd(TAG, "set slides pos to 4");
     robot.slides.moveToLevel(4);
 }
 
@@ -715,25 +731,59 @@ public void moveToPosition4(){
 
     public void moveArmToBack(){
         RobotLog.dd(TAG, "moveArmToBack");
-        robot.arm.moveToLevel(6, .5);
+        robot.arm.moveToLevel(6, 1);
+        robot.slides.moveToLevel(3);
     }
 
      protected void moveArmForward(){
          RobotLog.dd(TAG, "MOVE ARM FORWARD");
-         robot.arm.moveToLevel(0,.5);
+         robot.arm.moveToLevel(0,1);
 
      }
 
      protected void moveArmBackward(){
          RobotLog.dd(TAG, "MOVE Arm Back");
-         robot.arm.moveToLevel(2,.5);
+         robot.arm.moveToLevel(2,1);
 
      }
 
     public void armUpLittle(){
         RobotLog.dd(TAG, "Arm up pos little");
-        robot.arm.moveToLevel(4, .5);
+        robot.arm.moveToLevel(4, 1);
 
+    }
+
+    private Timer mTimer1;
+    private TimerTask mTt1;
+    private Timer mTimer2;
+    private TimerTask mTt2;
+
+
+    public void armToSpecimenPickup(){
+        RobotLog.dd(TAG, "Arm up pos little");
+        robot.arm.moveToLevel(3, 1);
+        robot.slides.moveToLevel(3);
+
+        mTimer1 = new Timer();
+        mTt1 = new TimerTask() {
+            public void run() {
+                closeClaw();
+            }
+        };
+        mTimer1.schedule(mTt1, 1200);
+
+        mTimer2 = new Timer();
+        mTt2 = new TimerTask() {
+            public void run() {
+                armUpLittle();
+            }
+        };
+        mTimer2.schedule(mTt2, 1550);
+
+//        route.addEvent(Route.Action.WAIT,0.4);
+//        route.addFunction(route::closeClaw );
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::armUpLittle );
     }
 
     protected void linearSlidesUp(){
@@ -772,7 +822,7 @@ public void moveToPosition4(){
      public static int conestackNum = INIT_CONE_STACK;
      protected MecanumBot robot;
 	 protected Field.Parks parkPos;
-     protected PositionOption startPos;
+     protected Field.StartPos startPos;
      protected Field.Alliance alliance;
      protected Field.Route routeStrategy;
      protected Field.FirstLocation firstLocation;
@@ -820,10 +870,16 @@ public void moveToPosition4(){
      protected Pose2d startCSRedHigh;
      protected Pose2d startSpecimenSide;
      protected Pose2d specimen1;
+     protected Pose2d specimen1PosPosToPush;
+     protected Pose2d specimen1PosToPush;
      protected Pose2d dropPreSpecimen;
     protected Pose2d corner;
     protected Pose2d corner2;
+    protected Pose2d subPos;
+    protected Pose2d subPos2;
+    protected Pose2d subPos3;
     protected Pose2d corner3;
+    protected Pose2d preSubPos;
      protected Pose2d startSample;
     protected Pose2d startSpecimen;
      protected Pose2d purplePixelPlaceCenterTop;
@@ -1043,6 +1099,11 @@ public void moveToPosition4(){
     protected Pose2d specimen3;
 
     protected Pose2d specimenPark1;
+    protected Pose2d waitForHumanPlayer;
+    protected Pose2d waitForHumanPlayer2;
+    protected Pose2d waitForHumanPlayer3;
+
+
 
     protected Pose2d forward;
      protected Pose2d fourPtJunctDropSpline;
@@ -1449,13 +1510,37 @@ public void moveToPosition4(){
 
  public void moveToDrive(){
         RobotLog.dd(TAG, "in moveToDrive\n");
-     robot.arm.moveToLevel(3, .5);
+     robot.arm.moveToLevel(2, 1);
      robot.slides.setLiftPos(RobotConstants.EL_MIN_ENCODER);
      }
 
+
+
+    private Timer mTimerArm;
+    private TimerTask mTtArm;
+
+    public void delayedArmToPickup(){
+        RobotLog.dd(TAG, "in delayedArmToPickup\n");
+
+        mTimerArm = new Timer();
+        mTtArm = new TimerTask() {
+            public void run() {
+                robot.arm.moveToLevel(0, 1);
+                robot.slides.moveToLevel(0);
+            }
+        };
+        mTimerArm.schedule(mTtArm, 1000);
+    }
+
+    public void moveArmToZero(){
+        RobotLog.dd(TAG, "in moveArmToZero\n");
+        robot.arm.moveToCnt(0,1);
+    }
+
     public void moveArmToPickup(){
         RobotLog.dd(TAG, "in moveArmToPickup\n");
-        robot.arm.moveToLevel(0, .5);
+        robot.arm.moveToLevel(0, 1);
+        robot.slides.moveToLevel(0);
     }
 
     public void moveSlidesToPickup(){
@@ -1465,7 +1550,7 @@ public void moveToPosition4(){
 
     public void moveArmTo90(){
         RobotLog.dd(TAG, "in moveArmTo90\n");
-        robot.arm.moveToLevel(3, .5);
+        robot.arm.moveToLevel(2, 1);
     }
     public void maxSlides(){
         RobotLog.dd(TAG, "in maxSlides\n");
@@ -1473,7 +1558,7 @@ public void moveToPosition4(){
     }
     public void moveArmToDrop(){
         RobotLog.dd(TAG, "in moveArmToDrop\n");
-        robot.arm.moveToLevel(5, .5);
+        robot.arm.moveToLevel(5, 1);
     }
     public void minSlides(){
         RobotLog.dd(TAG,  "in minSlides\n");
@@ -1662,6 +1747,10 @@ public void moveToPosition4(){
              }
          fullSeq = full.build();
          }
+    }
+
+    public Pose2d getStart(){
+        return firstPose;
     }
 
     public enum SegmentState

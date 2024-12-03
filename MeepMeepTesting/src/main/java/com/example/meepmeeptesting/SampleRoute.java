@@ -77,14 +77,13 @@ route = constructorRoute;
         route.addLocation(route.deliverSample3ToBasket,TURN, HEAD_LINEAR, Math.toRadians(90));
         deliverSample();
 
-        route.addLocation(route.positionToPark,LINE,HEAD_LINEAR,Math.toRadians(-180));
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(-110));
 
-        if(parkPos== Park1) {
-            route.addLocation(route.park, LINE, HEAD_LINEAR, Math.toRadians(90));
-        }
-        else {
-            route.addLocation(route.park2, LINE, HEAD_LINEAR, Math.toRadians(90));
-        }
+        route.addLocation(route.positionToPark,SPLINE,HEAD_LINEAR,Math.toRadians(-90));
+
+
+            route.addLocation(route.park, SPLINE, HEAD_LINEAR, Math.toRadians(180));
+
 
 
     }
