@@ -92,7 +92,7 @@ public class RobotConstants
 
   public static double EL_LEV3 = 10;
   public static double EL_LEV4 = 3.845;    //For hanging specimen
-  public static double EL_LEV5 = EL_MAX_ENCODER;
+  public static int EL_LEV5 = 3200;     //encoder counts, not a level
 
   public static int   EX_MAX = 3200;
   public static int   EX_MIN = 6;
@@ -303,7 +303,7 @@ public class RobotConstants
 
   public static double MAX_VEL = 60; //RR tune  maxVel 59.96
   public static double MAX_ACCEL = 35;
-  public static double MAX_ANG_VEL = 2.0167280197143556;
+  public static double MAX_ANG_VEL = Math.toRadians(180);
   public static double MAX_ANG_ACCEL = Math.toRadians(180);
 //old 2024
 
@@ -385,19 +385,19 @@ public class RobotConstants
     EL_MAX_ENCODER = 4000;
 
     ARM_MAX_ENCODER = 10;
-    ARM_MIN_ENCODER = -4200;
+    ARM_MIN_ENCODER = -6200;  //-4200
 
     EL_SPD = 1;
 
     EL_NUM_LEVS = 8;
     EL_LEVS = new double[EL_NUM_LEVS];
     SLIDECPI = 120;
-    EL_LEVS[0] = 450 / SLIDECPI;
+    EL_LEVS[0] = 380 / SLIDECPI;
     EL_LEVS[1] = EL_MIN_ENCODER / SLIDECPI;
     EL_LEVS[2] = EL_MIN_ENCODER / SLIDECPI;
     EL_LEVS[3] = EL_LEV3;
     EL_LEVS[4] = EL_LEV4;
-    EL_LEVS[5] = EL_MAX_ENCODER / SLIDECPI;
+    EL_LEVS[5] = EL_LEV5 / SLIDECPI;
     EL_LEVS[6] = EL_MAX_ENCODER / SLIDECPI;
     EL_LEVS[7] = 3000 / SLIDECPI;
 
@@ -405,12 +405,12 @@ public class RobotConstants
 
     ARM_NUM_LEVS = 7;
     ARM_LEVS = new double[ARM_NUM_LEVS];
-    ARM_LEVS[0] = -2.95;
+    ARM_LEVS[0] = -4.95;  //-2.95
     ARM_LEVS[1] = -2.4;
     ARM_LEVS[2] = -1.25;
     ARM_LEVS[3] = -2.78;
     ARM_LEVS[4] = -1.71;
-    ARM_LEVS[5] = -2;
+    ARM_LEVS[5] = -1.67;
     ARM_LEVS[6] = 0.2;
 
     IP_IMG_TOP = 0.20;
@@ -424,13 +424,13 @@ public class RobotConstants
     BOT_LEN = 18;
     BOT_WID = 18;
 
-    MAX_VEL = 50;
+
     LATERAL_MULTIPLIER = 0.963;
     DT_MOTOR = Motors.MotorModel.GOBILDA_5202_19_2;
     DT_EXT_GEAR_RATIO = 0.997;
     DT_WHEEL_DIAM = 96.0/MMPERIN;
     // Track Width tuned via Road Runner Quick Start
-    DT_TRACK_WIDTH = 13.85;
+    DT_TRACK_WIDTH = 16.5;
     MOTOR_VELO_PID = new PIDFCoefficients(8.05, 0, 5, 13.4); //Needs RR tuning
     //Heading & Translation PIDs tuned via Road Runner Quick Start
     TRANSLATIONAL_PID = new PIDCoefficients(6, 0.01, 0.25);

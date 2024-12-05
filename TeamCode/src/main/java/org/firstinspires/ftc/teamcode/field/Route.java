@@ -184,17 +184,17 @@ public class Route
         startCSBlueLow = new Pose2d(sx * -63.25, -15.5, flip + sh*Math.toRadians(0));
          purplePixelPlaceCenterTop = new Pose2d(sx * 28, 23.5, flip + sh*Math.toRadians(230));
          dropCenterPixel = new Pose2d(sx * 6, 65, flip + sh*Math.toRadians(270));
-        hangSpecimen = new Pose2d(sx * 5, 45, flip + sh*Math.toRadians(270));
+        hangSpecimen = new Pose2d(sx * 5, 44.9, flip + sh*Math.toRadians(270));
         moveBackFromSpecimen = new Pose2d(sx * 9, 55, flip + sh*Math.toRadians(270));
         sample1 = new Pose2d(sx * 47, 53.5, flip + sh*Math.toRadians(270));
-        deliverSampleToBasket = new Pose2d(sx * 54, 55, sh*Math.toRadians(60));
-        deliverSample2ToBasket = new Pose2d(sx * 54, 55, sh*Math.toRadians(60));
-        deliverSample3ToBasket = new Pose2d(sx * 51, 52, sh*Math.toRadians(50));
-        sample2 = new Pose2d(sx * 58, 55.5, flip + sh*Math.toRadians(-119.9));
+        deliverSampleToBasket = new Pose2d(sx * 55, 61.25 , sh*Math.toRadians(50));
+        deliverSample2ToBasket = new Pose2d(sx * 57.5, 64.2, sh*Math.toRadians(45));
+        deliverSample3ToBasket = new Pose2d(sx * 56.5, 66.5, sh*Math.toRadians(53));
+        sample2 = new Pose2d(sx * 54, 54.5, flip + sh*Math.toRadians(-100));// x is 58 y is 53.5 heading is -119.9
         rotateToSample2 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-90));
         turnStraight = new Pose2d (sx * 56, 54, flip + sh*Math.toRadians(-90));
-        sample3 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-60));
-        park = new Pose2d(sx * 25, 10, flip + sh*Math.toRadians(-180));
+        sample3 = new Pose2d(sx * 41.6, 27, flip + sh*Math.toRadians(-4));
+        park = new Pose2d(sx * 28, 10, flip + sh*Math.toRadians(-180));
         positionToPark = new Pose2d(sx * 40,10 , flip + sh*Math.toRadians(-90));
         waitForHumanPlayer = new Pose2d(sx * -48, 48, flip + sh*Math.toRadians(89.9));
 		waitForHumanPlayer2 = new Pose2d(sx * -46, 45.75, flip + sh*Math.toRadians(89.9));
@@ -757,9 +757,51 @@ public void moveToPosition4(){
     private TimerTask mTt1;
     private Timer mTimer2;
     private TimerTask mTt2;
+    private Timer mTimer3;
+    private TimerTask mTt3;
 
 
-    public void armToSpecimenPickup(){
+    public void deliverSample() {
+        RobotLog.dd(TAG, "Arm up pos little");
+        moveArmToDrop();
+
+
+        mTimer1 = new Timer();
+        mTt1 = new TimerTask() {
+            public void run() {
+                openclaw();
+            }
+        };
+        mTimer1.schedule(mTt1, 300);
+
+        mTimer2 = new Timer();
+        mTt2 = new TimerTask() {
+            public void run() {
+                moveArmTo90();
+            }
+
+        };
+        mTimer2.schedule(mTt2, 700);
+
+        mTimer3 = new Timer();
+        mTt3 = new TimerTask() {
+            public void run() {
+                minSlides();
+            }
+        };
+        mTimer3.schedule(mTt3, 850);
+//        route.addFunction(route::moveArmToDrop );
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::openclaw);
+//        route.addEvent(Route.Action.WAIT,0.3);
+//        route.addFunction(route::moveArmTo90 );
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::minSlides);
+  }
+
+
+
+        public void armToSpecimenPickup(){
         RobotLog.dd(TAG, "Arm up pos little");
         robot.arm.moveToLevel(3, 1);
         robot.slides.moveToLevel(3);
@@ -811,6 +853,21 @@ public void moveToPosition4(){
          if(VERBOSE) { RobotLog.dd(TAG, "Parking bot"); }
      }
 
+    private Timer mTimerPark;
+    private TimerTask mTtPark;
+
+    public void slidesUpPark(){
+        RobotLog.dd(TAG, "in delayedArmToPickup\n");
+
+        mTimerPark = new Timer();
+        mTtPark = new TimerTask() {
+            public void run() {
+                robot.slides.setLiftPos(2300);
+                robot.arm.moveToLevel(1,1);
+            }
+        };
+        mTimerPark.schedule(mTtPark, 200);
+    }
 
 
      public String toString()
@@ -1554,7 +1611,7 @@ public void moveToPosition4(){
     }
     public void maxSlides(){
         RobotLog.dd(TAG, "in maxSlides\n");
-        robot.slides.setLiftPos(RobotConstants.EL_MAX_ENCODER);
+        robot.slides.setLiftPos(RobotConstants.EL_LEV5);
     }
     public void moveArmToDrop(){
         RobotLog.dd(TAG, "in moveArmToDrop\n");

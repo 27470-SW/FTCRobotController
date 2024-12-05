@@ -62,24 +62,24 @@ route = constructorRoute;
         route.addLocation(route.deliverSampleToBasket,LINE, HEAD_LINEAR);
         deliverSample();
 
-        route.addLocation(route.sample2, LINE, HEAD_LINEAR);
+        route.addEvent(Route.Action.TANGENT, Math.toRadians(-130));
+        route.addLocation(route.sample3, LINE, HEAD_LINEAR, Math.toRadians(-20));
         moveArmDelay = 0.8;
         pickupSampleFromTape();
 
-        route.addLocation(route.deliverSample2ToBasket, SPLINE, HEAD_LINEAR);
+        route.addLocation(route.deliverSample2ToBasket, SPLINE, HEAD_SPLINE);
         deliverSample();
-/*
-         route.addLocation(route.sample3, LINE, HEAD_LINEAR);
+
+         route.addLocation(route.sample2, LINE, HEAD_LINEAR);
          pickupSampleFromTape();
 
         route.addLocation(route.deliverSample3ToBasket,SPLINE, HEAD_LINEAR, Math.toRadians(90));
         deliverSample();
-*/
+
+        route.addFunction(route::slidesUpPark);
         route.addEvent(Route.Action.TANGENT, Math.toRadians(-110));
 
         route.addLocation(route.positionToPark,SPLINE,HEAD_LINEAR,Math.toRadians(-90));
-        route.addFunction(route::armUpLittle);
-
             route.addLocation(route.park, SPLINE, HEAD_LINEAR, Math.toRadians(180));
 
 
@@ -93,16 +93,20 @@ route = constructorRoute;
         route.addEvent(Route.Action.WAIT,.35);
         route.addFunction(route::moveArmTo90 );
         route.addFunction(route::maxSlides);
+        route.addEvent(Route.Action.WAIT,.5);
     }
 
     private void deliverSample(){
-        route.addFunction(route::moveArmToDrop );
-        route.addEvent(Route.Action.WAIT,0.2);
-        route.addFunction(route::openclaw);
-        route.addEvent(Route.Action.WAIT,0.3);
-        route.addFunction(route::moveArmTo90 );
-        route.addEvent(Route.Action.WAIT,0.2);
-        route.addFunction(route::minSlides);
+
+        route.addFunction(route::deliverSample);
+       route.addEvent(Route.Action.WAIT,0.95);
+//        route.addFunction(route::moveArmToDrop );
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::openclaw);
+//        route.addEvent(Route.Action.WAIT,0.3);
+//        route.addFunction(route::moveArmTo90 );
+//        route.addEvent(Route.Action.WAIT,0.2);
+//        route.addFunction(route::minSlides);
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -78,7 +78,7 @@ public class SpinRoutebasket extends Route
 
        RobotLog.dd(TAG, "making route");
 
-       addLocation(deliverSample3ToBasket,START, HEAD_LINEAR, Math.toRadians(90));
+       addLocation(deliverSampleToBasket,START, HEAD_LINEAR, Math.toRadians(90));
 
        addEvent(Route.Action.TANGENT, Math.toRadians(-110));
 
