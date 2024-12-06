@@ -190,7 +190,7 @@ public class Route
         deliverSampleToBasket = new Pose2d(sx * 55, 61.25 , sh*Math.toRadians(50));
         deliverSample2ToBasket = new Pose2d(sx * 57.5, 64.2, sh*Math.toRadians(45));
         deliverSample3ToBasket = new Pose2d(sx * 56.5, 66.5, sh*Math.toRadians(53));
-        sample2 = new Pose2d(sx * 54, 54.5, flip + sh*Math.toRadians(-100));// x is 58 y is 53.5 heading is -119.9
+        sample2 = new Pose2d(sx * 54, 55, flip + sh*Math.toRadians(-100));// x is 58 y is 53.5 heading is -119.9
         rotateToSample2 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-90));
         turnStraight = new Pose2d (sx * 56, 54, flip + sh*Math.toRadians(-90));
         sample3 = new Pose2d(sx * 41.6, 27, flip + sh*Math.toRadians(-4));

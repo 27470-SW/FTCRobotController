@@ -45,6 +45,8 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENC
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_MAX_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_MIN_ENCODER;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.ARM_SPD;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.DT_MAX_CPS;
+import static org.firstinspires.ftc.teamcode.robot.RobotConstants.DT_SAF_CPS;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_LEVS;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.EL_SPD;
 import static org.firstinspires.ftc.teamcode.robot.RobotConstants.POSE_EQUAL;
@@ -610,7 +612,7 @@ public class MecanumTeleop extends InitLinearOpMode
 
         if      (incr) dSpd += dStp;
         else if (decr) dSpd -= dStp;
-        dSpd = Range.clip(dSpd, 0.0, 1.0);
+        dSpd = Range.clip(dSpd, 0.1, DT_MAX_CPS/DT_SAF_CPS);
 
 
 
@@ -627,10 +629,10 @@ public class MecanumTeleop extends InitLinearOpMode
             driveInput = new Vector2d(fb, -lr);
         }
 
-        double maxCPS = RobotConstants.DT_SAF_CPS;
-        if(hspd) maxCPS = RobotConstants.DT_MAX_CPS;
-        if (slow) maxCPS = RobotConstants.DT_SAF_CPS/3;
-        double spdScl = maxCPS/RobotConstants.DT_MAX_CPS;
+        double maxCPS = DT_SAF_CPS*dSpd;
+        if(hspd) maxCPS = DT_MAX_CPS;
+        if (slow) maxCPS = DT_SAF_CPS/3;
+        double spdScl = maxCPS/ DT_MAX_CPS;
 
         driveInput = driveInput.times(spdScl);
         turn = turn * spdScl;
@@ -1392,7 +1394,7 @@ public class MecanumTeleop extends InitLinearOpMode
     double moveAtRate = 0.0;
     private double lastMrkPos = RobotConstants.MK_ARM_STOW;
 
-    double dSpd = 0.0;
+    double dSpd = 1.0;
     double dStp = 0.1;
 
     static final double spdScl = Math.sqrt(2.0);
