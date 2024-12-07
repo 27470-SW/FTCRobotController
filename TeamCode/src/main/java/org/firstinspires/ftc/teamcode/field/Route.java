@@ -164,6 +164,8 @@ public class Route
 
         //Put new poses here
         startSample = new Pose2d(sx * 5, 63, flip + sh*Math.toRadians(270));
+        startSampleSample = new Pose2d(sx * 33, 63, flip + sh*Math.toRadians(0));
+
         //specimen points
         startSpecimenSide = new Pose2d(sx * -5, 63.25, flip + sh*Math.toRadians(270));
 		startSpecimen = new Pose2d(sx * -5, 63, flip + sh*Math.toRadians(270));
@@ -187,16 +189,18 @@ public class Route
         hangSpecimen = new Pose2d(sx * 5, 44.9, flip + sh*Math.toRadians(270));
         moveBackFromSpecimen = new Pose2d(sx * 9, 55, flip + sh*Math.toRadians(270));
         sample1 = new Pose2d(sx * 47, 53.5, flip + sh*Math.toRadians(270));
+        sample1Sample = new Pose2d(sx * 47.25, 51.25, flip + sh*Math.toRadians(255));
+        deliverSampleToBasket0 = new Pose2d(sx * 58, 61 , sh*Math.toRadians(50));
         deliverSampleToBasket = new Pose2d(sx * 55, 61.25 , sh*Math.toRadians(50));
-        deliverSample2ToBasket = new Pose2d(sx * 57.5, 64.2, sh*Math.toRadians(45));
-        deliverSample3ToBasket = new Pose2d(sx * 56.5, 66.5, sh*Math.toRadians(53));
-        sample2 = new Pose2d(sx * 54, 55, flip + sh*Math.toRadians(-100));// x is 58 y is 53.5 heading is -119.9
+        deliverSample2ToBasket = new Pose2d(sx * 54, 62.25, sh*Math.toRadians(45));
+        deliverSample3ToBasket = new Pose2d(sx * 55, 63.25, sh*Math.toRadians(53));
+        sample2 = new Pose2d(sx * 54, 53.25, flip + sh*Math.toRadians(-108));// x is 58 y is 53.5 heading is -119.9
         rotateToSample2 = new Pose2d(sx * 55, 56, flip + sh*Math.toRadians(-90));
         turnStraight = new Pose2d (sx * 56, 54, flip + sh*Math.toRadians(-90));
-        sample3 = new Pose2d(sx * 41.6, 27, flip + sh*Math.toRadians(-4));
-        park = new Pose2d(sx * 28, 10, flip + sh*Math.toRadians(-180));
-        positionToPark = new Pose2d(sx * 40,10 , flip + sh*Math.toRadians(-90));
-        waitForHumanPlayer = new Pose2d(sx * -48, 48, flip + sh*Math.toRadians(89.9));
+        sample3 = new Pose2d(sx * 41.1, 27, flip + sh*Math.toRadians(-4));
+        park = new Pose2d(sx * 28, 17, flip + sh*Math.toRadians(-180));
+        positionToPark = new Pose2d(sx * 40,17 , flip + sh*Math.toRadians(-90));
+        waitForHumanPlayer = new Pose2d(sx * -45.5, 46.5, flip + sh*Math.toRadians(105));
 		waitForHumanPlayer2 = new Pose2d(sx * -46, 45.75, flip + sh*Math.toRadians(89.9));
         waitForHumanPlayer3 = new Pose2d(sx * -47.25, 43.5, flip + sh*Math.toRadians(89.9));
         park2 = new Pose2d(sx * -70, 63, flip + sh*Math.toRadians(-90));

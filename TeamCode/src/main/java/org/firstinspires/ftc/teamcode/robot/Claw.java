@@ -70,7 +70,7 @@ public void update(){
     public void halfClaw(double val){
         RobotLog.dd(TAG, "Percent:%f Val:%f", percent, val);
 
-        percent = 0.7;
+        percent = 0.8;
 
         setClawPos(percent);
     }

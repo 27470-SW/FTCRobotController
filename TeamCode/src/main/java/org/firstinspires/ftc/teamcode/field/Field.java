@@ -153,7 +153,9 @@ public abstract class Field
         BACKDROP,
         PIXEL_WALL,
         PIXEL_CENTER,
-        PIXEL_DOOR
+        PIXEL_DOOR,
+        SPECIMEN,
+        SAMPLE
     }
 
 }
