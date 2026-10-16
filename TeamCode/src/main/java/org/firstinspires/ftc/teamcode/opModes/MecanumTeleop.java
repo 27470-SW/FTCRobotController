@@ -629,7 +629,7 @@ public class MecanumTeleop extends InitLinearOpMode
         }
         else
         {
-            driveInput = new Vector2d(fb, -lr);
+            driveInput = new Vector2d(fb, lr);  // stick right = strafe right
         }
 
         double maxCPS = DT_SAF_CPS*dSpd;
