@@ -1087,8 +1087,19 @@ public class MecanumTeleop extends InitLinearOpMode
             if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
                 telemetry.addData("Camera", "Waiting");
                 telemetry.update();
-                while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                // Give up after a few seconds so a missing/unplugged camera doesn't block INIT forever
+                long camTimeout = System.currentTimeMillis() + 3000;
+                while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)
+                        && System.currentTimeMillis() < camTimeout) {
                     sleep(20);
+                }
+                if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+                    RobotLog.ee(TAG, "Camera never started streaming - continuing without AprilTags");
+                    telemetry.addData("Camera", "Not found - running without camera");
+                    telemetry.update();
+                    visionPortal.close();
+                    visionPortal = null;
+                    return;
                 }
                 telemetry.addData("Camera", "Ready");
                 telemetry.update();
