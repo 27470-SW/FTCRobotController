@@ -291,7 +291,8 @@ public class MecanumTeleop extends InitLinearOpMode
 
         if(robot.arm == null) return;
         boolean start = gpad2.pressed(ManagedGamepad.Button.START);
-        double lftPwr = -gpad2.value(ManagedGamepad.AnalogInput.R_STICK_Y);
+        // Stick up = arm forward, stick back = arm back
+        double lftPwr = gpad2.value(ManagedGamepad.AnalogInput.R_STICK_Y);
         /* Move the Elevator to desired HuB level */
        // boolean armLevelUp   = gpad2.just_pressed(ManagedGamepad.Button.D_UP);
         //boolean armLevelDown   = gpad2.just_pressed(ManagedGamepad.Button.D_DOWN);
