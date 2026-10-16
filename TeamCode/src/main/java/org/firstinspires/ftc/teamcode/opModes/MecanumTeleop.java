@@ -513,9 +513,10 @@ public class MecanumTeleop extends InitLinearOpMode
 
         if (robot.motors.size() == 0) return;
 
-        raw_lr =  gpad1.value(ManagedGamepad.AnalogInput.R_STICK_X);
-        raw_fb = -gpad1.value(ManagedGamepad.AnalogInput.R_STICK_Y);
-        raw_turn =  gpad1.value(ManagedGamepad.AnalogInput.L_STICK_X);
+        // Left stick: drive forward/back and strafe left/right. Right stick X: rotate.
+        raw_lr =  gpad1.value(ManagedGamepad.AnalogInput.L_STICK_X);
+        raw_fb = -gpad1.value(ManagedGamepad.AnalogInput.L_STICK_Y);
+        raw_turn =  gpad1.value(ManagedGamepad.AnalogInput.R_STICK_X);
 
         //boolean strt =  gpad1.pressed(ManagedGamepad.Button.START);
         boolean  goto4Tag = gpad1.just_pressed(ManagedGamepad.Button.Y);
